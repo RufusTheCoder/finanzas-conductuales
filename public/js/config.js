@@ -1,2 +1,2 @@
 export const SUPABASE_URL = 'https://ncausitrddvtoyivolkj.supabase.co';
-export const SUPABASE_ANON_KEY = 'sb_publishable_l6DUrgk9d6JFrCLTuxn16Q_lO5qdHY2';
+export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYXVzaXRyZGR2dG95aXZvbGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDI0NDAsImV4cCI6MjA5MTYxODQ0MH0.FqUNSkwcMVnC3DfyMV4eTOVDqS67dcTbK3TydZinnq4';
