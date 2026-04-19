@@ -1,0 +1,3478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanzas Conductuales · Ibero CDMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   TOKENS & RESET
+═══════════════════════════════════════════════ */
+:root {
+  --red:        #C41E3A;
+  --red-dark:   #9B1830;
+  --red-light:  #E8364F;
+  --red-ghost:  rgba(196,30,58,0.08);
+  --ink:        #111116;
+  --ink-2:      #2E2E38;
+  --ink-3:      #5C5C6E;
+  --ink-4:      #9494A8;
+  --paper:      #F2F0EB;
+  --paper-2:    #E9E7E1;
+  --paper-3:    #DDDBD4;
+  --white:      #FFFFFF;
+  --success:    #059669;
+  --warning:    #D97706;
+
+  --ff-display: 'Playfair Display', Georgia, serif;
+  --ff-body:    'DM Sans', system-ui, sans-serif;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-body);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN SYSTEM
+═══════════════════════════════════════════════ */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; }
+
+/* ═══════════════════════════════════════════════
+   ①  AUTH SCREEN
+═══════════════════════════════════════════════ */
+#screen-auth {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#screen-auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 20%, rgba(196,30,58,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196,30,58,.10) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeUp .8s ease-out;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 3rem;
+}
+
+.auth-logo-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--red);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.auth-logo-text {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  line-height: 1.3;
+}
+
+.auth-headline {
+  font-family: var(--ff-display);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.auth-headline em {
+  font-style: italic;
+  color: var(--red-light);
+}
+
+.auth-sub {
+  font-size: .95rem;
+  color: var(--ink-4);
+  margin-bottom: 2.5rem;
+  line-height: 1.65;
+}
+
+.auth-tabs {
+  display: flex;
+  background: rgba(255,255,255,.06);
+  border-radius: var(--r-sm);
+  padding: 4px;
+  margin-bottom: 2rem;
+  gap: 4px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-4);
+  font-family: var(--ff-body);
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+.auth-tab.active {
+  background: var(--red);
+  color: white;
+}
+
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+
+.auth-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--r-sm);
+  color: white;
+  font-family: var(--ff-body);
+  font-size: .95rem;
+  outline: none;
+  transition: all .25s;
+}
+
+.auth-input::placeholder { color: rgba(255,255,255,.3); }
+.auth-input:focus { border-color: var(--red); background: rgba(255,255,255,.1); box-shadow: 0 0 0 3px rgba(196,30,58,.2); }
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: var(--r-sm);
+  font-family: var(--ff-body);
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .25s;
+  letter-spacing: .02em;
+}
+
+.btn-primary:hover:not(:disabled) { background: var(--red-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(196,30,58,.35); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+.auth-msg {
+  text-align: center;
+  font-size: .82rem;
+  padding: 10px;
+  border-radius: var(--r-sm);
+  margin-top: 8px;
+}
+.auth-msg.err { background: rgba(239,68,68,.15); color: #FCA5A5; }
+.auth-msg.ok  { background: rgba(5,150,105,.15); color: #6EE7B7; }
+
+/* ═══════════════════════════════════════════════
+   ②  DASHBOARD
+═══════════════════════════════════════════════ */
+#screen-dashboard {
+  flex-direction: column;
+  background: var(--paper);
+  min-height: 100vh;
+}
+
+.dash-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--paper-3);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.dash-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--red);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: .9rem;
+  font-weight: 700;
+  color: white;
+}
+
+.nav-title {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: .01em;
+}
+
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+
+.nav-user {
+  font-size: .82rem;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.btn-ghost {
+  padding: 7px 14px;
+  border: 1px solid var(--paper-3);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--ff-body);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-ghost:hover { border-color: var(--red); color: var(--red); }
+
+.dash-body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+/* Hero section */
+.dash-hero {
+  margin-bottom: 3rem;
+}
+
+.dash-hero-greeting {
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: .5rem;
+}
+
+.dash-hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: .75rem;
+}
+
+.dash-hero-sub {
+  font-size: .95rem;
+  color: var(--ink-3);
+  max-width: 560px;
+}
+
+/* Progress summary */
+.dash-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 600px) { .dash-summary { grid-template-columns: 1fr; } }
+
+.summary-card {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 1.5rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-num {
+  font-family: var(--ff-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+.summary-label {
+  font-size: .8rem;
+  color: var(--ink-4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* BIT section */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  font-family: var(--ff-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.section-badge {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.section-badge.pending { background: var(--paper-2); color: var(--ink-4); }
+.section-badge.done    { background: rgba(5,150,105,.1); color: var(--success); }
+
+.bit-card {
+  background: white;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 3rem;
+  cursor: pointer;
+  transition: all .3s;
+}
+.bit-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+.bit-card-banner {
+  height: 8px;
+  background: linear-gradient(90deg, var(--red-dark), var(--red-light));
+}
+
+.bit-card-body {
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (max-width: 580px) { .bit-card-body { flex-direction: column; align-items: flex-start; } }
+
+.bit-card-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  background: var(--red-ghost);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.bit-card-info { flex: 1; }
+
+.bit-card-title {
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin-bottom: .3rem;
+}
+
+.bit-card-desc {
+  font-size: .88rem;
+  color: var(--ink-3);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+.bit-card-meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: .78rem;
+  color: var(--ink-4);
+  font-weight: 500;
+}
+
+.bit-card-cta {
+  flex-shrink: 0;
+}
+
+.btn-cta {
+  padding: 12px 24px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: var(--r-sm);
+  font-family: var(--ff-body);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .25s;
+  white-space: nowrap;
+}
+.btn-cta:hover { background: var(--red-light); transform: translateY(-1px); }
+.btn-cta.secondary { background: var(--paper-2); color: var(--ink-2); border: 1px solid var(--paper-3); }
+.btn-cta.secondary:hover { background: var(--paper-3); }
+
+/* Sesgos grid */
+.sesgos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.sesgo-card {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 1.4rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all .25s;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.sesgo-card.locked {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.sesgo-card.done::after {
+  content: '✓';
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  background: var(--success);
+  color: white;
+  border-radius: 50%;
+  font-size: .72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 22px;
+  text-align: center;
+}
+
+.sesgo-card:not(.locked):not(.done):hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--red);
+  transform: translateY(-2px);
+}
+
+.sesgo-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.sesgo-card.active .sesgo-num { background: var(--red); color: white; }
+.sesgo-card.done .sesgo-num   { background: rgba(5,150,105,.12); color: var(--success); }
+
+.sesgo-info { flex: 1; }
+
+.sesgo-name {
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .2rem;
+  padding-right: 24px;
+}
+
+.sesgo-tipo {
+  font-size: .75rem;
+  color: var(--ink-4);
+  font-weight: 500;
+}
+
+.tipo-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.tipo-dot.emocional { background: #DC2626; }
+.tipo-dot.cognitivo { background: #2563EB; }
+.tipo-dot.dual      { background: #7C3AED; }
+
+/* ═══════════════════════════════════════════════
+   ③  BIT QUIZ
+═══════════════════════════════════════════════ */
+#screen-bit {
+  flex-direction: column;
+  background: var(--paper);
+}
+
+/* ═══════════════════════════════════════════════
+   ④  SESGO MODULE  (quiz → learn → result)
+═══════════════════════════════════════════════ */
+#screen-sesgo {
+  flex-direction: column;
+  background: var(--paper);
+}
+
+/* ═══════════════════════════════════════════════
+   SHARED: QUIZ ENGINE
+═══════════════════════════════════════════════ */
+.quiz-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.quiz-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--paper-3);
+}
+
+.quiz-progress-track {
+  height: 3px;
+  background: var(--paper-3);
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+.quiz-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+}
+
+.quiz-label {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.quiz-counter {
+  font-size: .82rem;
+  color: var(--ink-4);
+  font-weight: 500;
+}
+
+.btn-exit {
+  font-size: .8rem;
+  color: var(--ink-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--ff-body);
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color .2s;
+}
+.btn-exit:hover { color: var(--red); }
+
+.quiz-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+}
+
+.quiz-question-card {
+  max-width: 660px;
+  width: 100%;
+  animation: slideIn .35s ease-out;
+}
+
+.q-situation {
+  font-family: var(--ff-display);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: var(--ink);
+  line-height: 1.45;
+  margin-bottom: 2rem;
+}
+
+.q-options { display: flex; flex-direction: column; gap: 10px; }
+
+.q-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: white;
+  border: 2px solid var(--paper-3);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all .22s;
+  text-align: left;
+  font-family: var(--ff-body);
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  width: 100%;
+}
+
+.q-option:hover { border-color: var(--red); background: var(--red-ghost); }
+.q-option.selected { border-color: var(--red); background: rgba(196,30,58,.06); font-weight: 500; color: var(--ink); }
+
+.q-letter {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--ink-4);
+  transition: all .22s;
+}
+
+.q-option.selected .q-letter { background: var(--red); color: white; }
+
+.quiz-footer {
+  background: white;
+  border-top: 1px solid var(--paper-3);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-nav-back {
+  padding: 11px 22px;
+  border-radius: var(--r-sm);
+  background: var(--paper-2);
+  color: var(--ink-3);
+  border: 1px solid var(--paper-3);
+  font-family: var(--ff-body);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-nav-back:hover { background: var(--paper-3); }
+.btn-nav-back:disabled { opacity: .35; cursor: not-allowed; }
+
+.btn-nav-next {
+  padding: 11px 28px;
+  border-radius: var(--r-sm);
+  background: var(--red);
+  color: white;
+  border: none;
+  font-family: var(--ff-body);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-nav-next:hover:not(:disabled) { background: var(--red-light); }
+.btn-nav-next:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ═══════════════════════════════════════════════
+   SESGO: LEARN PHASE
+═══════════════════════════════════════════════ */
+.learn-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.learn-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.learn-breadcrumb {
+  font-size: .78rem;
+  color: rgba(255,255,255,.5);
+  font-weight: 500;
+}
+
+.learn-breadcrumb strong { color: rgba(255,255,255,.9); }
+
+.learn-body {
+  flex: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  width: 100%;
+}
+
+.learn-hero {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--paper-3);
+}
+
+.learn-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+}
+.learn-tag.emocional { background: rgba(220,38,38,.1); color: #DC2626; }
+.learn-tag.cognitivo { background: rgba(37,99,235,.1); color: #2563EB; }
+.learn-tag.dual      { background: rgba(124,58,237,.1); color: #7C3AED; }
+
+.learn-title {
+  font-family: var(--ff-display);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: .75rem;
+}
+
+.learn-subtitle {
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+
+.learn-section {
+  margin-bottom: 2.5rem;
+}
+
+.learn-section-title {
+  font-family: var(--ff-display);
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.learn-section-title::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1.1em;
+  background: var(--red);
+  border-radius: 2px;
+}
+
+.learn-prose {
+  font-size: .95rem;
+  color: var(--ink-2);
+  line-height: 1.75;
+}
+
+.learn-prose p { margin-bottom: .9rem; }
+.learn-prose p:last-child { margin-bottom: 0; }
+
+.learn-highlight {
+  background: var(--red-ghost);
+  border-left: 3px solid var(--red);
+  padding: 1rem 1.25rem;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  margin: 1.25rem 0;
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+
+.learn-highlight strong { color: var(--red); }
+
+.learn-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.learn-example {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.learn-example-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: .5rem;
+}
+
+.learn-example-text {
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.learn-antidote {
+  background: rgba(5,150,105,.06);
+  border: 1px solid rgba(5,150,105,.2);
+  border-radius: var(--r-md);
+  padding: 1.5rem;
+}
+
+.learn-antidote-title {
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--success);
+  margin-bottom: .75rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.learn-antidote-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.learn-antidote-list li {
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.learn-antidote-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: 700;
+}
+
+.learn-cta-bar {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid var(--paper-3);
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+}
+
+.learn-cta-hint {
+  font-size: .82rem;
+  color: var(--ink-4);
+}
+
+/* ═══════════════════════════════════════════════
+   SESGO RESULT / BIT RESULT
+═══════════════════════════════════════════════ */
+.result-shell {
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.result-hero {
+  background: var(--ink);
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(196,30,58,.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.result-hero-tag {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 100px;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 1.5rem;
+}
+
+.result-hero-name {
+  font-family: var(--ff-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: white;
+  margin-bottom: .5rem;
+  line-height: 1.1;
+}
+
+.result-hero-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,.6);
+}
+
+.result-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.result-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 2rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.result-card-title {
+  font-family: var(--ff-display);
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+
+/* Score bars */
+.score-bars { display: flex; flex-direction: column; gap: 14px; }
+
+.score-row {}
+
+.score-row-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: .82rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink-2);
+}
+
+.score-track {
+  height: 8px;
+  background: var(--paper-2);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* Bias list */
+.bias-list { display: flex; flex-direction: column; gap: 12px; }
+
+.bias-item {
+  padding: 1.1rem;
+  background: var(--paper);
+  border-radius: var(--r-sm);
+  border-left: 3px solid var(--red);
+}
+
+.bias-item-name {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .3rem;
+}
+
+.bias-item-desc {
+  font-size: .84rem;
+  color: var(--ink-3);
+  line-height: 1.55;
+}
+
+/* Reco list */
+.reco-list { display: flex; flex-direction: column; gap: 10px; }
+
+.reco-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.reco-icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--red);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+/* Responses grid (sesgo quiz results) */
+.responses-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.response-item {
+  background: var(--paper);
+  border-radius: var(--r-sm);
+  padding: 1rem;
+  border: 1px solid var(--paper-3);
+}
+
+.response-q {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-bottom: .4rem;
+}
+
+.response-a {
+  font-size: .9rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-bottom: .5rem;
+}
+
+.response-reveal {
+  font-size: .8rem;
+  color: var(--red);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════
+   ⑤  FINAL REPORT
+═══════════════════════════════════════════════ */
+#screen-report {
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.report-body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--paper-3);
+}
+
+.report-logo {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.5rem;
+}
+
+.report-title {
+  font-family: var(--ff-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: .75rem;
+}
+
+.report-name {
+  font-size: 1rem;
+  color: var(--ink-3);
+}
+
+.report-section {
+  margin-bottom: 3.5rem;
+}
+
+.report-section-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: .75rem;
+}
+
+.report-section-title {
+  font-family: var(--ff-display);
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+
+.report-profile-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 2rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-badge {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+}
+
+.profile-name {
+  font-family: var(--ff-display);
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+
+.profile-tagline {
+  font-size: .85rem;
+  color: var(--ink-4);
+}
+
+.profile-desc {
+  font-size: .92rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+.report-sesgo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.report-sesgo-card {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 1.4rem;
+  border: 1px solid var(--paper-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.report-sesgo-title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .25rem;
+}
+
+.report-sesgo-type {
+  font-size: .75rem;
+  color: var(--ink-4);
+  margin-bottom: .75rem;
+  font-weight: 500;
+}
+
+.report-sesgo-finding {
+  font-size: .85rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin-bottom: .75rem;
+  padding: .75rem;
+  background: var(--paper);
+  border-radius: var(--r-sm);
+}
+
+.report-sesgo-antidote {
+  font-size: .82rem;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.report-cta {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--paper-3);
+  margin-top: 2rem;
+}
+
+.report-cta-title {
+  font-family: var(--ff-display);
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-bottom: .75rem;
+}
+
+.report-cta-sub {
+  font-size: .9rem;
+  color: var(--ink-3);
+  margin-bottom: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════
+   LOADING OVERLAY
+═══════════════════════════════════════════════ */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  gap: 1.5rem;
+}
+
+.loader-ring {
+  width: 52px;
+  height: 52px;
+  border: 3px solid rgba(255,255,255,.1);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+.loader-text {
+  font-size: .95rem;
+  color: rgba(255,255,255,.5);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN BACKOFFICE
+═══════════════════════════════════════════════ */
+#screen-admin {
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.admin-nav {
+  background: var(--ink-2);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.admin-nav-title {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+}
+
+.admin-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  width: 100%;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 700px) { .admin-stats { grid-template-columns: repeat(2, 1fr); } }
+
+.admin-stat {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  border: 1px solid var(--paper-3);
+  text-align: center;
+}
+
+.admin-stat-num {
+  font-family: var(--ff-display);
+  font-size: 1.8rem;
+  color: var(--ink);
+  margin-bottom: .2rem;
+}
+
+.admin-stat-label {
+  font-size: .75rem;
+  color: var(--ink-4);
+  font-weight: 500;
+}
+
+.admin-table-wrap {
+  background: white;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--paper-3);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+}
+
+.admin-table th {
+  background: var(--paper-2);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  border-bottom: 1px solid var(--paper-3);
+}
+
+.admin-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--paper-2);
+  color: var(--ink-2);
+  vertical-align: middle;
+}
+
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: var(--paper); }
+
+.admin-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: .72rem;
+  font-weight: 600;
+}
+
+.admin-pill.PP { background: rgba(37,99,235,.1); color: #2563EB; }
+.admin-pill.FK { background: rgba(124,58,237,.1); color: #7C3AED; }
+.admin-pill.II { background: rgba(5,150,105,.1); color: #059669; }
+.admin-pill.AA { background: rgba(220,38,38,.1); color: #DC2626; }
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════ */
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn  { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes spin     { to { transform: rotate(360deg); } }
+@keyframes pulse    { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+
+/* ═══════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════ */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-1 { margin-top: .5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOADING OVERLAY
+══════════════════════════════════════════ -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <div class="loader-text" id="loadingText">Cargando…</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ① AUTH
+══════════════════════════════════════════ -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">I</div>
+      <div class="auth-logo-text">Ibero CDMX<br>Finanzas Conductuales</div>
+    </div>
+
+    <h1 class="auth-headline">
+      Conoce tu mente<br><em>de inversionista</em>
+    </h1>
+    <p class="auth-sub">Explora 14 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <div id="formLogin" class="auth-form">
+      <input type="email" class="auth-input" id="loginEmail" placeholder="Correo electrónico" autocomplete="email">
+      <input type="password" class="auth-input" id="loginPass" placeholder="Contraseña">
+      <button class="btn-primary" onclick="doLogin()">Entrar →</button>
+      <div id="loginMsg" class="auth-msg hidden"></div>
+    </div>
+
+    <div id="formRegister" class="auth-form hidden">
+      <input type="text" class="auth-input" id="regName" placeholder="Nombre completo" autocomplete="name">
+      <input type="email" class="auth-input" id="regEmail" placeholder="Correo electrónico" autocomplete="email">
+      <input type="password" class="auth-input" id="regPass" placeholder="Contraseña (mín. 6 caracteres)">
+      <button class="btn-primary" onclick="doRegister()">Crear cuenta →</button>
+      <div id="registerMsg" class="auth-msg hidden"></div>
+    </div>
+
+    <div style="margin-top:2rem;text-align:center;">
+      <button onclick="adminLogin()" style="background:none;border:none;font-size:.72rem;color:rgba(255,255,255,.2);cursor:pointer;font-family:var(--ff-body);">Admin</button>
+      <span style="color:rgba(255,255,255,.1);margin:0 8px">·</span>
+      <button onclick="devSkip()" style="background:none;border:none;font-size:.72rem;color:rgba(255,255,255,.15);cursor:pointer;font-family:var(--ff-body);">dev</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ② DASHBOARD
+══════════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <nav class="dash-nav">
+    <div class="dash-nav-brand">
+      <div class="nav-logo-mark">I</div>
+      <div class="nav-title">Finanzas Conductuales</div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-user" id="navUserName"></span>
+      <button id="devFillBtn" onclick="devFillAll()" style="display:none;background:none;border:none;font-size:.72rem;color:var(--ink-4);cursor:pointer;font-family:var(--ff-body);padding:4px 8px;border-radius:6px" title="Rellenar todo aleatoriamente">⚡ aleatorio</button>
+      <button class="btn-ghost" onclick="doLogout()">Salir</button>
+    </div>
+  </nav>
+
+  <div class="dash-body">
+    <div class="dash-hero">
+      <div class="dash-hero-greeting">Bienvenido/a</div>
+      <h2 class="dash-hero-title" id="dashGreeting">Tu jornada conductual</h2>
+      <p class="dash-hero-sub">Completa el test BIT primero, luego explora cada sesgo a tu ritmo. Al finalizar todos, obtendrás tu informe completo.</p>
+    </div>
+
+    <div class="dash-summary">
+      <div class="summary-card">
+        <div class="summary-num" id="sumCompleted">0</div>
+        <div class="summary-label">Sesgos completados</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">14</div>
+        <div class="summary-label">Total de módulos</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num" id="sumPct">0%</div>
+        <div class="summary-label">Progreso total</div>
+      </div>
+    </div>
+
+    <!-- BIT -->
+    <div class="section-header">
+      <div class="section-title">Paso 1 · Test BIT</div>
+      <div class="section-badge" id="bitBadge">Pendiente</div>
+    </div>
+
+    <div class="bit-card" id="bitCard" onclick="startBIT()">
+      <div class="bit-card-banner"></div>
+      <div class="bit-card-body">
+        <div class="bit-card-icon">🧠</div>
+        <div class="bit-card-info">
+          <div class="bit-card-title">Behavioral Investor Type (BIT)</div>
+          <div class="bit-card-desc">Descubre tu perfil como inversionista. Este diagnóstico identificará si eres un Passive Preserver, Friendly Follower, Independent Individualist o Active Accumulator.</div>
+          <div class="bit-card-meta">
+            <span>⏱ ~8 min</span>
+            <span>📋 20 preguntas</span>
+          </div>
+        </div>
+        <div class="bit-card-cta">
+          <button class="btn-cta" id="bitBtn">Comenzar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sesgos -->
+    <div class="section-header">
+      <div class="section-title">Paso 2 · Módulos de Sesgos</div>
+      <div class="section-badge pending" id="sesgosCompletedBadge">0 / 14</div>
+    </div>
+
+    <div class="sesgos-grid" id="sesgosGrid"></div>
+
+    <!-- Final report -->
+    <div id="reportCTASection" class="hidden" style="margin-top:2.5rem;">
+      <div class="bit-card" onclick="showReport()">
+        <div class="bit-card-banner" style="background:linear-gradient(90deg,#059669,#10B981)"></div>
+        <div class="bit-card-body">
+          <div class="bit-card-icon">📊</div>
+          <div class="bit-card-info">
+            <div class="bit-card-title">Ver mi Informe Final</div>
+            <div class="bit-card-desc">Tu perfil BIT contrastado con el resultado sesgo a sesgo. Mecanismos, puntos ciegos y recomendaciones personalizadas.</div>
+          </div>
+          <div class="bit-card-cta">
+            <button class="btn-cta" style="background:#059669">Ver informe →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ③ BIT QUIZ
+══════════════════════════════════════════ -->
+<div id="screen-bit" class="screen">
+  <div class="quiz-shell" id="bitQuizShell"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ④ SESGO MODULE
+══════════════════════════════════════════ -->
+<div id="screen-sesgo" class="screen">
+  <div id="sesgoContent"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ⑤ FINAL REPORT
+══════════════════════════════════════════ -->
+<div id="screen-report" class="screen">
+  <div id="reportContent"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ⑥ ADMIN
+══════════════════════════════════════════ -->
+<div id="screen-admin" class="screen">
+  <nav class="admin-nav">
+    <div class="admin-nav-title">Backoffice · Finanzas Conductuales</div>
+    <button class="btn-ghost" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2)" onclick="doLogout()">Salir</button>
+  </nav>
+  <div class="admin-body" id="adminBody"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ══════════════════════════════════════════════════
+const SUPA_URL = 'https://ncausitrddvtoyivolkj.supabase.co';
+const SUPA_KEY = 'sb_publishable_l6DUrgk9d6JFrCLTuxn16Q_lO5qdHY2';
+
+const db = {
+  async query(path, opts = {}) {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': opts.prefer || '',
+        ...opts.headers
+      },
+      method: opts.method || 'GET',
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
+    if (!res.ok && res.status !== 404) {
+      const err = await res.text();
+      console.error('Supabase error:', res.status, err);
+      return null;
+    }
+    if (res.status === 204 || res.status === 404) return null;
+    return res.json();
+  },
+
+  // Users
+  async getUser(email) {
+    const r = await this.query(`users?email=eq.${encodeURIComponent(email)}&limit=1`);
+    return r && r[0] ? r[0] : null;
+  },
+  async createUser(email, name, password) {
+    return this.query('users', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: { email, name, password }
+    });
+  },
+
+  // Progress
+  async getProgress(email) {
+    const r = await this.query(`progress?email=eq.${encodeURIComponent(email)}&limit=1`);
+    return r && r[0] ? r[0] : null;
+  },
+  async upsertProgress(email, data) {
+    return this.query('progress', {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates,return=representation',
+      body: { email, ...data, updated_at: new Date().toISOString() }
+    });
+  }
+};
+
+// ══════════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════════
+let currentUser = null; // { email, name, isAdmin }
+let userProgress = {};  // { bitDone, bitResult, sesgos: { id: { quizAnswers, done } } }
+
+// ══════════════════════════════════════════════════
+// CONTENT DATA
+// ══════════════════════════════════════════════════
+
+// ── BIT QUESTIONS (20) ──────────────────────────
+const BIT_QUESTIONS = [
+  { situation: "Recibes tu mesada del mes. Después de cubrir gastos fijos, te sobran $2,000 MXN.", options: [
+    { text: "Lo meto a algo que pueda dar buen rendimiento aunque sea arriesgado", type:"AA" },
+    { text: "Investigo en internet opciones como Cetesdirecto o fondos antes de decidir", type:"II" },
+    { text: "Lo guardo en mi cuenta y no lo toco, prefiero tenerlo seguro", type:"PP" },
+    { text: "Le pregunto a alguien que sepa de dinero qué me conviene", type:"FK" }
+  ]},
+  { situation: "Tu mejor amigo te propone ser socio en un negocio. Necesitas poner $5,000 MXN. Varios del grupo ya dijeron que sí.", options: [
+    { text: "Si varios ya entraron y confío en mi amigo, le entro también", type:"FK" },
+    { text: "Le digo que no, prefiero no arriesgar mi dinero en algo incierto", type:"PP" },
+    { text: "Le pido el plan de negocio, números, y decido con base en eso", type:"II" },
+    { text: "Me emociona la idea, le entro de una y quiero participar activamente", type:"AA" }
+  ]},
+  { situation: "En tu grupo de amigos todos hablan de una cripto que subió 40% en una semana. Varios ya compraron y te presionan para que entres.", options: [
+    { text: "Busco información por mi cuenta antes de meter un peso", type:"II" },
+    { text: "No me importa lo que digan, yo no le entro a cosas que no entiendo bien", type:"PP" },
+    { text: "Si tanta gente está ganando, algo de cierto debe haber, meto una cantidad moderada", type:"FK" },
+    { text: "Le meto con todo, este tipo de oportunidades no se presentan dos veces", type:"AA" }
+  ]},
+  { situation: "Es Hot Sale y ves una laptop con 35% de descuento. No la necesitas urgentemente, pero la oferta se acaba en 24 horas.", options: [
+    { text: "La compro, estas oportunidades no se repiten", type:"AA" },
+    { text: "Comparo specs, reviews, precios en otras tiendas y si conviene la compro", type:"II" },
+    { text: "No la compro, prefiero guardar ese dinero por si surge algo que sí necesite", type:"PP" },
+    { text: "Le pregunto a alguien que sepa de tecnología si realmente vale la pena", type:"FK" }
+  ]},
+  { situation: "Quieres irte de intercambio. Necesitas juntar $80,000 MXN en 10 meses. Hoy tienes $0 ahorrados.", options: [
+    { text: "Me armo un plan detallado: cuánto ahorrar al mes, en qué instrumento, con fechas", type:"II" },
+    { text: "Le pido ayuda a mis papás o busco una beca, solo no creo poder", type:"FK" },
+    { text: "Siento que es imposible, mejor busco opciones más baratas", type:"PP" },
+    { text: "Busco generar dinero extra de donde sea — freelance, venta de cosas", type:"AA" }
+  ]},
+  { situation: "El banco te ofrece tu primera tarjeta de crédito con un límite de $15,000 MXN.", options: [
+    { text: "La acepto de volada, tener crédito me abre puertas", type:"AA" },
+    { text: "Investigo la tasa, CAT, anualidad y comparo con otras opciones", type:"II" },
+    { text: "No la quiero, las tarjetas de crédito te endeudan", type:"PP" },
+    { text: "Le pregunto a alguien de mi familia si es buena idea", type:"FK" }
+  ]},
+  { situation: "Ves un anuncio en Instagram de un curso de trading con testimonios de gente que 'ya vive de esto'. Cuesta $3,000 MXN.", options: [
+    { text: "Si tanta gente lo recomienda, algo bueno debe tener, me inscribo", type:"FK" },
+    { text: "Busco reseñas independientes, reviso el temario y al instructor antes de pagar", type:"II" },
+    { text: "Me llama la atención pero $3,000 es mucho, mejor no arriesgo", type:"PP" },
+    { text: "Me inscribo ya, si no funciona al menos aprendí algo", type:"AA" }
+  ]},
+  { situation: "Recibes tu primer aguinaldo de unas prácticas profesionales: $8,000 MXN. Es dinero que no esperabas.", options: [
+    { text: "Lo meto todo a algo agresivo — acciones, cripto — total es dinero extra", type:"AA" },
+    { text: "Lo dejo en mi cuenta de ahorro, así sé que está seguro", type:"PP" },
+    { text: "Pregunto en casa o a un profe de finanzas qué sería lo más inteligente", type:"FK" },
+    { text: "Comparo rendimientos de Cetesdirecto, SOFIPOS y fondos", type:"II" }
+  ]},
+  { situation: "Estás por graduarte. Tienes una oferta de trabajo estable con buen sueldo, pero también una idea de negocio que te apasiona.", options: [
+    { text: "Analizo ambas opciones a fondo: proyecciones, costos, mercado, y decido con datos", type:"II" },
+    { text: "Le entro al negocio, la vida es una y no quiero arrepentirme de no intentarlo", type:"AA" },
+    { text: "Tomo el empleo seguro, necesito estabilidad", type:"PP" },
+    { text: "Hablo con gente que admiro profesionalmente y sigo el consejo que más se repita", type:"FK" }
+  ]},
+  { situation: "Un compañero de clase te muestra una app donde inviertes desde $100 MXN. Te enseña que lleva 15% de rendimiento en 3 meses.", options: [
+    { text: "Meto un poco a ver qué pasa, total es poco dinero", type:"AA" },
+    { text: "Descargo la app, reviso quién la regula, leo los términos, y luego decido", type:"II" },
+    { text: "Suena bien pero mejor espero, no me gusta meter dinero en cosas nuevas", type:"PP" },
+    { text: "Si a mi compañero le está funcionando, le entro con lo mismo que él", type:"FK" }
+  ]},
+  { situation: "Recibes una herencia inesperada de $200,000 MXN. No tienes deudas.", options: [
+    { text: "Lo divido en diferentes instrumentos de mayor riesgo para hacer crecer el capital", type:"AA" },
+    { text: "Construyo un portafolio diversificado basado en mi horizonte de inversión y perfil", type:"II" },
+    { text: "Lo meto a una cuenta de ahorro de alta seguridad, no quiero arriesgar nada", type:"PP" },
+    { text: "Le pido consejo a mi asesor bancario o a alguien de confianza", type:"FK" }
+  ]},
+  { situation: "El mercado de valores cayó 30% en 3 meses. Tus amigos dicen que es hora de comprar más.", options: [
+    { text: "Si todos los que conozco están comprando, quizás tienen razón", type:"FK" },
+    { text: "Analizo si la valuación actual representa una oportunidad real basado en fundamentos", type:"II" },
+    { text: "Este nivel de incertidumbre me paraliza, prefiero esperar a que se estabilice", type:"PP" },
+    { text: "Compro agresivamente, las caídas son oportunidades y hay que actuar rápido", type:"AA" }
+  ]},
+  { situation: "Debes elegir entre dos fondos de inversión. Fondo A: rendimiento promedio 8%, bajo riesgo. Fondo B: rendimiento promedio 15%, alto riesgo.", options: [
+    { text: "El Fondo B sin dudarlo, quiero maximizar mi rendimiento", type:"AA" },
+    { text: "Analizo la desviación estándar, el Sharpe ratio y el horizonte de cada opción", type:"II" },
+    { text: "El Fondo A definitivamente, no quiero perder lo que tengo", type:"PP" },
+    { text: "Le pregunto a mi banco o a alguien de confianza cuál recomienda", type:"FK" }
+  ]},
+  { situation: "Tienes una inversión en acciones que ha bajado 40% desde que la compraste.", options: [
+    { text: "La mantengo y compro más, estoy seguro de que se va a recuperar", type:"AA" },
+    { text: "Evalúo en frío si los fundamentos cambiaron y decido sin importar mi precio de entrada", type:"II" },
+    { text: "La mantengo pero no compro más, no soporto hacer realidad la pérdida vendiéndola", type:"PP" },
+    { text: "Le pregunto a un broker o analista qué hacer con esta posición", type:"FK" }
+  ]},
+  { situation: "Ves que una acción que te gusta está cara según su P/E ratio histórico, pero todos los analistas dicen que va a subir más.", options: [
+    { text: "Si todos los analistas están optimistas, compro sin esperar", type:"FK" },
+    { text: "Construyo mi propio modelo de valuación independiente antes de decidir", type:"II" },
+    { text: "Si está cara según los fundamentos, mejor no entro", type:"PP" },
+    { text: "Compro ahora, el momentum puede durar más tiempo del esperado", type:"AA" }
+  ]},
+  { situation: "Tienes que decidir cuánto de tu portafolio poner en activos internacionales vs. México.", options: [
+    { text: "La mayoría en México, conozco mejor el mercado local", type:"PP" },
+    { text: "Analizo correlaciones, diversificación y expectativas macroeconómicas de cada región", type:"II" },
+    { text: "50% internacional, hay que seguir la tendencia global que todos siguen", type:"FK" },
+    { text: "Mayoría internacional, quiero exposición agresiva a mercados de alto crecimiento", type:"AA" }
+  ]},
+  { situation: "Tu mejor decisión de inversión te generó 80% de rendimiento. ¿A qué atribuyes ese resultado?", options: [
+    { text: "Principalmente a mi análisis y timing — identifiqué bien la oportunidad", type:"AA" },
+    { text: "A mi proceso de investigación, aunque el mercado también ayudó", type:"II" },
+    { text: "Tuve suerte, el mercado cooperó más de lo esperado", type:"PP" },
+    { text: "Seguí el consejo de alguien que sabía más que yo", type:"FK" }
+  ]},
+  { situation: "Tu peor decisión de inversión te hizo perder 50% de tu capital. ¿Qué pasó?", options: [
+    { text: "El mercado se comportó de manera imposible de predecir — fue mala suerte", type:"AA" },
+    { text: "Cometí un error en mi análisis que debo identificar y corregir", type:"II" },
+    { text: "Me dejé llevar por el pánico en el peor momento", type:"PP" },
+    { text: "Seguí el consejo equivocado de alguien en quien confié", type:"FK" }
+  ]},
+  { situation: "Estás construyendo tu plan de retiro. Tienes 30 años por delante.", options: [
+    { text: "Portafolio 80% renta variable, 20% fija — hay tiempo para recuperar pérdidas", type:"AA" },
+    { text: "Portafolio optimizado basado en curva de riesgo decreciente con la edad", type:"II" },
+    { text: "Portafolio conservador desde el inicio, no quiero sorpresas", type:"PP" },
+    { text: "Copio la estrategia de algún fondo de pensiones reconocido", type:"FK" }
+  ]},
+  { situation: "Simulador de inversión en clase: te dan $100,000 virtuales para un mes. ¿Tu estrategia?", options: [
+    { text: "Diseño un portafolio diversificado con fundamentals, como si fuera dinero real", type:"II" },
+    { text: "Le meto la mayor parte a las acciones más volátiles, es simulado y quiero ganar", type:"AA" },
+    { text: "Copio la estrategia de algún fondo reconocido o de lo que el profesor sugirió", type:"FK" },
+    { text: "Pongo casi todo en instrumentos seguros como Cetes, no quiero ver números rojos", type:"PP" }
+  ]}
+];
+
+function bitLabel(code) { return code === 'FK' ? 'FF' : code; }
+
+const BIT_PROFILES = {
+  PP: {
+    name: "Passive Preserver",
+    nameEs: "Preservador Pasivo",
+    tagline: "Emocional · Pasivo — Tu prioridad es proteger lo que tienes",
+    color: "#2563EB",
+    description: "Tiendes a priorizar la seguridad y la preservación de tu patrimonio por encima del crecimiento. Tus decisiones financieras están fuertemente influenciadas por el miedo a perder. Eres cuidadoso y constante, pero corres el riesgo de que la inflación erosione tu capital al evitar el riesgo necesario.",
+    biases: [
+      { name: "Aversión a la pérdida", desc: "Sientes las pérdidas con más intensidad que las ganancias equivalentes. Perder $1,000 te duele más de lo que te alegra ganar $1,000." },
+      { name: "Sesgo de status quo", desc: "Prefieres mantener las cosas como están, incluso cuando cambiar podría beneficiarte. 'Mejor malo conocido que bueno por conocer.'" },
+      { name: "Efecto dotación", desc: "Sobrevaloras lo que ya posees simplemente porque es tuyo, lo que te hace resistente a vender o intercambiar." }
+    ],
+    recommendations: [
+      "Entiende que la inflación es un riesgo silencioso: no invertir también es arriesgar.",
+      "Empieza con instrumentos de bajo riesgo pero con rendimiento real (Cetesdirecto, SOFIPOS).",
+      "Establece reglas claras antes de invertir para que las emociones no dominen.",
+      "Diversifica gradualmente — no necesitas hacer cambios drásticos, pero sí moverte."
+    ]
+  },
+  FK: {
+    name: "Friendly Follower",
+    nameEs: "Seguidor Amistoso",
+    tagline: "Cognitivo · Pasivo — Buscas orientación en personas de confianza",
+    color: "#7C3AED",
+    description: "Tiendes a buscar la opinión de otros antes de tomar decisiones financieras. No es que no pienses — valoras la validación social y el consejo de figuras de autoridad. Tu riesgo está en confiar en voces que suenan seguras pero no necesariamente tienen razón.",
+    biases: [
+      { name: "Efecto manada (Herding)", desc: "Tiendes a seguir lo que hace la mayoría. Si todos compran, compras. La multitud no siempre tiene razón." },
+      { name: "Sesgo de autoridad", desc: "Das demasiado peso a la opinión de figuras que percibes como expertos, sin cuestionar si realmente lo son." },
+      { name: "Sesgo de disponibilidad", desc: "Das más importancia a la información más reciente y visible. Si el mercado subió esta semana, crees que seguirá subiendo." }
+    ],
+    recommendations: [
+      "Desarrolla tu propio criterio: antes de preguntar, escribe qué harías tú y por qué.",
+      "Cuestiona las fuentes: ¿esa persona realmente sabe, o solo suena segura?",
+      "Diversifica tus fuentes de información — no dependas de una sola persona.",
+      "Practica tomando decisiones pequeñas por tu cuenta para construir confianza."
+    ]
+  },
+  II: {
+    name: "Independent Individualist",
+    nameEs: "Individualista Independiente",
+    tagline: "Cognitivo · Activo — Analizas, investigas y decides por tu cuenta",
+    color: "#059669",
+    description: "Eres analítico y autosuficiente. Investigas antes de decidir y confías en tu propio juicio. Tu riesgo está en creer que siempre tienes la razón y que tu análisis es mejor de lo que es en realidad.",
+    biases: [
+      { name: "Exceso de confianza", desc: "Sobreestimas tu capacidad para predecir resultados. Tu análisis puede ser sólido pero no infalible." },
+      { name: "Sesgo de confirmación", desc: "Buscas información que confirme lo que ya crees e ignoras la que lo contradice. Tu 'investigación' puede ser selectiva." },
+      { name: "Ilusión de control", desc: "Crees que puedes controlar o influir en resultados que en realidad son inciertos o aleatorios." }
+    ],
+    recommendations: [
+      "Busca activamente opiniones contrarias a las tuyas — si solo lees lo que confirma tu tesis, no estás investigando.",
+      "Acepta que el mercado puede ser irracional más tiempo del que tú puedes ser solvente.",
+      "Lleva un registro de tus predicciones para medir tu precisión real, no la percibida.",
+      "Considera que pedir consejo no es debilidad — incluso los mejores analistas tienen puntos ciegos."
+    ]
+  },
+  AA: {
+    name: "Active Accumulator",
+    nameEs: "Acumulador Activo",
+    tagline: "Emocional · Activo — Actúas rápido y buscas crecimiento",
+    color: "#DC2626",
+    description: "Eres decidido, arriesgado y orientado a la acción. Te gusta tomar el control y no te da miedo apostar. Tu riesgo es confundir actividad con progreso — más operaciones no siempre significan mejores resultados.",
+    biases: [
+      { name: "Exceso de confianza", desc: "Tu seguridad al actuar puede hacerte subestimar los riesgos reales." },
+      { name: "Ilusión de control", desc: "Crees que al estar activo y tomar decisiones, controlas el resultado. El azar juega un papel mayor de lo que percibes." },
+      { name: "Sesgo de acción", desc: "Prefieres hacer algo — lo que sea — antes que no hacer nada. A veces la mejor decisión es esperar." }
+    ],
+    recommendations: [
+      "Implementa reglas de stop-loss y toma de ganancias ANTES de invertir, no en el momento.",
+      "No confundas actividad con productividad — a veces la mejor inversión es no hacer nada.",
+      "Antes de actuar por impulso, espera 24 horas. Si mañana sigue pareciendo buena idea, adelante.",
+      "Calcula cuánto te han costado tus decisiones impulsivas — el dato te puede sorprender."
+    ]
+  }
+};
+
+// ── SESGOS (14) ──────────────────────────────────
+const SESGOS = [
+  {
+    id: "contabilidad-mental",
+    name: "Contabilidad Mental",
+    nameEn: "Mental Accounting",
+    tipo: "cognitivo",
+    clase: 9,
+    definition: "Tratamos sumas de dinero de manera diferente dependiendo de su origen o uso previsto, ignorando que el dinero es fungible.",
+    description: "La Contabilidad Mental es un sesgo cognitivo descrito por Richard Thaler (Premio Nobel) en el que creamos 'cuentas mentales' separadas para el dinero según su fuente o destino previsto. Esto nos lleva a tomar decisiones irracionales porque ignoramos el principio de fungibilidad: un peso es un peso, sin importar de dónde venga.",
+    mechanism: "Nuestro Sistema 1 (Kahneman) segrega el dinero en compartimentos psicológicos: el dinero del trabajo es 'sagrado', el dinero de la lotería es 'para gastar', el dinero del bono es 'extra'. Esta segmentación viola la lógica económica básica.",
+    examples: [
+      { label: "Inversión", text: "Un inversor pierde $5,000 en cripto (cuenta de 'aventuras') pero guarda intocable su fondo de emergencia. Económicamente son el mismo dinero, pero los trata diferente." },
+      { label: "Vida personal", text: "Gastas sin culpa el dinero de un reembolso de impuestos en algo lujoso, aunque si lo pusieras en tu cuenta normal nunca lo gastarías así." },
+      { label: "Empresa", text: "Una empresa asigna presupuesto por departamento y no lo transfiere aunque otro área lo necesite más urgentemente." }
+    ],
+    trapQuestion: "Imagina dos situaciones: (A) Vas al cine, pierdes un billete de $200 en la calle. ¿Compras la entrada? / (B) Vas al cine, ya compraste la entrada por $200 y la perdiste. ¿Compras otra? — La mayoría dice Sí a A y No a B. Pero la pérdida económica es idéntica en ambos casos.",
+    antidotes: [
+      "Visualiza todo tu dinero como un único fondo — antes de gastar pregúntate: ¿lo gastaría si viniera de mi nómina?",
+      "Consolida mentalmente tus cuentas: evalúa el portafolio total, no cada inversión en aislado.",
+      "Regla del 'dinero extra': cualquier ingreso inesperado sigue las mismas reglas que tu ingreso normal.",
+      "Lleva un registro unificado de ingresos y gastos sin categorías emocionales."
+    ],
+    questions: [
+      { situation: "Vas al cine. La entrada cuesta $200. Al llegar, te das cuenta de que perdiste un billete de $200 en la calle. ¿Compras la entrada de todos modos?", options: [
+        { text: "Sí, son cosas separadas — perder el billete no tiene que ver con el cine", reveal: "Racional: correcto, el dinero es fungible" },
+        { text: "No, ya perdí $200, no puedo gastar $200 más", reveal: "Sesgo: tratas las pérdidas como vinculadas cuando no lo están" }
+      ]},
+      { situation: "Recibes un reembolso de impuestos de $3,000. ¿Cómo lo tratas?", options: [
+        { text: "Como dinero 'extra' — me doy un gusto que no me daría con mi sueldo", reveal: "Sesgo: el origen del dinero no cambia su valor" },
+        { text: "Igual que cualquier otro ingreso — va a donde más lo necesito", reveal: "Racional: correcto, la fungibilidad aplica independiente del origen" }
+      ]},
+      { situation: "Tu portafolio tiene: Cetes +5% y una acción -30%. El Cetes venció hoy. ¿Qué haces con esos fondos?", options: [
+        { text: "Los reinvierto en Cetes — no quiero mezclarlos con la acción que perdió", reveal: "Sesgo: tratas cada inversión como cuenta separada en lugar del portafolio total" },
+        { text: "Evalúo qué tiene mejor expectativa de retorno ajustado al riesgo hoy", reveal: "Racional: correcto, el portafolio se optimiza en conjunto" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Por qué la contabilidad mental es un sesgo y no un sistema racional?", options: ["Porque trata el dinero de forma diferente según su origen, cuando en realidad $1 siempre vale $1", "Porque hace que gastemos menos de lo que deberíamos", "Porque solo afecta a personas con poco conocimiento financiero"] },
+      { question: "Ganas $500 en el casino y los gastas en ropa que normalmente no comprarías. ¿Qué sesgo explica esto?", options: ["Contabilidad mental: creaste una cuenta de dinero ganado que sientes libre de gastar", "Exceso de confianza: crees que seguirás ganando", "Efecto manada: todos gastan cuando ganan en el casino"] },
+      { question: "¿Cuál es la implicación financiera más peligrosa de la contabilidad mental?", options: ["Que podemos tener deudas con intereses altos y ahorros simultáneamente sin ver la contradicción", "Que nos hace ahorrar demasiado en cuentas separadas", "Que nos impide invertir en más de un instrumento a la vez"] }
+    ]
+  },
+  {
+    id: "confirmation-bias",
+    name: "Sesgo de Confirmación",
+    nameEn: "Confirmation Bias",
+    tipo: "cognitivo",
+    clase: 10,
+    definition: "Buscamos, notamos y recordamos la información que confirma nuestras creencias previas, ignorando la que las contradice.",
+    description: "El Sesgo de Confirmación es uno de los sesgos más perniciosos en finanzas. Según el CFA Institute, pertenece a la subcategoría de Perseverancia de Creencias: nos negamos a actualizar nuestras opiniones aunque los datos apunten en otra dirección. No es malicia — es que el Sistema 1 construye historias coherentes, no precisas.",
+    mechanism: "Daniel Kahneman explica que el Sistema 1 opera bajo WYSIATI ('What You See Is All There Is'): construye la mejor historia posible con la información disponible, ignorando lo que falta. La disonancia cognitiva hace doloroso enfrentar evidencia contradictoria.",
+    examples: [
+      { label: "Inversión", text: "Estás convencido de que Tesla va a subir. Lees solo artículos bullish, ignoras los que cuestionan su valuación. Tu 'investigación' es en realidad validación." },
+      { label: "Decisión personal", text: "Decides que cierta ciudad es perfecta para vivir. Recuerdas las buenas noticias sobre ella y olvidas las malas." },
+      { label: "Empresa", text: "Un CEO comprometido con una estrategia ignora métricas que la cuestionan y enfatiza las que la apoyan en sus reportes trimestrales." }
+    ],
+    trapQuestion: "Estás convencido de que Bitcoin va a subir. ¿Qué buscas en Google? A) 'Razones por las que Bitcoin subirá' o B) 'Riesgos de invertir en Bitcoin hoy'. — La mayoría elige A, buscando validar, no cuestionar.",
+    antidotes: [
+      "Practica el 'empirismo negativo': intenta demostrar que tu idea es FALSA, no que es verdadera.",
+      "Steel-manning: construye el mejor argumento posible contra tu tesis antes de actuar.",
+      "Busca activamente artículos, analistas y datos que contradigan tu posición.",
+      "Antes de cualquier inversión, escribe explícitamente: ¿qué tendría que pasar para que esté equivocado?"
+    ],
+    questions: [
+      { situation: "Estás convencido de que una acción va a subir. ¿Qué buscas en Google?", options: [
+        { text: "Razones por las que la acción subirá", reveal: "Sesgo: estás buscando validar, no investigar" },
+        { text: "Riesgos y argumentos en contra de esa inversión", reveal: "Racional: primero busca la hipótesis nula — por qué podrías estar equivocado" }
+      ]},
+      { situation: "Un político que no te agrada hace una gran donación a caridad. ¿Tu primer pensamiento?", options: [
+        { text: "Seguro lo hace para evadir impuestos o limpiar su imagen", reveal: "Sesgo: interpretamos la misma evidencia diferente según nuestras creencias previas" },
+        { text: "Finalmente hizo algo bueno, independientemente de sus motivaciones", reveal: "Racional: separamos los hechos de nuestros prejuicios previos" }
+      ]},
+      { situation: "Llevas 6 meses invirtiendo en una empresa que no ha dado resultados. Encuentras un artículo que dice que el CEO es brillante.", options: [
+        { text: "Esto confirma que mi análisis fue correcto — hay que esperar más", reveal: "Sesgo: usas información nueva para reforzar una posición que quizás debería revisarse" },
+        { text: "Interesante, pero también busco artículos críticos del CEO antes de decidir", reveal: "Racional: el nuevo dato se evalúa junto a toda la evidencia disponible" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué hace exactamente el sesgo de confirmación?", options: ["Buscar, interpretar y recordar información que confirma lo que ya creemos, ignorando lo que lo contradice", "Confirmar decisiones pasadas sin importar si fueron correctas o no", "Seguir la opinión de la mayoría para confirmar que nuestra decisión es correcta"] },
+      { question: "Un inversor convencido de que una empresa es excelente lee solo análisis positivos. ¿Cuál es el riesgo concreto?", options: ["Perder señales de alerta reales porque activamente evita información negativa", "Sobreestimar el riesgo porque tiene demasiada información sobre la empresa", "Seguir el efecto manada al leer los mismos análisis que todos"] },
+      { question: "¿Cuál es el antídoto más efectivo contra el sesgo de confirmación?", options: ["Buscar activamente el mejor argumento en contra de tu propia tesis antes de decidir", "Leer más fuentes de información para tener una visión más completa", "Esperar a que otros tomen la decisión primero para validar tu análisis"] }
+    ]
+  },
+  {
+    id: "disponibilidad-representatividad",
+    name: "Disponibilidad y Representatividad",
+    nameEn: "Availability & Representativeness",
+    tipo: "cognitivo",
+    clase: 8,
+    definition: "Juzgamos probabilidades por qué tan fácil recordamos ejemplos (disponibilidad) o por a qué categoría se parece algo (representatividad).",
+    description: "Estas dos heurísticas son atajos mentales del Sistema 1. La Disponibilidad nos lleva a sobreestimar la frecuencia de eventos memorables o recientes. La Representatividad nos hace clasificar situaciones por estereotipos, ignorando probabilidades estadísticas reales.",
+    mechanism: "Cuando enfrentamos una pregunta difícil (¿cuál es la probabilidad de X?), el cerebro la sustituye por una más fácil: ¿qué tan fácil recuerdo ejemplos de X? o ¿a qué categoría se parece X? Estas sustituciones son rápidas pero sistemáticamente erróneas.",
+    examples: [
+      { label: "Disponibilidad", text: "Después de ver las noticias sobre un robo, crees que la criminalidad aumentó drásticamente, aunque estadísticamente bajó. Lo memorable distorsiona tu percepción de frecuencia." },
+      { label: "Representatividad", text: "Ves una empresa joven con fundador carismático y tecnología de moda — se parece a Apple en 1997. Inviertes sin revisar sus fundamentals. El parecido no es suficiente." },
+      { label: "Inversión", text: "Después de tres meses de mercado alcista, crees que el rally continuará (disponibilidad reciente). Después de un crash, crees que todo seguirá cayendo." }
+    ],
+    trapQuestion: "Linda tiene 31 años, es muy inteligente y activista social. ¿Qué es más probable? A) Cajera de banco. B) Cajera de banco y feminista. — La mayoría elige B, aunque matemáticamente A siempre es más probable que A+B.",
+    antidotes: [
+      "Antes de estimar una probabilidad, pregunta: ¿cuál es la tasa base estadística real?",
+      "Desconfía de tu primera impresión cuando algo 'se parece' a un patrón de éxito.",
+      "Los eventos dramáticos o recientes no son más probables — solo más memorables.",
+      "Busca datos duros antes de actuar sobre una intuición basada en lo que 'recuerdas'."
+    ],
+    questions: [
+      { situation: "¿Qué causa más muertes anuales en México?", options: [
+        { text: "Homicidios", reveal: "Sesgo de disponibilidad: los homicidios aparecen más en noticias, parecen más frecuentes" },
+        { text: "Diabetes y enfermedades crónicas", reveal: "Correcto: enfermedades crónicas causan 5-10x más muertes, pero son menos 'disponibles' en la memoria" }
+      ]},
+      { situation: "Linda tiene 31 años, es inteligente y fue activista. ¿Qué es más probable que sea hoy?", options: [
+        { text: "Cajera de banco y feminista activa", reveal: "Sesgo de representatividad (Falacia de Conjunción): dos eventos juntos nunca pueden ser más probables que uno solo" },
+        { text: "Cajera de banco", reveal: "Correcto: P(A) siempre es ≥ P(A y B). El estereotipo nos distrae de la lógica básica" }
+      ]},
+      { situation: "Una moneda justa cae cara 5 veces seguidas. ¿Qué esperas en el lanzamiento 6?", options: [
+        { text: "Cruz es más probable — ya es 'hora' de que salga", reveal: "Falacia del jugador: cada lanzamiento es independiente. El pasado no influye en el futuro" },
+        { text: "50/50 — cada lanzamiento es independiente del anterior", reveal: "Correcto: la moneda no tiene memoria. La representatividad nos hace ver patrones donde no existen" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué determina qué tan probable nos parece un evento según el sesgo de disponibilidad?", options: ["La facilidad con la que ejemplos de ese evento vienen a nuestra mente", "La frecuencia estadística real con la que ocurre ese evento", "La cantidad de información que tenemos sobre ese evento"] },
+      { question: "Después de ver noticias sobre accidentes aéreos, muchas personas prefieren manejar. ¿Qué explica esta decisión?", options: ["La imagen vívida del accidente hace que el vuelo parezca más peligroso de lo que estadísticamente es", "Manejar es objetivamente más seguro que volar en todos los contextos", "Las personas hacen un análisis racional del riesgo basado en las noticias"] },
+      { question: "¿Cuál es el impacto del sesgo de disponibilidad en decisiones de inversión?", options: ["Sobreponderar activos que estuvieron en las noticias recientemente, sin importar sus fundamentos", "Diversificar demasiado el portafolio por miedo a eventos poco probables", "Ignorar completamente los eventos recientes al tomar decisiones"] }
+    ]
+  },
+  {
+    id: "overconfidence",
+    name: "Exceso de Confianza",
+    nameEn: "Overconfidence Bias",
+    tipo: "emocional",
+    clase: 12,
+    definition: "Tenemos una fe injustificada en nuestro propio razonamiento, juicios y habilidades cognitivas.",
+    description: "Kahneman afirma que si tuviera una varita mágica para eliminar un solo sesgo, eliminaría el exceso de confianza, ya que amplifica casi todos los demás. Se manifiesta como Ilusión de Conocimiento (creer que más información da más precisión) e Ilusión de Control (creer que podemos influir en lo aleatorio).",
+    mechanism: "El Sistema 1 construye historias coherentes con la información disponible. Como la historia es coherente, la sentimos como verdadera y confiable. No nos detenemos a preguntar qué datos nos faltan — la confianza no viene de la evidencia, sino de la coherencia del relato.",
+    examples: [
+      { label: "Inversión", text: "Un estudio de Duke encontró que los CFOs de empresas dan rangos de confianza del 80% para el S&P500 que fallan el 67% de las veces. Prefieren parecer precisos aunque estén equivocados." },
+      { label: "Trading", text: "Los inversores individuales que operan más activamente obtienen menores rendimientos que los pasivos — la actividad excesiva es señal de exceso de confianza." },
+      { label: "Personal", text: "El 80% de las personas cree que sus habilidades para manejar están por encima del promedio. El 93% de estudiantes universitarios cree estar en el 50% superior de su clase." }
+    ],
+    trapQuestion: "En comparación con el promedio de tu grupo, ¿cómo calificarías tu capacidad para tomar decisiones financieras? A) Por encima del promedio. B) Promedio o por debajo. — En grupos educados, el 70-80% elige A, aunque estadísticamente es imposible.",
+    antidotes: [
+      "Lleva un diario de decisiones: registra tus predicciones y mide tu precisión real versus percibida.",
+      "Practica rangos de incertidumbre amplios: si el 90% de tus estimaciones están en el rango, el rango es correcto.",
+      "El test del 'Outside View': ¿cuál es la tasa base de éxito para situaciones similares a la tuya?",
+      "Busca activamente quién sabe más que tú sobre este tema — no como señal de debilidad, sino de inteligencia."
+    ],
+    questions: [
+      { situation: "Comparado con tu grupo, ¿cómo calificarías tu capacidad para tomar decisiones financieras racionales?", options: [
+        { text: "Por encima del promedio (top 50%)", reveal: "Sesgo: estadísticamente, la mitad del grupo está por debajo. Si casi todos eligen esto, algo no cuadra" },
+        { text: "Promedio o por debajo del promedio", reveal: "Racional: la humildad epistémica — saber lo que no sabes — es la base de buenas decisiones" }
+      ]},
+      { situation: "Llevas 3 años invirtiendo con buenos rendimientos. ¿A qué lo atribuyes?", options: [
+        { text: "Mi estrategia y análisis — tomé las decisiones correctas", reveal: "Posible sesgo de autoatribución: los mercados alcistas hacen que todos parezcan genios" },
+        { text: "Una mezcla de proceso sólido y condiciones favorables de mercado", reveal: "Racional: separar habilidad de suerte requiere un horizonte largo y análisis honesto" }
+      ]},
+      { situation: "El S&P500 está en 5,000. Tu estimación a 12 meses con 90% de confianza sería:", options: [
+        { text: "4,800 – 5,300 (rango preciso)", reveal: "Sesgo: los rangos estrechos fallan más del 60% de las veces en estudios de expertos" },
+        { text: "3,500 – 6,500 (rango amplio)", reveal: "Racional: un 90% de confianza real requiere un rango mucho más amplio en sistemas complejos" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Cuál es la diferencia entre exceso de confianza e ilusión de conocimiento?", options: ["La ilusión de conocimiento es creer que más información nos hace más precisos, aunque esa información sea irrelevante", "Son exactamente lo mismo: ambos describen sobreestimar las propias habilidades", "El exceso de confianza solo aplica a expertos; la ilusión de conocimiento a novatos"] },
+      { question: "Un trader revisa 20 indicadores antes de cada operación creyendo que por eso sus predicciones son más precisas. ¿Qué sesgo ilustra esto?", options: ["Ilusión de conocimiento: más datos no garantizan mejores predicciones si no añaden información real", "Sesgo de confirmación: busca indicadores que confirmen su decisión previa", "Efecto halo: los indicadores sofisticados le dan una imagen de experto"] },
+      { question: "¿Qué es el sesgo de autoatribución y cómo se relaciona con el exceso de confianza?", options: ["Atribuir los éxitos a la propia habilidad y los fracasos a factores externos, reforzando la confianza sin fundamento real", "Creer que nuestras habilidades son superiores a las del promedio en todas las áreas", "Confiar demasiado en las recomendaciones de otros sin analizarlas"] }
+    ]
+  },
+  {
+    id: "self-attribution",
+    name: "Auto-Atribución",
+    nameEn: "Self-Attribution Bias",
+    tipo: "emocional",
+    clase: 13,
+    definition: "Atribuimos nuestros éxitos a nuestra habilidad y nuestros fracasos a factores externos.",
+    description: "El Sesgo de Auto-Atribución es el 'combustible' del Exceso de Confianza. Juntos forman un ciclo peligroso: gano → fue mi habilidad → aprendo que soy bueno → pierdo → fue mala suerte → no aprendo nada. Este ciclo destruye nuestra capacidad de calibrar el riesgo real.",
+    mechanism: "El mecanismo es defensivo: el ego necesita proteger una autoimagen positiva. Atribuirse el mérito de los éxitos alimenta la autoestima; culpar al entorno de los fracasos protege de la autocrítica. El resultado es que nunca aprendemos de nuestros errores de manera sistemática.",
+    examples: [
+      { label: "Inversión", text: "Tu cartera subió 40% en 2021. Fue tu análisis brillante. En 2022 cayó 30%. Fue la Fed, el mercado, la guerra en Ucrania. El doble rasero impide aprendizaje real." },
+      { label: "Empresa", text: "Un CEO reporta ganancias récord: 'nuestra estrategia brillante.' Reporta pérdidas: 'condiciones macroeconómicas adversas sin precedentes.'" },
+      { label: "Personal", text: "Pasaste un examen: estudiaste bien. Reprobaste: el profesor fue injusto o las preguntas eran ambiguas." }
+    ],
+    trapQuestion: "Tu cartera subió +25% este año. ¿Cuál fue el factor principal? A) Mi estrategia y selección (habilidad). B) Estuve en el sector correcto en el momento justo (suerte). — La mayoría elige A. ¿Y si la cartera hubiera bajado -25%?",
+    antidotes: [
+      "Diario de decisiones: registra ANTES de invertir tu razonamiento. Al revisar, evalúa el proceso, no solo el resultado.",
+      "Separar proceso de resultado: ¿fue una buena decisión dado lo que sabías entonces, independientemente del resultado?",
+      "Post-mortem honesto: cuando una inversión sale mal, identifica exactamente qué error cometiste, no qué factor externo falló.",
+      "Comparte tus análisis con alguien crítico antes de actuar — la exposición reduce el autoengaño."
+    ],
+    questions: [
+      { situation: "Tu inversión principal subió 35% este año. ¿A qué lo atribuyes principalmente?", options: [
+        { text: "Mi análisis y timing — identifiqué bien la oportunidad", reveal: "Sesgo de autoatribución (Self-Enhancement): podría ser habilidad, pero ¿verificaste que no fue suerte de mercado?" },
+        { text: "Una combinación de análisis razonable y condiciones favorables", reveal: "Racional: distinguir habilidad de suerte requiere múltiples ciclos de mercado, no un año" }
+      ]},
+      { situation: "Tu inversión principal cayó 25% inesperadamente. ¿Cómo lo describes en tu análisis?", options: [
+        { text: "Riesgo sistémico / evento impredecible — fue externo a mi análisis", reveal: "Sesgo de autoprotección: ¿era realmente impredecible o ignoraste señales que no querías ver?" },
+        { text: "Error de análisis — necesito identificar qué no vi correctamente", reveal: "Racional: incluso si el shock fue externo, ¿el sizing del riesgo era correcto?" }
+      ]},
+      { situation: "Un colega duplicó su inversión en criptomonedas este año. ¿Qué piensas?", options: [
+        { text: "Es un inversor hábil que supo identificar la oportunidad", reveal: "Doble estándar: si fuera tu pérdida, ¿también sería habilidad? Aplicamos raseros distintos a éxitos ajenos y propios" },
+        { text: "Asumió riesgos altos y las condiciones lo favorecieron", reveal: "Racional: consistencia en el rasero — aplica el mismo estándar a ti y a los demás" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué es la aversión a la pérdida según Kahneman y Tversky?", options: ["Perder $100 duele aproximadamente el doble que el placer de ganar $100", "Preferir siempre las inversiones más seguras independientemente del retorno", "Evitar cualquier decisión que pueda resultar en pérdida"] },
+      { question: "Un inversor mantiene una acción que bajó 40% esperando recuperarse pero vende rápido las que suben. ¿Cómo se llama este patrón?", options: ["Efecto disposición: vender ganadoras pronto y mantener perdedoras demasiado tiempo", "Sesgo de confirmación: busca información que justifique mantener la acción", "Exceso de confianza: cree que puede predecir cuándo se recuperará"] },
+      { question: "¿Qué es la aversión miope a la pérdida?", options: ["Revisar el portafolio con tanta frecuencia que las pérdidas a corto plazo dominan las decisiones de largo plazo", "Negarse a invertir en activos que alguna vez tuvieron pérdidas históricas", "Preferir instrumentos de renta fija por encima de cualquier otro activo"] }
+    ]
+  },
+  {
+    id: "status-quo",
+    name: "Sesgo de Status Quo",
+    nameEn: "Status Quo Bias",
+    tipo: "emocional",
+    clase: 14,
+    definition: "Preferimos mantener las cosas como están, incluso cuando cambiar sería objetivamente mejor.",
+    description: "Descrito por Samuelson y Zeckhauser (1988), este sesgo surge del confort de lo conocido y del miedo al arrepentimiento. La inercia psicológica es poderosa: moverse del estado actual implica el riesgo de equivocarse activamente, mientras que quedarse quieto se percibe como 'no hacer nada malo'.",
+    mechanism: "El Sistema 1 evalúa opciones en relación a un punto de referencia neutral — el Status Quo. Dado que las pérdidas pesan el doble que las ganancias (Aversión a la Pérdida), cualquier cambio se percibe como potencialmente desventajoso. La pereza del Sistema 2 completa el cuadro.",
+    examples: [
+      { label: "Pensiones", text: "Cuando el plan de pensiones de una empresa cambia de opt-in a opt-out, la participación sube del 40% al 90%. El default lo es todo." },
+      { label: "Inversión", text: "Un inversor hereda una cartera de bonos de su padre. Aunque las acciones tendrían mejor rendimiento esperado, mantiene los bonos porque 'son lo que había'." },
+      { label: "Empresa", text: "Una empresa sigue usando el mismo proveedor de software durante 10 años, aunque hay opciones mejores y más baratas, simplemente porque 'siempre ha sido así'." }
+    ],
+    trapQuestion: "Recibes un bono de $100,000 en efectivo. ¿Lo inviertes en acciones o bonos? — Ahora: heredas $100,000 en bonos de tu tío. ¿Los cambias a acciones? La misma decisión económica, pero muchos más eligen no cambiar en el segundo caso.",
+    antidotes: [
+      "Pregunta activa: ¿si tuviera este dinero hoy en efectivo, tomaría esta misma posición?",
+      "Revisión periódica forzada: agenda cada trimestre una evaluación sin dar por sentado que 'todo sigue igual'.",
+      "Diseña buenas opciones por defecto desde el inicio — el status quo que diseñas importa.",
+      "Separar la decisión original de la revisión actual: ¿qué harías si empezaras de cero hoy?"
+    ],
+    questions: [
+      { situation: "Tu plan de inversión tiene 60% acciones / 40% bonos. El mercado cambió y ahora 70/30 es más adecuado para tu perfil. ¿Qué haces?", options: [
+        { text: "Mantengo el 60/40 — funcionó hasta ahora y cambiar implica transacciones y riesgo", reveal: "Sesgo de status quo: el costo de no cambiar puede ser mayor que el costo de cambiar" },
+        { text: "Rebalanzo al 70/30 — mi perfil y el mercado han cambiado", reveal: "Racional: las decisiones de portafolio deben reflejar el contexto actual, no la inercia" }
+      ]},
+      { situation: "Llevas 5 años con el mismo banco que cobra comisiones altas. Hay opciones que cobran 60% menos. ¿Qué haces?", options: [
+        { text: "Me quedo — el proceso de cambiar es complicado y mi banco ya me conoce", reveal: "Sesgo de status quo: el costo del cambio es real pero probablemente menor que el costo de las comisiones en 5 años" },
+        { text: "Calculo el ahorro proyectado y si supera el costo del cambio, me muevo", reveal: "Racional: tratar el cambio como cualquier otra decisión de costo-beneficio" }
+      ]},
+      { situation: "Tu empresa ofrece un plan de retiro con opción por defecto conservadora (bonos). Puedes cambiarlo a acciones para mejor rendimiento a largo plazo. ¿Qué haces?", options: [
+        { text: "Me quedo con el default — alguien que sabe más que yo lo diseñó así", reveal: "Sesgo de status quo + autoridad: el default fue elegido por conveniencia administrativa, no necesariamente por tu beneficio" },
+        { text: "Evalúo mi horizonte de tiempo y si tengo 20+ años, probablemente elijo más acciones", reveal: "Racional: las opciones por defecto no siempre son las óptimas — son las más fáciles de implementar" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Cuál es el mecanismo psicológico central del sesgo de status quo?", options: ["La inercia: preferir el estado actual porque cualquier cambio se percibe como una pérdida potencial", "La racionalidad: mantener lo que funciona es siempre la decisión más lógica", "El miedo al fracaso: evitar decisiones nuevas porque podrían salir mal"] },
+      { question: "Una empresa mantiene a un proveedor caro por años 'porque siempre hemos trabajado con ellos'. ¿Qué sesgo opera aquí?", options: ["Status quo: el costo de cambiar se sobreestima y el beneficio del cambio se subestima", "Efecto dotación: valoran al proveedor más porque es suyo", "Aversión al arrepentimiento: temen que el nuevo proveedor sea peor"] },
+      { question: "¿Por qué las opciones por defecto son tan poderosas en el diseño de políticas públicas?", options: ["Porque el sesgo de status quo hace que la mayoría no cambie la opción predeterminada, aunque pudiera beneficiarse", "Porque las personas racionalmente evalúan que las opciones por defecto son siempre las mejores", "Porque cambiar las opciones por defecto es técnicamente muy difícil para la mayoría"] }
+    ]
+  },
+  {
+    id: "autocontrol",
+    name: "Sesgo de Autocontrol",
+    nameEn: "Self-Control Bias",
+    tipo: "emocional",
+    clase: 15,
+    definition: "No actuamos en pro de nuestros objetivos a largo plazo por falta de autodisciplina y preferencia por la gratificación inmediata.",
+    description: "El Sesgo de Autocontrol (CFA) y el Descuento Hiperbólico (Thaler) describen el mismo fenómeno: somos incapaces de ejecutar hoy lo que en teoría queremos para el futuro. No es un problema de conocimiento — sabemos que debemos ahorrar. Es un problema de voluntad bajo presión.",
+    mechanism: "Dan Ariely distingue el 'yo en estado frío' (racional, planificador) del 'yo en estado caliente' (impulsivo, bajo presión). En estado frío, elegimos virtuosamente. En estado caliente, el Sistema 1 toma el control. La 'brecha de empatía' nos impide predecir cuánto diferirá nuestro yo caliente del yo frío.",
+    examples: [
+      { label: "Ahorro", text: "Sabes que debes ahorrar el 20% de tu sueldo. Cada mes 'este mes es la excepción' por alguna razón. Nunca ahorramos tanto como planeamos en frío." },
+      { label: "Inversión", text: "Planeas no revisar tu portafolio más de una vez al mes. Pero cuando el mercado cae, entras a la app cada hora y terminas vendiendo en el peor momento." },
+      { label: "Gasto", text: "Decides no gastar en ropa este mes. Pero en el mall, ves una oferta 'única' y el yo caliente gana." }
+    ],
+    trapQuestion: "¿Cuánto planeas ahorrar el próximo mes? Ahora: ¿cuánto ahorraste este mes? La diferencia entre estos dos números es tu 'brecha de autocontrol'.",
+    antidotes: [
+      "Automatiza el ahorro: transfiere automáticamente antes de que el dinero llegue a tu cuenta corriente.",
+      "Usa la herramienta de Thaler: 'Save More Tomorrow' — compromete hoy un % de tus futuros aumentos de sueldo.",
+      "Elimina la tentación del entorno: borra apps de trading si revisas en exceso; esconde tarjetas de crédito.",
+      "Contratos de compromiso (commitment devices): penalidades reales si no cumples tus metas."
+    ],
+    questions: [
+      { situation: "Recibes un bono de $10,000. Tienes una deuda de tarjeta al 20% de interés. ¿Qué haces?", options: [
+        { text: "Pago la deuda inmediatamente — es el movimiento matemáticamente óptimo", reveal: "Racional: eliminar deuda al 20% es un retorno garantizado del 20%, difícil de superar" },
+        { text: "Gasto la mitad en algo que quería y pago la mitad de la deuda", reveal: "Sesgo de autocontrol: el yo caliente interfiere con la decisión óptima del yo frío" }
+      ]},
+      { situation: "Llevas 4 horas en una reunión agotadora. Pasan snacks. ¿Qué eliges?", options: [
+        { text: "El chocolate/galletas — estoy agotado y lo necesito", reveal: "Sesgo de autocontrol + Ego Depletion: el Sistema 2 está agotado y el Sistema 1 toma el control" },
+        { text: "Frutos secos — aunque me cuesta, sigo mi plan de alimentación", reveal: "Autocontrol activo: el Sistema 2 ejercita la disciplina incluso bajo fatiga" }
+      ]},
+      { situation: "El mercado cayó 8% hoy. Tu portafolio bajó $15,000. ¿Qué haces?", options: [
+        { text: "Reviso la app cada hora y eventualmente vendo para 'detener las pérdidas'", reveal: "Sesgo de autocontrol: el malestar del yo caliente destruye el plan del yo frío" },
+        { text: "Recuerdo mi plan de largo plazo y no hago nada hasta la revisión programada", reveal: "Racional: la aversión miope a la pérdida destruye retornos — el plan existe precisamente para momentos así" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué es el descuento hiperbólico?", options: ["La tendencia a preferir recompensas pequeñas e inmediatas sobre recompensas mayores en el futuro", "Descuentos que parecen atractivos pero tienen costos ocultos a largo plazo", "La incapacidad de calcular correctamente el valor del dinero en el tiempo"] },
+      { question: "Sabes que deberías ahorrar $2,000 al mes pero cada mes lo pospones. ¿Qué explica este patrón?", options: ["Sesgo del presente: el yo futuro se siente lejano y abstracto; el placer de gastar hoy se siente concreto e inmediato", "Sesgo de status quo: prefieres mantener tus hábitos de gasto actuales", "Aversión a la pérdida: sientes que ahorrar es perder dinero disponible"] },
+      { question: "¿Por qué los compromisos previos (precommitment) son efectivos contra este sesgo?", options: ["Porque eliminan la decisión en el momento de tentación, cuando el Sistema 1 domina", "Porque aumentan la culpa cuando no cumplimos, lo que nos motiva más", "Porque hacen que el ahorro sea más visible y fácil de monitorear"] }
+    ]
+  },
+  {
+    id: "endowment-effect",
+    name: "Efecto de Dotación",
+    nameEn: "Endowment Effect",
+    tipo: "emocional",
+    clase: 16,
+    definition: "Valoramos más un activo simplemente porque lo poseemos.",
+    description: "Descrito por Kahneman y Thaler, el Efecto de Dotación viola la teoría económica clásica: el precio al que estarías dispuesto a vender algo (WTA) debería ser igual al que pagarías por comprarlo (WTP). En la práctica, WTA siempre supera WTP — somos dueños sentimentales de nuestros activos.",
+    mechanism: "Una vez que poseemos algo, dejarlo ir se siente como una pérdida. La aversión a la pérdida entra en juego: el dolor de perder la posesión supera el placer de ganar el dinero. Dan Ariely observó que empezamos a amar las cosas casi inmediatamente después de poseerlas, o incluso de imaginar que las poseemos.",
+    examples: [
+      { label: "Inversión", text: "Un inversor recibe acciones de su empresa como compensación. Aunque racionalmente sabe que está sobreexpuesto a un solo activo, no las vende porque 'son mías, las gané yo'." },
+      { label: "Inmuebles", text: "Los vendedores de casas siempre creen que su propiedad vale más de lo que dice el mercado. El apego emocional infla la valuación." },
+      { label: "Negociación", text: "En negociaciones, quien ya 'tiene' algo (un contrato, un derecho) pide más para cederlo de lo que la contraparte pagaría para adquirirlo, bloqueando acuerdos eficientes." }
+    ],
+    trapQuestion: "Ganaste en un sorteo una entrada VIP de $1,500 para tu evento soñado. Alguien te ofrece $1,500 en efectivo por ella. ¿La vendes? — La mayoría dice no. Pero antes de ganarla, no habrías pagado $1,500 por ella.",
+    antidotes: [
+      "Test del nuevo dinero: '¿Si tuviera este activo en efectivo hoy, compraría esta posición a este precio?'",
+      "Valoración desde fuera: pide a alguien sin vínculo emocional que evalúe el activo.",
+      "Separar la historia del activo de su valor de mercado actual.",
+      "Revisión periódica forzada: '¿Qué tan objetivamente estoy valorando esto porque lo poseo?'"
+    ],
+    questions: [
+      { situation: "Tienes acciones de tu empresa que recibiste como bono. Representan el 40% de tu portafolio. ¿Qué haces?", options: [
+        { text: "Las mantengo — son 'mis' acciones, las gané, confío en la empresa", reveal: "Efecto de dotación: la posesión y el origen crean apego que nubla la evaluación de concentración de riesgo" },
+        { text: "Evalúo si tener el 40% en una sola acción es prudente, independiente de su origen", reveal: "Racional: las acciones deben evaluarse como cualquier otra inversión, sin privilegio por su historia" }
+      ]},
+      { situation: "Compraste un auto hace 3 años. Quieres venderlo. El mercado lo valúa en $180,000. ¿A qué precio lo pones?", options: [
+        { text: "$220,000 o más — mi auto está en perfecto estado y vale más que el promedio", reveal: "Efecto de dotación: todos los dueños creen que su auto es 'especial' y está en mejor estado que el promedio" },
+        { text: "$180,000 o el precio de mercado — es lo que un comprador racional pagaría", reveal: "Racional: el mercado ya incorpora el 'perfecto estado' en su valuación promedio" }
+      ]},
+      { situation: "Ganaste en un sorteo una entrada a un concierto valorada en $2,000. Alguien te ofrece $2,000 en efectivo por ella. ¿La vendes?", options: [
+        { text: "No — ya es mía y la experiencia vale más que el dinero", reveal: "Efecto de dotación: si antes de ganarla no habrías pagado $2,000, ¿por qué ahora vale más?" },
+        { text: "Sí — si la entrada vale exactamente lo que me ofrecen, la decisión es neutra", reveal: "Racional: la propiedad no debería crear valor adicional si el precio es de mercado" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué revela el experimento de las tazas de café de Kahneman sobre el efecto dotación?", options: ["Las personas piden más para vender algo que lo que pagarían por comprarlo, solo porque ya lo poseen", "Las personas valoran más los objetos de uso cotidiano que los de inversión", "El precio de mercado no refleja el valor real que los consumidores le dan a los productos"] },
+      { question: "Un inversor se niega a vender acciones heredadas de su abuelo aunque tengan mal desempeño. ¿Cómo opera el efecto dotación aquí?", options: ["La propiedad y el vínculo emocional inflan el valor percibido más allá del valor financiero real", "El sesgo de status quo le impide tomar decisiones activas sobre el portafolio", "La aversión a la pérdida le hace temer cristalizar la pérdida vendiendo"] },
+      { question: "¿Cuál es la pregunta clave para neutralizar el efecto dotación en decisiones financieras?", options: ["'Si no tuviera este activo hoy, ¿lo compraría a este precio?' — si la respuesta es no, hay que replantearse tenerlo", "'¿Cuánto tiempo llevo con este activo?' — más tiempo justifica más apego", "'¿Qué harían otros inversores con este activo?' — la comparación social neutraliza el sesgo"] }
+    ]
+  },
+  {
+    id: "halo-effect",
+    name: "Efecto Halo",
+    nameEn: "Halo Effect",
+    tipo: "cognitivo",
+    clase: 17,
+    definition: "Generalizamos un atributo positivo (o negativo) de una persona o empresa hacia todas sus demás características.",
+    description: "El Efecto Halo es una obra maestra del Sistema 1: ante la ausencia de información completa, usamos la emoción que nos produce un rasgo visible para 'rellenar' los espacios en blanco. Si una empresa hace un producto que adoramos, asumimos que sus finanzas, gestión y perspectivas también son brillantes.",
+    mechanism: "Kahneman explica que el Sistema 1 detesta la ambigüedad y busca narrativas simples y coherentes. Ante la pregunta difícil '¿Es esta empresa una buena inversión?', sustituye por '¿Me gusta su producto?'. La respuesta emocional llena los vacíos cognitivos.",
+    examples: [
+      { label: "Inversión", text: "Apple hace productos que amas. Sus acciones siempre valen más de lo que los fundamentals justifican porque el halo del producto contamina la valuación. 'Buen producto = buena acción' es el Efecto Halo aplicado." },
+      { label: "Contratación", text: "Un candidato atractivo y bien vestido parece más competente en la entrevista, independientemente de sus respuestas técnicas. El físico irradia halo hacia la inteligencia." },
+      { label: "Empresa", text: "Un CEO carismático que habla bien en conferencias parece más capaz de ejecutar la estrategia, aunque los números digan otra cosa." }
+    ],
+    trapQuestion: "Tu teléfono favorito es de la marca X. Es rápido y hermoso. La empresa sale a bolsa. Tienes liquidez. ¿Qué haces? — Comprar porque el producto es genial es el Efecto Halo: producto ≠ acción.",
+    antidotes: [
+      "Separar explícitamente: '¿Me gusta el producto?' vs. '¿Es buena inversión la acción?'",
+      "Evalúa la empresa como si nunca hubieras usado su producto — ¿cómo ves los números?",
+      "Busca activamente debilidades en las empresas que más admiras.",
+      "El test del CEO feo: ¿evaluarías igual esta empresa si el CEO fuera antipático pero los números iguales?"
+    ],
+    questions: [
+      { situation: "Eres fanático de una marca de autos de lujo. Acaban de sacar al mercado sus acciones. ¿Qué haces?", options: [
+        { text: "Compro — si el producto es tan bueno, la empresa debe ser excelente", reveal: "Efecto Halo: la admiración por el producto contamina la evaluación financiera de la acción" },
+        { text: "Analizo el ratio deuda/capital, márgenes y perspectivas como si no conociera la marca", reveal: "Racional: separar la experiencia como consumidor del análisis como inversor" }
+      ]},
+      { situation: "Un gestor de fondos es guapo, articula perfectamente y tiene un MBA de Harvard. ¿Qué peso le das a su historial de retornos?", options: [
+        { text: "El MBA y la presencia me dan mucha confianza — reviso el historial de forma", reveal: "Efecto Halo: los atributos superficiales (apariencia, credenciales) contaminan la evaluación de lo que importa (resultados)" },
+        { text: "El historial de retornos ajustados al riesgo es lo que determina mi decisión", reveal: "Racional: los retornos auditados son el único indicador que predice futuro desempeño con algo de validez" }
+      ]},
+      { situation: "Una empresa que hizo un producto que usas y adoras reporta pérdidas por tercer trimestre consecutivo. ¿Cómo reaccionas?", options: [
+        { text: "Deben ser problemas temporales — es una empresa demasiado buena para fracasar", reveal: "Efecto Halo inverso: el amor por la marca crea resistencia a actualizar la visión ante evidencia negativa" },
+        { text: "Reviso si hay razones fundamentales para las pérdidas y actualizo mi tesis", reveal: "Racional: los datos actuales pesan más que la historia emocional con la empresa" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué es el efecto halo en el contexto de inversiones?", options: ["Generalizar atributos positivos de una empresa a todos sus demás aspectos, formando una imagen distorsionada", "El brillo que genera un activo en todo el portafolio cuando sube de valor", "La tendencia a invertir en empresas conocidas porque su marca genera confianza"] },
+      { question: "Una empresa tech muy admirada lanza un producto en un mercado que no conoce. Los analistas la califican positivamente por inercia. ¿Qué sesgo opera?", options: ["Efecto halo: el éxito pasado en tecnología contamina la evaluación de una aventura en un sector diferente", "Sesgo de disponibilidad: el éxito reciente de la empresa es fácil de recordar", "Representatividad: se parece a otras empresas que diversificaron exitosamente"] },
+      { question: "¿Cuál es el antídoto más directo contra el efecto halo al evaluar una inversión?", options: ["Analizar cada dimensión por separado — producto, finanzas, equipo — sin dejar que una contamine las demás", "Buscar opiniones de personas que no conozcan la empresa para evitar el sesgo", "Comparar la empresa con su competencia directa antes de evaluarla de forma aislada"] }
+    ]
+  },
+  {
+    id: "herding",
+    name: "Efecto Manada",
+    nameEn: "Herding Effect",
+    tipo: "cognitivo",
+    clase: 18,
+    definition: "Tendemos a seguir las decisiones de la multitud, abandonando nuestro análisis propio.",
+    description: "El Efecto Manada (Social Proof) es la tendencia a asumir que si muchos están haciendo algo, debe ser correcto. En inversiones, este sesgo alimenta burbujas (todos compran) y crashes (todos venden). Según el CFA, es un Error Cognitivo: el inversor falla en procesar información de manera independiente.",
+    mechanism: "El cerebro sustituye una pregunta difícil ('¿Cuáles son los fundamentals de este activo?') por una fácil ('¿Están todos los demás comprando?'). Bajo incertidumbre, el consenso actúa como proxy de la verdad. Robert Cialdini explica que este mecanismo se amplifica con dos condiciones: incertidumbre y similitud (seguimos más a quienes son como nosotros).",
+    examples: [
+      { label: "Burbuja", text: "En 2021, millones compraron NFTs porque 'todos los demás lo hacían'. Nadie quería perderse el rally. El resultado fue una caída del 97% en muchos activos." },
+      { label: "Institucional", text: "Los gestores profesionales también sufren herding: es más seguro equivocarse con la mayoría ('todos perdimos') que equivocarse solo ('¿por qué tomaste esa posición?')." },
+      { label: "FOMO", text: "Una acción sube 30% en una semana. El volumen de búsquedas en Google explota. Nuevos inversores entran justo cuando los informados están saliendo." }
+    ],
+    trapQuestion: "Eres parte de un comité. Todos aprueban un proyecto con números frágiles. ¿Cómo actúas? — En frío, el 90% dice que votaría en contra. En la sala, la presión del grupo cambia el voto.",
+    antidotes: [
+      "Antes de cualquier decisión, escribe tu análisis ANTES de conocer la posición de los demás.",
+      "El test del contrarian: ¿qué argumento haría el mejor inversores que va en dirección opuesta?",
+      "El consenso es información, no verdad. Pregunta: ¿qué saben los que están comprando que yo no sé?",
+      "Huye de las decisiones tomadas bajo urgencia y presión social — es precisamente cuando el herding ataca."
+    ],
+    questions: [
+      { situation: "Un activo que no conoces subió 80% este mes. Todos tus amigos ya invirtieron. ¿Qué haces?", options: [
+        { text: "Entro — si tanta gente está ganando, algo saben que yo no sé", reveal: "Efecto Manada: el consenso actúa como sustituto del análisis. Pero quienes entraron primero ya están saliendo" },
+        { text: "Investigo los fundamentals antes de moverme, independiente de lo que hagan mis amigos", reveal: "Racional: cuando todos hablan de una inversión, suele ser tarde para entrar" }
+      ]},
+      { situation: "En el comité de inversiones, 4 de 5 miembros aprueban un proyecto con proyecciones que te parecen optimistas. Eres el último en votar. ¿Qué haces?", options: [
+        { text: "Voto a favor — si cuatro personas más inteligentes que yo lo aprobaron, algo ven", reveal: "Herding institucional (Groupthink): los comités destruyen el valor de la información privada de cada miembro" },
+        { text: "Voto en contra y explico mis dudas — el valor de estar en el comité es precisamente votar de forma independiente", reveal: "Racional: la diversidad de opiniones en un comité es su principal activo. Ceder al consenso la elimina" }
+      ]},
+      { situation: "El mercado cayó 15% en dos semanas. Todos venden. Los medios hablan de 'colapso histórico'. ¿Qué haces con tu portafolio de largo plazo?", options: [
+        { text: "Vendo también para evitar pérdidas mayores — si todos salen, algo grave está pasando", reveal: "Herding a la baja: las crisis generan el peor momento para seguir a la multitud — es cuando los informados compran" },
+        { text: "Reviso si los fundamentals de mis posiciones cambiaron, no si el sentimiento del mercado cambió", reveal: "Racional: el precio y el valor divergen más en pánico. El herding vende cuando debería comprar" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Por qué el efecto manada se intensifica en condiciones de incertidumbre?", options: ["Porque bajo incertidumbre, el consenso actúa como sustituto del análisis — si todos lo hacen, debe ser correcto", "Porque en mercados volátiles la información individual pierde valor frente a la colectiva", "Porque la incertidumbre activa el Sistema 2 que busca validación social antes de decidir"] },
+      { question: "Los gestores profesionales de fondos también sufren efecto manada. ¿Por qué?", options: ["Porque equivocarse junto a todos es profesionalmente menos costoso que equivocarse solo con una posición contraria", "Porque tienen acceso a la misma información y naturalmente llegan a las mismas conclusiones", "Porque los reguladores les exigen mantener portafolios similares al índice de referencia"] },
+      { question: "¿Qué distingue al inversor que resiste el efecto manada del que cede?", options: ["Escribir y documentar su análisis antes de conocer la posición del mercado o de otros inversores", "Tener más experiencia en mercados y conocer más casos históricos de burbujas", "Invertir en activos menos seguidos por el mercado donde hay menos presión de grupo"] }
+    ]
+  },
+  {
+    id: "optimism-bias",
+    name: "Sesgo de Optimismo",
+    nameEn: "Optimism Bias",
+    tipo: "emocional",
+    clase: 19,
+    definition: "Creemos sistemáticamente que tenemos menos probabilidad de vivir eventos negativos y más de vivir positivos que el promedio estadístico.",
+    description: "El Sesgo de Optimismo es el 'gemelo' del Exceso de Confianza. Juntos explican por qué los inversores asumen más riesgo del que deberían, los emprendedores subestiman el fracaso y los gestores prometen rendimientos imposibles. Nuestro ego necesita creer que el futuro será brillante y que somos excepcionales.",
+    mechanism: "El Sistema 1 opera bajo WYSIATI: al planificar, se enfoca en el escenario ideal e ignora contingencias. La Falacia de Planificación (Kahneman) es su manifestación más clara: proyectos que siempre se entregan tarde y sobre presupuesto porque el plan asumió el mejor escenario.",
+    examples: [
+      { label: "Falacia de planificación", text: "El 90% de los proyectos de construcción de infraestructura llegan tarde y sobre presupuesto. El optimismo de los planificadores es sistemático, no accidental." },
+      { label: "Emprendimiento", text: "El 90% de los emprendedores cree estar en el 10% que sobrevivirá. Estadísticamente, el 90% de las startups fracasan en 5 años." },
+      { label: "Inversión", text: "Los inversores individuales estiman retornos promedios de 15-20% anual para sus portafolios, cuando el mercado históricamente da 8-10%." }
+    ],
+    trapQuestion: "Inicias un proyecto importante. ¿Defines el presupuesto y tiempo incluyendo un 30% de margen para imprevistos, o propones el escenario más optimista para 'demostrar rentabilidad'? — En frío, todos dicen que incluyen margen. En la práctica, casi nadie lo hace.",
+    antidotes: [
+      "Outside View (Visión Externa): ¿cuál es la tasa base de éxito para proyectos similares al tuyo?",
+      "Pre-mortem: imagina que tu plan falló — ¿cuáles fueron las 3 razones principales?",
+      "Planifica con el escenario pesimista como base, no el optimista.",
+      "Comparte tus planes con alguien que no tenga stake emocional para que identifique los puntos ciegos."
+    ],
+    questions: [
+      { situation: "Estás lanzando un negocio. ¿Cómo defines tu presupuesto y timeline inicial?", options: [
+        { text: "Propongo el escenario más rápido y barato — hay que mostrar rentabilidad atractiva", reveal: "Sesgo de optimismo / Falacia de Planificación: el 90% de proyectos llegan tarde y sobre presupuesto por exactamente esta razón" },
+        { text: "Añado 30-40% de tiempo y capital extra sobre mi estimación base", reveal: "Racional: la 'Visión Externa' muestra que los proyectos siempre cuestan más y tardan más de lo planeado" }
+      ]},
+      { situation: "¿Cuál crees que es la probabilidad de que tu próxima inversión te dé retornos por encima del mercado?", options: [
+        { text: "Alta (70%+) — tengo información y análisis que el mercado no incorporó", reveal: "Sesgo de optimismo: los mercados son competitivos. La mayoría de inversores activos no supera al índice consistentemente" },
+        { text: "Modesta (50% o menos) — los mercados son eficientes y la superioridad consistente es rara", reveal: "Racional: la humildad estadística es el punto de partida correcto. Superar al mercado es posible pero difícil" }
+      ]},
+      { situation: "Tu startup tiene 18 meses de capital. Planificas el próximo fundraising. ¿Cuánto tiempo antes empiezas?", options: [
+        { text: "3-4 meses antes — con mis métricas no debería tardar tanto en cerrar", reveal: "Sesgo de optimismo: fundraisings toman en promedio 6-9 meses. La mayoría de founders empieza tarde por exactamente esta razón" },
+        { text: "9-12 meses antes — el proceso siempre tarda más de lo esperado", reveal: "Racional: planificar desde el escenario pesimista da margen para el mundo real" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué es la Falacia de Planificación y quién la describió?", options: ["La tendencia sistemática a subestimar el tiempo, costo y riesgos de proyectos futuros, descrita por Kahneman", "El error de planificar con escenarios pesimistas que nunca se materializan, descrito por Thaler", "La dificultad de hacer planes a largo plazo cuando el futuro es muy incierto, descrita por Ariely"] },
+      { question: "El 90% de los conductores cree que maneja mejor que el promedio. ¿Qué ilustra esto?", options: ["Que sistemáticamente nos ubicamos por encima del promedio en habilidades, lo cual es estadísticamente imposible para la mayoría", "Que las personas mienten sobre sus habilidades para parecer mejores ante los demás", "Que el optimismo es una estrategia racional para mantener la motivación"] },
+      { question: "¿Qué es el 'outside view' (visión externa) y por qué combate el sesgo de optimismo?", options: ["Preguntar cuál es la tasa base de éxito para proyectos similares al tuyo, en lugar de enfocarte solo en tu caso particular", "Pedir la opinión de personas externas a tu equipo antes de tomar una decisión importante", "Analizar los datos históricos del mercado en lugar de proyecciones futuras"] }
+    ]
+  },
+  {
+    id: "authority-bias",
+    name: "Sesgo de Autoridad",
+    nameEn: "Authority Bias",
+    tipo: "cognitivo",
+    clase: 20,
+    definition: "Damos demasiado peso a la opinión de figuras que percibimos como expertos, sin cuestionar si realmente lo son.",
+    description: "El Sesgo de Autoridad (Cialdini) es uno de sus seis Principios de Influencia: estamos programados para obedecer a figuras de autoridad como atajo cognitivo. En finanzas, esto nos hace abandonar nuestro análisis ante cualquier figura con credenciales, título o confianza aparente.",
+    mechanism: "El cerebro está biológicamente diseñado para usar la autoridad como señal de fiabilidad — evolutivamente ahorró energía y tiempo. El Sistema 1 convierte credenciales (título, ropa, confianza) en permiso para no pensar. El problema: las credenciales no siempre predicen competencia, y los expertos tienen conflictos de interés.",
+    examples: [
+      { label: "Finanzas", text: "Madoff manejó el mayor fraude financiero de la historia ($65B) durante décadas. Los inversores nunca auditaron sus estrategias porque su autoridad como ex-presidente del NASDAQ era suficiente señal." },
+      { label: "Inversión", text: "Un Nobel de Economía publica un modelo. Los fondos lo adoptan sin cuestionar sus supuestos. LTCM quebró con dos nobeles en el equipo." },
+      { label: "Redes sociales", text: "Influencers financieros con millones de seguidores mueven mercados. La audiencia asume que quien tiene muchos seguidores sabe más." }
+    ],
+    trapQuestion: "Un célebre Nobel de Economía publica un modelo de inversión innovador. ¿Qué haces? A) Revisar el modelo con cautela buscando vulnerabilidades. B) Adoptarlo — su nivel garantiza resultados. — LTCM tenía dos Nobeles y quebró espectacularmente.",
+    antidotes: [
+      "Separa las credenciales del argumento: ¿el argumento se sostiene por sí solo, sin importar quién lo dice?",
+      "Pregunta siempre: ¿qué incentivos tiene esta persona para darme este consejo?",
+      "Busca la opinión de expertos en el otro lado — si solo escuchas un lado, estás bajo el sesgo.",
+      "La prueba del historial auditado: ¿cuál es el track record real de esta persona en situaciones similares?"
+    ],
+    questions: [
+      { situation: "Un famoso gestor de fondos con 30 años de experiencia recomienda una acción en televisión. ¿Qué haces?", options: [
+        { text: "Si él lo dice con tanto conviction, debe saber algo — compro", reveal: "Sesgo de autoridad: los expertos también se equivocan. ¿Tiene posición en esa acción? ¿Cuál es su track record reciente?" },
+        { text: "Uso su tesis como punto de partida para mi propio análisis, no como conclusión", reveal: "Racional: la autoridad puede señalar ideas interesantes, pero no reemplaza el análisis propio" }
+      ]},
+      { situation: "Tu asesor bancario — corbata, oficina lujosa, MBA — te recomienda un fondo de inversión con comisiones del 2.5% anual. ¿Qué haces?", options: [
+        { text: "Si me lo recomienda el banco, debe ser bueno — contrato", reveal: "Sesgo de autoridad: los asesores bancarios tienen incentivos para recomendar productos del banco. El 2.5% es altísimo" },
+        { text: "Pregunto qué comisión recibe por recomendarlo, comparo con ETFs y decido con información", reveal: "Racional: en finanzas, los incentivos del asesor frecuentemente divergen de tu interés" }
+      ]},
+      { situation: "Un influencer con 3M de seguidores, que parece muy exitoso, recomienda 'la criptomoneda del momento'. ¿Qué haces?", options: [
+        { text: "Si 3M de personas lo siguen, algo sabe — al menos meto un poco", reveal: "Sesgo de autoridad + herding: los seguidores son prueba social, no de competencia. Muchos influencers fueron pagados para promover" },
+        { text: "Investigo si tiene posición en ese activo, cuál es su historial real y los fundamentos del proyecto", reveal: "Racional: los incentivos y el historial son lo que importa, no los seguidores ni la apariencia de éxito" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué es la negligencia de la tasa base en el sesgo de representatividad?", options: ["Ignorar la probabilidad estadística real de que algo ocurra porque un caso concreto parece muy representativo", "No considerar los costos base al calcular el retorno de una inversión", "Subestimar la importancia de las tasas de interés en decisiones financieras"] },
+      { question: "Una startup tiene un fundador joven con hoodie y oficina en Silicon Valley. La describes como 'la próxima Apple'. ¿Qué sesgo opera?", options: ["Representatividad: el parecido superficial con el estereotipo de empresa exitosa sustituye el análisis real", "Efecto halo: los atributos positivos del fundador se transfieren a la empresa", "Sesgo de disponibilidad: recuerdas fácilmente casos de startups exitosas similares"] },
+      { question: "¿Qué hace el cerebro cuando aplica el sesgo de representatividad?", options: ["Clasifica algo nuevo según su parecido con un estereotipo, ignorando la probabilidad estadística real", "Representa mentalmente los escenarios futuros para tomar mejores decisiones", "Usa la experiencia pasada de forma sistemática y precisa para evaluar situaciones nuevas"] }
+    ]
+  },
+  {
+    id: "regret-aversion",
+    name: "Aversión al Arrepentimiento",
+    nameEn: "Regret Aversion",
+    tipo: "emocional",
+    clase: 11,
+    definition: "Evitamos tomar decisiones por miedo a que el resultado sea malo y nos haga sentir responsables de la pérdida.",
+    description: "La Aversión al Arrepentimiento es distinta de la Aversión al Riesgo clásica: no es miedo a perder dinero, es miedo a sentirte responsable de haberlo perdido. Esto lleva a dos comportamientos opuestos: parálisis (no hacer nada para no equivocarse activamente) y comportamiento de manada (si todos se equivocan, no es tu culpa).",
+    mechanism: "Kahneman explica que el arrepentimiento es una emoción contrafactual: el cerebro simula la realidad alternativa ('si tan solo hubiera…'). El dolor es más intenso cuando la pérdida resulta de una acción que tomamos que de una omisión. Esto crea una asimetría que paraliza la toma de decisiones.",
+    examples: [
+      { label: "Efecto disposición", text: "Un inversor mantiene una acción perdedora durante años porque venderla 'haría real' la pérdida y tendría que admitir que se equivocó. Vende las ganadoras para asegurar ganancias antes de que 'se vayan'." },
+      { label: "Manada", text: "Un gestor invierte en lo mismo que todos sus colegas. Si pierde, 'todos perdimos' — el arrepentimiento se diluye. Si hubiera tomado una posición contraria y perdido, habría sido culpa exclusivamente suya." },
+      { label: "Inacción", text: "Una persona con dinero en efectivo por un año que 'espera el momento correcto' para invertir. El miedo al arrepentimiento de entrar en el momento equivocado supera el costo de oportunidad de no estar invertido." }
+    ],
+    trapQuestion: "Fondo A perdió 10% manteniendo su estrategia estándar. Fondo B perdió 10% tras intentar una nueva estrategia. ¿A cuál gestor despides? — La mayoría despide al de B, aunque el resultado es idéntico. Castigamos más el error por acción que por omisión.",
+    antidotes: [
+      "Distinguir proceso de resultado: ¿fue una buena decisión dado lo que sabías, aunque el resultado fuera malo?",
+      "Re-enmarcar el inmovilismo: no decidir también es una decisión — y también puede generar arrepentimiento.",
+      "Regla del '10-10-10' (Suzy Welch): ¿cómo te sentirás sobre esta decisión en 10 minutos, 10 meses, 10 años?",
+      "Portafolio de 'arrepentimiento mínimo': diseña tu estrategia para que puedas vivir con el peor escenario posible."
+    ],
+    questions: [
+      { situation: "Fondo A perdió -10% manteniendo su estrategia conservadora de siempre. Fondo B perdió -10% tras cambiar a una estrategia nueva. ¿A quién despides?", options: [
+        { text: "Al gestor de Fondo B — intentó algo nuevo y falló", reveal: "Sesgo de omisión: castigamos más los errores por acción que por inacción, aunque el resultado sea idéntico" },
+        { text: "A ninguno / Son equivalentes — el resultado fue el mismo", reveal: "Racional: el resultado fue idéntico. Si Fondo B habría ganado con la nueva estrategia, habrías felicitado al gestor por la misma decisión" }
+      ]},
+      { situation: "Tienes $500,000 en efectivo esperando 'el momento correcto' para invertir. Llevas 14 meses esperando. ¿Qué haces?", options: [
+        { text: "Sigo esperando — si entro y el mercado cae, me voy a arrepentir de no haber esperado", reveal: "Aversión al arrepentimiento por acción: pero ¿cuánto costó de oportunidad ese año y medio en efectivo?" },
+        { text: "Entro de forma escalonada — el costo de oportunidad de esperar también genera arrepentimiento", reveal: "Racional: la inacción también genera arrepentimiento futuro. El dollar-cost averaging reduce el dolor de 'entrar en el tope'" }
+      ]},
+      { situation: "Necesitas liquidar una posición urgentemente. Tienes: Acción A (+20%) y Acción B (-25%). Ambas con igual potencial a futuro. ¿Cuál vendes?", options: [
+        { text: "Vendo la A (+20%) — aseguro la ganancia y no 'hago real' la pérdida en B", reveal: "Efecto disposición / Aversión al arrepentimiento: vender la ganadora y mantener la perdedora es el sesgo clásico de Shefrin & Statman" },
+        { text: "Evalúo cuál tiene mejor perspectiva a futuro y vendo la que menos me convence", reveal: "Racional: el precio de entrada es irrelevante para la decisión de hoy. Solo importa el potencial futuro" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Cuál es la diferencia entre un error de comisión y uno de omisión en la aversión al arrepentimiento?", options: ["El error de comisión es actuar y que salga mal; el de omisión es no actuar y perder una oportunidad — el primero duele más", "El error de comisión es no hacer nada; el de omisión es actuar sin suficiente información", "Ambos generan el mismo nivel de arrepentimiento según las investigaciones de Kahneman"] },
+      { question: "Un inversor no vende una posición perdedora porque 'si vendo y sube, no me lo voy a perdonar'. ¿Qué sesgo explica la parálisis?", options: ["Aversión al arrepentimiento: el miedo al arrepentimiento futuro pesa más que el análisis racional presente", "Efecto dotación: sobrevalora la posición porque ya la posee", "Sesgo de status quo: prefiere no tomar decisiones activas"] },
+      { question: "¿Cómo el comportamiento de manada puede ser una forma de gestionar el arrepentimiento?", options: ["Si perdemos dinero siguiendo a todos, el arrepentimiento es menor porque todos perdieron — equivocarse solo duele más", "Seguir a la manada reduce el arrepentimiento porque la decisión colectiva siempre es más precisa", "El comportamiento de manada elimina el arrepentimiento porque distribuye la responsabilidad legalmente"] }
+    ]
+  },
+  {
+    id: "escalation-commitment",
+    name: "Escalada de Compromiso",
+    nameEn: "Escalation of Commitment / Sunk Cost Fallacy",
+    tipo: "dual",
+    clase: 21,
+    definition: "Continuamos invirtiendo en un proyecto o posición porque ya invertimos en él, no porque tenga potencial futuro.",
+    description: "La Falacia del Costo Hundido es una combinación de Error Cognitivo (Contabilidad Mental, Encuadre Estrecho) y Sesgo Emocional (Aversión a la Pérdida, Aversión al Arrepentimiento). Es el sesgo que mantiene proyectos fallidos vivos, carteras llenas de posiciones perdedoras y personas en relaciones que ya no funcionan.",
+    mechanism: "Kahneman explica que nos negamos a 'cerrar la cuenta mental' con saldo negativo. La aversión a la pérdida hace que invertir más parezca la única manera de 'recuperar'. La responsabilidad personal amplifica el efecto: cuanto más fuimos los creadores de la decisión original, más difícil es abandonarla.",
+    examples: [
+      { label: "Empresarial (Concorde)", text: "Los gobiernos de Francia y Reino Unido siguieron financiando el Concorde durante años después de saber que era económicamente inviable. No podían admitir el error." },
+      { label: "Inversión", text: "Una acción que compraste a $100 está en $30. La sigues manteniendo y comprando más, no porque creas en la empresa, sino porque 'no puedes vender a ese precio'." },
+      { label: "Personal", text: "Llevas 2 años en un posgrado que no te gusta y no es relevante para tu carrera. Sigues porque 'ya invertí mucho tiempo y dinero'." }
+    ],
+    trapQuestion: "Eres consultor externo. Un cliente lleva años financiando un proyecto que ya no tiene demanda. ¿Qué recomiendas? — En frío, el 90% dice 'cancelar'. Pero cuando es TU proyecto, con TU dinero, la respuesta cambia.",
+    antidotes: [
+      "Test del Nuevo CEO: '¿Si yo llegara hoy sin historia con este proyecto, continuaría o lo cancelaría?'",
+      "Reformular la pregunta: '¿Cuánto invertiría HOY en esto si empezara de cero?'",
+      "Stop-loss predefinidos: antes de invertir, define cuándo y bajo qué condiciones saldrías.",
+      "Re-etiquetar el fracaso: la pérdida ya ocurrió — la pregunta es solo qué hacer hacia adelante."
+    ],
+    questions: [
+      { situation: "Compraste acciones de una empresa a $100. Hoy valen $40. Llevas 8 meses esperando que se recupere. ¿Qué preguntas te haces?", options: [
+        { text: "¿Cómo puedo recuperar los $60 que perdí?", reveal: "Escalada de compromiso: los $60 ya se perdieron. La pregunta correcta es sobre el futuro, no el pasado" },
+        { text: "¿Si tuviera $40 en efectivo hoy, compraría esta acción a $40?", reveal: "Racional: este es el Test del Nuevo CEO — la decisión debe basarse en el futuro, no en recuperar el pasado" }
+      ]},
+      { situation: "Tu startup lleva 18 meses sin tracción. Ya gastaste $800K. Los clientes no adoptan el producto. Tienes $200K en caja. ¿Qué haces?", options: [
+        { text: "Inyecto los $200K restantes — no puedo darme por vencido después de tanto sacrificio", reveal: "Escalada de compromiso: los $800K ya no se pueden recuperar. La pregunta es si los $200K tienen mejor retorno en este proyecto o en otro" },
+        { text: "Evalúo si hay evidencia nueva que justifique continuar, o si es momento de un pivot o cierre", reveal: "Racional: la decisión se hace con los datos actuales, no con el peso emocional del pasado" }
+      ]},
+      { situation: "Llevas 3 años en un proyecto laboral que te tiene infeliz. Tu lógica para quedarte es 'ya invertí mucho aquí'. ¿Es un buen argumento?", options: [
+        { text: "Sí — es válido considerar todo lo que construí antes de renunciar", reveal: "Escalada de compromiso: lo que ya invertiste no cambia lo que ganarás o perderás hacia adelante. La decisión se hace desde hoy" },
+        { text: "No — lo que ya invertí no recuperaré. La pregunta es qué quiero construir a partir de hoy", reveal: "Racional: el tiempo pasado no se puede recuperar. Solo el tiempo futuro está en juego" }
+      ]}
+    ]
+,
+    fixationQuestions: [
+      { question: "¿Qué distingue la escalada de compromiso de simplemente ser perseverante?", options: ["La escalada ignora nueva evidencia negativa y continúa por lo ya invertido; la perseverancia responde a fundamentos reales", "La escalada solo ocurre en grandes inversiones; la perseverancia aplica a decisiones cotidianas", "La perseverancia es siempre racional; la escalada siempre es irracional sin excepción"] },
+      { question: "Un CEO lleva 3 años defendiendo una división que pierde dinero. Los datos empeoran cada trimestre. ¿Qué sesgos combinados explican su comportamiento?", options: ["Escalada de compromiso + aversión a la pérdida + ilusión de control: no puede admitir el fracaso y cree que puede revertirlo", "Exceso de confianza + efecto manada: confía en que el mercado eventualmente validará su estrategia", "Sesgo de confirmación + representatividad: interpreta los datos negativos como casos excepcionales"] },
+      { question: "¿Qué es la 'táctica del nuevo CEO' como antídoto a la escalada?", options: ["Preguntarse: 'Si llegara hoy sin historia en este proyecto, ¿tomaría esta misma decisión?' — juzgar sin equipaje emocional", "Contratar un consultor externo que no tenga vínculos con el proyecto para que evalúe objetivamente", "Establecer desde el inicio criterios claros de éxito y fracaso que no puedan modificarse después"] }
+    ]
+  },
+  {
+    id: "anclaje",
+    name: "Anclaje y Ajuste",
+    nameEn: "Anchoring & Adjustment",
+    tipo: "cognitivo",
+    clase: 5,
+    definition: "Dependemos excesivamente de un valor inicial (el 'ancla') para hacer estimaciones, ajustando insuficientemente desde ese punto.",
+    description: "El sesgo de Anclaje, descrito por Kahneman y Tversky, muestra que cualquier número que veamos primero actúa como punto de referencia que contamina todas las estimaciones posteriores. Dan Ariely lo llama 'Coherencia Arbitraria': el primer precio que vemos se convierte en el estándar mental, incluso si fue completamente aleatorio.",
+    mechanism: "El Sistema 1 es insuficientemente crítico con el ancla inicial. El ajuste desde el ancla siempre es insuficiente porque nos detenemos en el primer valor 'plausible'. No importa si el ancla es relevante o ridícula — su efecto persiste.",
+    examples: [
+      { label: "Negociación", text: "En una negociación salarial, quien pone el primer número sobre la mesa ancla toda la discusión. El que responde siempre ajusta desde ese punto, no desde su valor real." },
+      { label: "Inversión", text: "Una acción que compraste a $200 y ahora vale $80. Tu ancla es $200 y percibes $80 como 'barata', aunque $80 pueda ser todavía cara según los fundamentals actuales." },
+      { label: "Precios", text: "En un restaurante, el vino más caro del menú existe para hacer que el segundo más caro parezca razonable — el precio alto ancla la percepción de valor." }
+    ],
+    trapQuestion: "¿Cuánta gente hay en Turquía? Ahora: primero dime, ¿hay más o menos de 10 millones? — Después de pensar en 10M, tu respuesta será diferente que si te hubiera dicho 100M primero. El número arbitrario te ancló.",
+    antidotes: [
+      "Define tu estimación ANTES de ver cualquier precio o número de referencia.",
+      "Pregúntate: '¿Sería mi estimación la misma si nunca hubiera visto ese número?'",
+      "Usa múltiples metodologías de valuación independientes antes de comparar.",
+      "En negociaciones: si el otro ancla primero, señala explícitamente que el ancla es arbitraria antes de contra-proponer."
+    ],
+    questions: [
+      { situation: "Una acción que compraste a $150 ahora cotiza a $60. El analista dice que el precio justo es $55. ¿Cómo percibes $60?", options: [
+        { text: "Está barata — está muy por debajo de los $150 que pagué", reveal: "Anclaje: tu precio de compra ($150) contamina tu percepción del valor actual. $60 puede ser caro si el valor es $55" },
+        { text: "Evalúo si $60 es barata o cara basándome en el análisis actual, no en lo que pagué", reveal: "Racional: el precio de compra es históricamente irrelevante para la decisión de hoy" }
+      ]},
+      { situation: "Vas a negociar tu sueldo. ¿Cuál es tu estrategia?", options: [
+        { text: "Espero a que el empleador proponga primero — no quiero quedar mal pidiendo mucho", reveal: "Error: quien ancla primero tiene ventaja. El primero que menciona un número establece el punto de referencia para toda la negociación" },
+        { text: "Propongo primero un número alto pero razonable — quiero anclar yo la conversación", reveal: "Racional: anclar primero con un número ambicioso pero creíble sesga el acuerdo final hacia tu favor" }
+      ]},
+      { situation: "Ves un reloj de $5,000 en el aparador de una tienda de lujo. Entras a preguntar por un reloj que buscabas. Te ofrecen uno a $1,200. ¿Cómo lo percibes?", options: [
+        { text: "Parece razonable — es mucho menos que el de $5,000 de la vitrina", reveal: "Anclaje por diseño: las tiendas de lujo ponen artículos caros en la vitrina precisamente para anclar tu percepción de valor" },
+        { text: "Evalúo $1,200 como si no hubiera visto el reloj de $5,000 — ¿es ese precio justo para lo que quiero?", reveal: "Racional: el ancla fue colocada intencionalmente para contaminar tu evaluación" }
+      ]}
+    ],
+    fixationQuestions: [
+      { question: "¿Qué es el 'ancla' en el sesgo de anclaje?", options: ["El primer dato que recibimos y que influye desproporcionadamente en nuestra estimación", "El precio final que pagamos por un producto", "La decisión más racional en una negociación"] },
+      { question: "Un vendedor anuncia precio original $10,000 con 50% de descuento. ¿Cuál es el efecto del anclaje?", options: ["El descuento nos hace creer que $5,000 es una ganga, aunque no sepamos si ese era el precio justo", "El precio de $5,000 es objetivamente barato porque bajó", "Solo hay anclaje si el comprador conocía el precio original antes"] },
+      { question: "Según Dan Ariely, ¿qué es la 'coherencia arbitraria'?", options: ["Los precios iniciales aleatorios se vuelven el estándar mental con el que comparamos todo lo demás", "Las personas siempre negocian de forma coherente aunque los precios sean arbitrarios", "El cerebro ignora los precios iniciales y decide solo con información nueva"] }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('formLogin').classList.toggle('hidden', tab!=='login');
+  document.getElementById('formRegister').classList.toggle('hidden', tab!=='register');
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  const msg   = document.getElementById('loginMsg');
+  if (!email || !pass) { showMsg(msg, 'err', 'Completa todos los campos'); return; }
+
+  showLoading('Verificando credenciales…');
+  const u = await db.getUser(email);
+  if (!u || u.password !== btoa(pass)) {
+    hideLoading();
+    showMsg(msg, 'err', 'Correo o contraseña incorrectos');
+    return;
+  }
+  currentUser = { email, name: u.name, isAdmin: u.is_admin || false };
+  await loadUserProgress();
+  hideLoading();
+  if (currentUser.isAdmin) { showScreen('admin'); renderAdmin(); }
+  else { showScreen('dashboard'); renderDashboard(); }
+}
+
+async function doRegister() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('regPass').value;
+  const msg   = document.getElementById('registerMsg');
+  if (!name || !email || !pass) { showMsg(msg, 'err', 'Completa todos los campos'); return; }
+  if (pass.length < 6) { showMsg(msg, 'err', 'Contraseña mínimo 6 caracteres'); return; }
+
+  showLoading('Creando cuenta…');
+  const existing = await db.getUser(email);
+  if (existing) { hideLoading(); showMsg(msg, 'err', 'Este correo ya está registrado'); return; }
+
+  const created = await db.createUser(email, name, btoa(pass));
+  if (!created) { hideLoading(); showMsg(msg, 'err', 'Error al crear cuenta. Intenta de nuevo.'); return; }
+
+  currentUser = { email, name, isAdmin: false };
+  userProgress = { bitDone: false, bitResult: null, sesgos: {} };
+  await saveProgress();
+  hideLoading();
+  showScreen('dashboard');
+  renderDashboard();
+}
+
+function adminLogin() {
+  const p = prompt('Contraseña admin:');
+  if (p === 'ibero2026') {
+    currentUser = { email: 'admin@ibero.mx', name: 'Admin', isAdmin: true };
+    showScreen('admin');
+    renderAdmin();
+  }
+}
+
+function devSkip() {
+  currentUser = { email: 'dev@ibero.mx', name: 'Dev Preview', isDev: true };
+  userProgress = { bitDone: false, bitResult: null, sesgos: {} };
+  showScreen('dashboard');
+  renderDashboard();
+  document.getElementById('devFillBtn').style.display = 'inline-block';
+}
+
+async function devFillAll() {
+  showLoading('Simulando respuestas…');
+
+  // BIT aleatorio
+  const bitAnss = BIT_QUESTIONS.map(q => Math.floor(Math.random() * q.options.length));
+  const scores = { PP:0, FK:0, II:0, AA:0 };
+  bitAnss.forEach((ans, qi) => { scores[BIT_QUESTIONS[qi].options[ans].type]++; });
+  const types = Object.keys(scores).sort((a,b) => scores[b]-scores[a]);
+  userProgress.bitDone = true;
+  userProgress.bitResult = { primary: types[0], secondary: types[1], scores };
+  userProgress.bitAnswers = bitAnss;
+
+  // Sesgos aleatorios
+  if (!userProgress.sesgos) userProgress.sesgos = {};
+  SESGOS.forEach(s => {
+    const answers = s.questions.map(q => Math.floor(Math.random() * q.options.length));
+    const fixAnswers = (s.fixationQuestions || []).map(() => Math.floor(Math.random() * 3));
+    const fixScore = fixAnswers.filter(a => a === 0).length;
+    userProgress.sesgos[s.id] = {
+      done: true,
+      answers,
+      fixationAnswers: fixAnswers,
+      fixationScore: fixScore,
+      intensidad: answers.filter((a,i) => !s.questions[i].options[a].reveal.toLowerCase().startsWith('racional')).length / answers.length,
+      completedAt: new Date().toISOString()
+    };
+  });
+
+  await saveProgress();
+  hideLoading();
+  renderDashboard();
+}
+
+function doLogout() {
+  currentUser = null;
+  userProgress = {};
+  showScreen('auth');
+}
+
+// ══════════════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════════════
+async function loadUserProgress() {
+  const row = await db.getProgress(currentUser.email);
+  if (row) {
+    userProgress = {
+      bitDone:   row.bit_done   || false,
+      bitResult: row.bit_result || null,
+      bitAnswers: row.bit_answers || null,
+      sesgos:    row.sesgos     || {}
+    };
+  } else {
+    userProgress = { bitDone: false, bitResult: null, sesgos: {} };
+  }
+}
+
+async function saveProgress() {
+  await db.upsertProgress(currentUser.email, {
+    bit_done:    userProgress.bitDone,
+    bit_result:  userProgress.bitResult,
+    bit_answers: userProgress.bitAnswers || null,
+    sesgos:      userProgress.sesgos
+  });
+}
+
+// ══════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════
+function renderDashboard() {
+  document.getElementById('navUserName').textContent = currentUser.name;
+  document.getElementById('dashGreeting').textContent = `Hola, ${currentUser.name.split(' ')[0]} 👋`;
+
+  const completed = Object.values(userProgress.sesgos || {}).filter(s => s.done).length;
+  document.getElementById('sumCompleted').textContent = completed;
+  document.getElementById('sumPct').textContent = Math.round((completed / SESGOS.length) * 100) + '%';
+  document.getElementById('sesgosCompletedBadge').textContent = `${completed} / ${SESGOS.length}`;
+
+  // BIT card
+  if (userProgress.bitDone) {
+    const p = userProgress.bitResult;
+    document.getElementById('bitBadge').textContent = '✓ Completado';
+    document.getElementById('bitBadge').className = 'section-badge done';
+    document.getElementById('bitBtn').textContent = 'Ver resultado';
+    document.getElementById('bitCard').onclick = () => showBITResult();
+  }
+
+  // Sesgos grid
+  const grid = document.getElementById('sesgosGrid');
+  const locked = !userProgress.bitDone;
+  grid.innerHTML = SESGOS.map((s, i) => {
+    const done = userProgress.sesgos[s.id]?.done;
+    const tipoDot = `<span class="tipo-dot ${s.tipo}"></span>`;
+    const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
+    const cls = done ? 'done' : (locked ? 'locked' : 'active');
+    const displayName = done ? s.name : `Módulo ${i+1}`;
+    const displayTipo = done
+      ? `${tipoDot}${tipoLabel} · Clase ${s.clase}`
+      : `<span style="color:var(--ink-4);font-style:italic">Completa el módulo para revelar</span>`;
+    return `<div class="sesgo-card ${cls}" onclick="${locked ? '' : `startSesgo('${s.id}')`}">
+      <div class="sesgo-num">${i+1}</div>
+      <div class="sesgo-info">
+        <div class="sesgo-name">${displayName}</div>
+        <div class="sesgo-tipo">${displayTipo}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Report CTA
+  if (completed === SESGOS.length && userProgress.bitDone) {
+    document.getElementById('reportCTASection').classList.remove('hidden');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// BIT QUIZ
+// ══════════════════════════════════════════════════
+let bitAnswers = [];
+let bitCurrentQ = 0;
+
+function startBIT() {
+  if (userProgress.bitDone) { showBITResult(); return; }
+  bitAnswers = new Array(BIT_QUESTIONS.length).fill(null);
+  bitCurrentQ = 0;
+  showScreen('bit');
+  renderBITQuestion();
+}
+
+function renderBITQuestion() {
+  const q = BIT_QUESTIONS[bitCurrentQ];
+  const total = BIT_QUESTIONS.length;
+  const pct = (bitCurrentQ / total) * 100;
+
+  document.getElementById('bitQuizShell').innerHTML = `
+    <div class="quiz-topbar">
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="quiz-topbar-inner">
+        <div class="quiz-label">Test BIT · Perfil de Inversionista</div>
+        <div class="quiz-counter">${bitCurrentQ + 1} / ${total}</div>
+        <button class="btn-exit" onclick="if(confirm('¿Salir? Tu progreso se perderá.')) { showScreen('dashboard'); renderDashboard(); }">✕ Salir</button>
+      </div>
+    </div>
+    <div class="quiz-main">
+      <div class="quiz-question-card">
+        <div class="q-situation">${q.situation}</div>
+        <div class="q-options">
+          ${q.options.map((o, i) => `
+            <button class="q-option ${bitAnswers[bitCurrentQ] === i ? 'selected' : ''}"
+                    onclick="selectBITAnswer(${i})">
+              <span class="q-letter">${['A','B','C','D'][i]}</span>
+              <span>${o.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn-nav-back" onclick="bitCurrentQ > 0 && (bitCurrentQ--, renderBITQuestion())" ${bitCurrentQ === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="btn-nav-next" id="bitNextBtn" onclick="advanceBIT()" ${bitAnswers[bitCurrentQ] === null ? 'disabled' : ''}>
+        ${bitCurrentQ === total - 1 ? 'Ver mi resultado →' : 'Siguiente →'}
+      </button>
+    </div>
+  `;
+}
+
+function selectBITAnswer(i) {
+  bitAnswers[bitCurrentQ] = i;
+  renderBITQuestion();
+}
+
+async function advanceBIT() {
+  if (bitCurrentQ < BIT_QUESTIONS.length - 1) {
+    bitCurrentQ++;
+    renderBITQuestion();
+  } else {
+    showLoading('Calculando tu perfil BIT…');
+    await new Promise(r => setTimeout(r, 1200));
+    const result = calculateBIT();
+    userProgress.bitDone = true;
+    userProgress.bitResult = result;
+    userProgress.bitAnswers = bitAnswers;
+    await saveProgress();
+    hideLoading();
+    showBITResult();
+  }
+}
+
+function calculateBIT() {
+  const scores = { PP:0, FK:0, II:0, AA:0 };
+  bitAnswers.forEach((ans, qi) => {
+    if (ans !== null) scores[BIT_QUESTIONS[qi].options[ans].type]++;
+  });
+  const types = Object.keys(scores);
+  types.sort((a,b) => scores[b] - scores[a]);
+  return { primary: types[0], secondary: types[1], scores };
+}
+
+function showBITResult() {
+  const result = userProgress.bitResult;
+  const profile = BIT_PROFILES[result.primary];
+  const secondary = BIT_PROFILES[result.secondary];
+  const total = BIT_QUESTIONS.length;
+
+  showScreen('sesgo');
+  document.getElementById('sesgoContent').innerHTML = `
+    <div class="result-shell" style="display:flex">
+      <div class="result-hero">
+        <div class="result-hero-tag">Tu resultado BIT</div>
+        <div class="result-hero-name" style="color:${profile.color}">${profile.name}</div>
+        <div class="result-hero-sub">${profile.tagline}</div>
+      </div>
+      <div class="result-body">
+        <div class="result-card">
+          <div class="result-card-title">Puntuaciones por tipo</div>
+          <div class="score-bars">
+            ${Object.entries(result.scores).map(([type, score]) => `
+              <div class="score-row">
+                <div class="score-row-header">
+                  <span>${BIT_PROFILES[type].name} (${bitLabel(type)})</span>
+                  <span>${score} / ${total}</span>
+                </div>
+                <div class="score-track">
+                  <div class="score-fill" style="width:${(score/total)*100}%;background:${BIT_PROFILES[type].color}"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-title">Tu perfil principal</div>
+          <div class="profile-header">
+            <div class="profile-badge" style="background:${profile.color}">${bitLabel(result.primary)}</div>
+            <div>
+              <div class="profile-name">${profile.name}</div>
+              <div class="profile-tagline">${profile.tagline}</div>
+            </div>
+          </div>
+          <div class="profile-desc">${profile.description}</div>
+          <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${secondary.name} (${bitLabel(result.secondary)})</strong></div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-title">Sesgos predominantes en tu perfil</div>
+          <div class="bias-list">
+            ${profile.biases.map(b => `
+              <div class="bias-item">
+                <div class="bias-item-name">${b.name}</div>
+                <div class="bias-item-desc">${b.desc}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-title">Recomendaciones para tu perfil</div>
+          <div class="reco-list">
+            ${profile.recommendations.map((r, i) => `
+              <div class="reco-item">
+                <div class="reco-icon">${i+1}</div>
+                <div>${r}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="text-align:center;padding:1rem 0;">
+          <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1rem;">Tu perfil BIT quedó guardado. Ahora explora cada sesgo en el dashboard.</p>
+          <button class="btn-cta" onclick="showScreen('dashboard'); renderDashboard()">Ir al Dashboard →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════
+// SESGO MODULE
+// ══════════════════════════════════════════════════
+let currentSesgo = null;
+let sesgoAnswers = [];
+let sesgoPhase = 'quiz'; // 'quiz' | 'learn' | 'fixation' | 'result'
+let sesgoCurrentQ = 0;
+let fixationAnswers = [];
+let fixationCurrentQ = 0;
+
+function startSesgo(id) {
+  currentSesgo = SESGOS.find(s => s.id === id);
+  sesgoAnswers = new Array(currentSesgo.questions.length).fill(null);
+  fixationAnswers = new Array(3).fill(null);
+  sesgoCurrentQ = 0;
+  fixationCurrentQ = 0;
+  sesgoPhase = 'quiz';
+  showScreen('sesgo');
+  renderSesgoQuiz();
+}
+
+function renderSesgoQuiz() {
+  const q = currentSesgo.questions[sesgoCurrentQ];
+  const total = currentSesgo.questions.length;
+  const pct = (sesgoCurrentQ / total) * 100;
+
+  document.getElementById('sesgoContent').innerHTML = `
+    <div class="quiz-shell">
+      <div class="quiz-topbar">
+        <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+        <div class="quiz-topbar-inner">
+          <div class="quiz-label">¿Cómo decides tú? · ${sesgoCurrentQ+1} de ${total}</div>
+          <div class="quiz-counter"></div>
+          <button class="btn-exit" onclick="if(confirm('¿Salir?')) { showScreen('dashboard'); renderDashboard(); }">✕</button>
+        </div>
+      </div>
+      <div class="quiz-main">
+        <div class="quiz-question-card">
+          <div class="q-situation">${q.situation}</div>
+          <div class="q-options">
+            ${q.options.map((o, i) => `
+              <button class="q-option ${sesgoAnswers[sesgoCurrentQ] === i ? 'selected' : ''}"
+                      onclick="selectSesgoAnswer(${i})">
+                <span class="q-letter">${['A','B'][i]}</span>
+                <span>${o.text}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="quiz-footer">
+        <button class="btn-nav-back" onclick="sesgoCurrentQ > 0 && (sesgoCurrentQ--, renderSesgoQuiz())" ${sesgoCurrentQ===0?'disabled':''}>← Anterior</button>
+        <button class="btn-nav-next" onclick="advanceSesgoQuiz()" ${sesgoAnswers[sesgoCurrentQ]===null?'disabled':''}>
+          ${sesgoCurrentQ === total-1 ? 'Continuar →' : 'Siguiente →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectSesgoAnswer(i) {
+  sesgoAnswers[sesgoCurrentQ] = i;
+  renderSesgoQuiz();
+}
+
+function advanceSesgoQuiz() {
+  if (sesgoCurrentQ < currentSesgo.questions.length - 1) {
+    sesgoCurrentQ++;
+    renderSesgoQuiz();
+  } else {
+    sesgoPhase = 'learn';
+    renderSesgoLearn();
+  }
+}
+
+function renderSesgoLearn() {
+  const s = currentSesgo;
+  const tipoClass = s.tipo;
+  const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Error Cognitivo + Sesgo Emocional';
+
+  document.getElementById('sesgoContent').innerHTML = `
+    <div class="learn-shell">
+      <div class="learn-topbar">
+        <div class="learn-breadcrumb">Finanzas Conductuales · <strong>${s.name}</strong></div>
+        <button class="btn-exit" style="color:rgba(255,255,255,.5)" onclick="if(confirm('¿Salir?')) { showScreen('dashboard'); renderDashboard(); }">✕</button>
+      </div>
+
+      <div class="learn-body">
+        <div class="learn-hero">
+          <div class="learn-tag ${tipoClass}">${tipoLabel}</div>
+          <h1 class="learn-title">${s.name}</h1>
+          <p class="learn-subtitle">${s.definition}</p>
+        </div>
+
+        <div class="learn-section">
+          <div class="learn-section-title">¿Qué es?</div>
+          <div class="learn-prose"><p>${s.description}</p></div>
+        </div>
+
+        <div class="learn-section">
+          <div class="learn-section-title">¿Cómo funciona?</div>
+          <div class="learn-prose"><p>${s.mechanism}</p></div>
+          <div class="learn-highlight">
+            <strong>La trampa del cuestionario:</strong> ${s.trapQuestion}
+          </div>
+        </div>
+
+        <div class="learn-section">
+          <div class="learn-section-title">Ejemplos concretos</div>
+          <div class="learn-examples">
+            ${s.examples.map(e => `
+              <div class="learn-example">
+                <div class="learn-example-label">${e.label}</div>
+                <div class="learn-example-text">${e.text}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="learn-section">
+          <div class="learn-antidote">
+            <div class="learn-antidote-title">🛡 Antídotos — ¿Cómo mitigarlo?</div>
+            <ul class="learn-antidote-list">
+              ${s.antidotes.map(a => `<li>${a}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div style="height:80px"></div>
+      </div>
+
+      <div class="learn-cta-bar">
+        <div class="learn-cta-hint">Ya respondiste el cuestionario · Pon a prueba lo que aprendiste</div>
+        <button class="btn-cta" onclick="renderSesgoFixation()">Preguntas de verificación →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSesgoFixation() {
+  const s = currentSesgo;
+  const fq = s.fixationQuestions;
+  const q = fq[fixationCurrentQ];
+  const total = fq.length;
+  const pct = (fixationCurrentQ / total) * 100;
+
+  document.getElementById('sesgoContent').innerHTML = `
+    <div class="quiz-shell">
+      <div class="quiz-topbar">
+        <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+        <div class="quiz-topbar-inner">
+          <div class="quiz-label">Verificación · ${fixationCurrentQ+1} de ${total}</div>
+          <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${s.name}</div>
+          <button class="btn-exit" onclick="if(confirm('¿Salir?')) { showScreen('dashboard'); renderDashboard(); }">✕</button>
+        </div>
+      </div>
+      <div class="quiz-main">
+        <div class="quiz-question-card">
+          <div class="q-situation" style="font-size:1.1rem">${q.question}</div>
+          <div class="q-options">
+            ${q.options.map((o, i) => `
+              <button class="q-option ${fixationAnswers[fixationCurrentQ] === i ? 'selected' : ''}"
+                      onclick="selectFixationAnswer(${i})">
+                <span class="q-letter">${['A','B','C'][i]}</span>
+                <span>${o}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="quiz-footer">
+        <button class="btn-nav-back" onclick="fixationCurrentQ > 0 && (fixationCurrentQ--, renderSesgoFixation())" ${fixationCurrentQ===0?'disabled':''}>← Anterior</button>
+        <button class="btn-nav-next" onclick="advanceFixation()" ${fixationAnswers[fixationCurrentQ]===null?'disabled':''}>
+          ${fixationCurrentQ === total-1 ? 'Ver mis resultados →' : 'Siguiente →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectFixationAnswer(i) {
+  fixationAnswers[fixationCurrentQ] = i;
+  renderSesgoFixation();
+}
+
+function advanceFixation() {
+  if (fixationCurrentQ < currentSesgo.fixationQuestions.length - 1) {
+    fixationCurrentQ++;
+    renderSesgoFixation();
+  } else {
+    renderSesgoResult();
+  }
+}
+
+async function renderSesgoResult() {
+  const s = currentSesgo;
+
+  // Score de fixación
+  const fixScore = fixationAnswers.reduce((acc, ans) => acc + (ans === 0 ? 1 : 0), 0);
+  const fixTotal = s.fixationQuestions.length;
+
+  // Calcular intensidad del sesgo en los escenarios de diagnóstico
+  // La opción "racional" siempre contiene "Racional" en el reveal
+  const sesgadasCount = sesgoAnswers.filter((ans, i) => {
+    if (ans === null) return false;
+    const reveal = s.questions[i]?.options[ans]?.reveal || '';
+    return !reveal.toLowerCase().startsWith('racional');
+  }).length;
+  const totalScenarios = s.questions.length;
+  const intensidad = totalScenarios > 0 ? sesgadasCount / totalScenarios : 0;
+
+  const intensidadLabel = intensidad === 0
+    ? 'No detectado'
+    : intensidad <= 0.34
+    ? 'Tendencia leve'
+    : intensidad <= 0.67
+    ? 'Tendencia moderada'
+    : 'Sesgo dominante';
+
+  const intensidadDesc = intensidad === 0
+    ? 'En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.'
+    : intensidad <= 0.34
+    ? 'Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.'
+    : intensidad <= 0.67
+    ? 'Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.'
+    : 'Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.';
+
+  const intensidadColor = intensidad === 0 ? '#059669'
+    : intensidad <= 0.34 ? '#D97706'
+    : intensidad <= 0.67 ? '#D97706'
+    : '#DC2626';
+
+  const intensidadBg = intensidad === 0 ? 'rgba(5,150,105,.07)'
+    : intensidad <= 0.67 ? 'rgba(217,119,6,.07)'
+    : 'rgba(220,38,38,.07)';
+
+  // Save progress
+  if (!userProgress.sesgos) userProgress.sesgos = {};
+  userProgress.sesgos[s.id] = {
+    done: true,
+    answers: sesgoAnswers,
+    fixationAnswers: fixationAnswers,
+    fixationScore: fixScore,
+    intensidad: intensidad,
+    completedAt: new Date().toISOString()
+  };
+  await saveProgress();
+
+  const fixColor = fixScore === fixTotal ? 'var(--success)' : fixScore >= fixTotal * 0.67 ? 'var(--warning)' : 'var(--red)';
+  const fixLabel = fixScore === fixTotal ? '¡Perfecto!' : fixScore >= fixTotal * 0.67 ? 'Bien' : 'Sigue practicando';
+
+  document.getElementById('sesgoContent').innerHTML = `
+    <div class="result-shell" style="display:flex">
+      <div class="result-hero">
+        <div class="result-hero-tag">${s.name}</div>
+        <div class="result-hero-name">Tu diagnóstico</div>
+        <div class="result-hero-sub">Tus decisiones vs. lo que haría el REM</div>
+      </div>
+      <div class="result-body">
+
+        <!-- INTENSIDAD -->
+        <div class="result-card" style="background:${intensidadBg};border-color:${intensidadColor}30">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:.75rem">
+            <div style="flex:1">
+              <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${intensidadColor};margin-bottom:.2rem">${intensidadLabel}</div>
+              <div style="font-size:1.1rem;font-weight:700;color:var(--ink);font-family:var(--ff-display)">${s.name}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:1.6rem;font-weight:700;color:${intensidadColor};font-family:var(--ff-display);line-height:1">${sesgadasCount}/${totalScenarios}</div>
+              <div style="font-size:.72rem;color:var(--ink-4)">respuestas sesgadas</div>
+            </div>
+          </div>
+          <div style="height:6px;background:rgba(0,0,0,.08);border-radius:3px;overflow:hidden;margin-bottom:.75rem">
+            <div style="height:100%;width:${Math.round(intensidad*100)}%;background:${intensidadColor};border-radius:3px;transition:width .6s"></div>
+          </div>
+          <div style="font-size:.88rem;color:var(--ink-3);line-height:1.55">${intensidadDesc}</div>
+        </div>
+
+        <!-- ESCENARIOS VS REM -->
+        <div class="result-card">
+          <div class="result-card-title">Tus decisiones vs. el REM</div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            ${s.questions.map((q, i) => {
+              const ans = sesgoAnswers[i];
+              const chosen = ans !== null ? q.options[ans] : null;
+              const rational = q.options.find(o => o.reveal.toLowerCase().startsWith('racional'));
+              const isRational = chosen && chosen.reveal.toLowerCase().startsWith('racional');
+              return `
+                <div style="border:1px solid var(--paper-3);border-radius:12px;overflow:hidden">
+                  <div style="padding:.85rem 1rem;background:var(--paper-2);font-size:.85rem;color:var(--ink-2);line-height:1.5;font-style:italic">"${q.situation}"</div>
+                  <div style="padding:.85rem 1rem;display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;gap:10px;align-items:flex-start">
+                      <div style="flex-shrink:0;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:100px;margin-top:1px;background:${isRational?'rgba(5,150,105,.12)':'rgba(220,38,38,.1)'};color:${isRational?'#059669':'#DC2626'}">Tú</div>
+                      <div style="font-size:.875rem;color:var(--ink-2);line-height:1.5">${chosen ? chosen.text : '—'}</div>
+                    </div>
+                    ${!isRational && rational ? `
+                    <div style="display:flex;gap:10px;align-items:flex-start">
+                      <div style="flex-shrink:0;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:100px;margin-top:1px;background:rgba(5,150,105,.12);color:#059669">REM</div>
+                      <div style="font-size:.875rem;color:var(--ink-3);line-height:1.5">${rational.text}</div>
+                    </div>` : ''}
+                    ${chosen ? `<div style="font-size:.8rem;color:var(--ink-4);padding:.5rem .75rem;background:var(--paper);border-radius:6px;line-height:1.5;margin-top:2px">💡 ${chosen.reveal}</div>` : ''}
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- VERIFICACIÓN -->
+        <div class="result-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+            <div class="result-card-title" style="margin:0">Verificación de conceptos</div>
+            <div style="font-size:1.2rem;font-weight:700;color:${fixColor};font-family:var(--ff-display)">${fixScore}/${fixTotal} <span style="font-size:.78rem;font-weight:600">${fixLabel}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${s.fixationQuestions.map((fq, i) => {
+              const correct = fixationAnswers[i] === 0;
+              return `<div style="padding:.75rem 1rem;border-radius:8px;background:${correct?'rgba(5,150,105,.07)':'rgba(220,38,38,.05)'};border:1px solid ${correct?'rgba(5,150,105,.18)':'rgba(220,38,38,.15)'}">
+                <div style="font-size:.75rem;font-weight:700;color:${correct?'#059669':'#DC2626'};margin-bottom:.3rem">${correct?'✓ Correcto':'✗ Incorrecto'}</div>
+                <div style="font-size:.82rem;color:var(--ink-3)">${fq.question}</div>
+                ${!correct?`<div style="font-size:.8rem;color:#059669;margin-top:.4rem">→ ${fq.options[0]}</div>`:''}
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+
+        <div style="text-align:center;padding:1rem 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn-cta secondary" onclick="renderSesgoLearn()">← Releer explicación</button>
+          <button class="btn-cta" onclick="showScreen('dashboard'); renderDashboard()">Volver al Dashboard →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════
+// FINAL REPORT
+// ══════════════════════════════════════════════════
+function showReport() {
+  const bitResult = userProgress.bitResult;
+  const profile = BIT_PROFILES[bitResult.primary];
+
+  // Calcular intensidad de sesgo por módulo
+  // Si la opción elegida en los escenarios contiene "Sesgo" o "Racional" en el reveal
+  // opción 0 = generalmente el sesgo, opción 1 = generalmente racional
+  const sesgoData = SESGOS.map(s => {
+    const data = userProgress.sesgos[s.id];
+    if (!data) return null;
+    const answers = data.answers || [];
+    const total = s.questions.length;
+    // Contar cuántas respuestas "sesgadas" (reveal contiene "Sesgo" o no "Racional")
+    const sesgadas = answers.filter((ans, i) => {
+      if (ans === null) return false;
+      const reveal = s.questions[i]?.options[ans]?.reveal || '';
+      return reveal.toLowerCase().includes('sesgo') || reveal.toLowerCase().includes('trampa') || reveal.toLowerCase().includes('herding') || reveal.toLowerCase().includes('anclaje') || reveal.toLowerCase().includes('halo') || reveal.toLowerCase().includes('manada') || reveal.toLowerCase().includes('dotación') || reveal.toLowerCase().includes('status quo') || reveal.toLowerCase().includes('confianza') || reveal.toLowerCase().includes('confirmación') || reveal.toLowerCase().includes('optimism') || reveal.toLowerCase().includes('loss') || reveal.toLowerCase().includes('pérdida') || reveal.toLowerCase().includes('contabilidad') || reveal.toLowerCase().includes('disponibilidad') || reveal.toLowerCase().includes('escalada') || reveal.toLowerCase().includes('costo hundido') || reveal.toLowerCase().includes('arrepentimiento') || reveal.toLowerCase().includes('representativ');
+    }).length;
+    const intensidad = total > 0 ? sesgadas / total : 0;
+    const nivel = intensidad >= 0.67 ? 'alto' : intensidad >= 0.34 ? 'medio' : 'bajo';
+    const nivelColor = nivel === 'alto' ? '#DC2626' : nivel === 'medio' ? '#D97706' : '#059669';
+    const nivelLabel = nivel === 'alto' ? 'Alto' : nivel === 'medio' ? 'Medio' : 'Bajo';
+    const fixScore = data.fixationScore ?? 0;
+    const fixTotal = s.fixationQuestions?.length ?? 3;
+    return { ...s, intensidad, nivel, nivelColor, nivelLabel, fixScore, fixTotal };
+  }).filter(Boolean);
+
+  // Top 3 sesgos más dominantes
+  const top3 = [...sesgoData].sort((a,b) => b.intensidad - a.intensidad).slice(0,3);
+
+  // Score global de verificación
+  const totalFix = sesgoData.reduce((a,s) => a + s.fixScore, 0);
+  const totalFixMax = sesgoData.reduce((a,s) => a + s.fixTotal, 0);
+  const fixPct = totalFixMax > 0 ? Math.round((totalFix / totalFixMax) * 100) : 0;
+
+  // Agrupar por tipo
+  const cognitivos = sesgoData.filter(s => s.tipo === 'cognitivo');
+  const emocionales = sesgoData.filter(s => s.tipo === 'emocional');
+  const duales = sesgoData.filter(s => s.tipo === 'dual');
+
+  const sesgoRow = (s) => `
+    <div style="background:var(--paper);border:1px solid var(--paper-3);border-radius:10px;padding:.85rem 1rem;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+      <div style="width:8px;height:8px;border-radius:50%;background:${s.nivelColor};flex-shrink:0"></div>
+      <div style="font-size:.88rem;font-weight:500;color:var(--ink);flex:1">${s.name}</div>
+      <div style="width:80px;height:4px;background:var(--paper-3);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(s.intensidad*100)}%;background:${s.nivelColor};border-radius:2px"></div>
+      </div>
+      <div style="font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:100px;background:${s.nivel==='alto'?'rgba(220,38,38,.1)':s.nivel==='medio'?'rgba(217,119,6,.1)':'rgba(5,150,105,.1)'};color:${s.nivelColor}">${s.nivelLabel}</div>
+    </div>`;
+
+  showScreen('report');
+  document.getElementById('reportContent').innerHTML = `
+    <div style="flex-direction:column;display:flex;min-height:100vh">
+      <div style="background:var(--ink);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100">
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)">Informe Final · Finanzas Conductuales Ibero</div>
+        <button class="btn-ghost" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2)" onclick="showScreen('dashboard'); renderDashboard()">← Dashboard</button>
+      </div>
+
+      <div class="report-body" style="max-width:760px;margin:0 auto;padding:2.5rem 2rem 4rem;width:100%">
+
+        <!-- HERO -->
+        <div style="background:var(--ink);border-radius:16px;padding:2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem">
+          <div style="flex-shrink:0;width:64px;height:64px;background:${profile.color};border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:white;font-family:var(--ff-display)">${bitLabel(bitResult.primary)}</div>
+          <div>
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.3rem">Tu perfil como tomador de decisiones</div>
+            <div style="font-size:1.4rem;font-weight:700;color:white;margin-bottom:.2rem;font-family:var(--ff-display)">${profile.name}</div>
+            <div style="font-size:.85rem;color:rgba(255,255,255,.5)">${profile.tagline}</div>
+          </div>
+        </div>
+
+        <!-- RESUMEN CARDS -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem">
+          <div style="background:white;border:1px solid var(--paper-3);border-radius:12px;padding:1rem 1.25rem;text-align:center">
+            <div style="font-size:1.8rem;font-weight:700;color:var(--ink);font-family:var(--ff-display);line-height:1;margin-bottom:.2rem">${sesgoData.length}</div>
+            <div style="font-size:.72rem;color:var(--ink-4);font-weight:500;text-transform:uppercase;letter-spacing:.06em">Módulos completados</div>
+          </div>
+          <div style="background:white;border:1px solid var(--paper-3);border-radius:12px;padding:1rem 1.25rem;text-align:center">
+            <div style="font-size:1.8rem;font-weight:700;color:#DC2626;font-family:var(--ff-display);line-height:1;margin-bottom:.2rem">${sesgoData.filter(s=>s.nivel==='alto').length}</div>
+            <div style="font-size:.72rem;color:var(--ink-4);font-weight:500;text-transform:uppercase;letter-spacing:.06em">Sesgos dominantes</div>
+          </div>
+          <div style="background:white;border:1px solid var(--paper-3);border-radius:12px;padding:1rem 1.25rem;text-align:center">
+            <div style="font-size:1.8rem;font-weight:700;color:${fixPct>=70?'#059669':fixPct>=50?'#D97706':'#DC2626'};font-family:var(--ff-display);line-height:1;margin-bottom:.2rem">${fixPct}%</div>
+            <div style="font-size:.72rem;color:var(--ink-4);font-weight:500;text-transform:uppercase;letter-spacing:.06em">Score de verificación</div>
+          </div>
+        </div>
+
+        <!-- TOP 3 -->
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.75rem">Tus 3 sesgos más dominantes</div>
+        ${top3.map(s => sesgoRow(s)).join('')}
+
+        <!-- MAPA COMPLETO -->
+        <div style="margin-top:1.5rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.75rem">Mapa completo de sesgos</div>
+          ${cognitivos.length ? `<div style="font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(37,99,235,.1);color:#2563EB;display:inline-block;margin-bottom:.6rem">Errores cognitivos</div>${cognitivos.map(s=>sesgoRow(s)).join('')}` : ''}
+          ${emocionales.length ? `<div style="font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(220,38,38,.1);color:#DC2626;display:inline-block;margin:.75rem 0 .6rem">Sesgos emocionales</div>${emocionales.map(s=>sesgoRow(s)).join('')}` : ''}
+          ${duales.length ? `<div style="font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(124,58,237,.1);color:#7C3AED;display:inline-block;margin:.75rem 0 .6rem">Cognitivo + Emocional</div>${duales.map(s=>sesgoRow(s)).join('')}` : ''}
+        </div>
+
+        <!-- SCORE VERIFICACIÓN POR MÓDULO -->
+        <div style="background:white;border:1px solid var(--paper-3);border-radius:12px;padding:1.25rem;margin-top:1.5rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:1rem">Score de verificación por módulo</div>
+          ${sesgoData.map(s => {
+            const pct = s.fixTotal > 0 ? Math.round((s.fixScore/s.fixTotal)*100) : 0;
+            const col = pct===100?'#059669':pct>=67?'#D97706':'#DC2626';
+            return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+              <div style="font-size:.82rem;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
+              <div style="flex:1;height:5px;background:var(--paper-3);border-radius:3px;overflow:hidden">
+                <div style="height:100%;width:${pct}%;background:${col};border-radius:3px"></div>
+              </div>
+              <div style="font-size:.8rem;font-weight:700;color:${col};min-width:32px;text-align:right">${s.fixScore}/${s.fixTotal}</div>
+            </div>`;
+          }).join('')}
+        </div>
+
+        <!-- RECOMENDACIONES -->
+        <div style="background:white;border:1px solid var(--paper-3);border-radius:12px;padding:1.25rem;margin-top:1.5rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:1rem">Recomendaciones para tu perfil</div>
+          ${profile.recommendations.map((r, i) => `
+            <div style="display:flex;gap:12px;margin-bottom:10px;align-items:flex-start">
+              <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center">${i+1}</div>
+              <div style="font-size:.88rem;color:var(--ink-3);line-height:1.55">${r}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- CTA -->
+        <div style="text-align:center;padding:2rem 0 0">
+          <button class="btn-cta" onclick="showScreen('dashboard'); renderDashboard()">← Volver al dashboard</button>
+        </div>
+
+        <div style="text-align:center;padding:2rem 0 0;font-size:.75rem;color:var(--ink-4)">
+          Finanzas Conductuales · Universidad Iberoamericana CDMX · Basado en el modelo BIT de Michael Pompian (CFA)
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════
+// ADMIN BACKOFFICE
+// ══════════════════════════════════════════════════
+async function renderAdmin() {
+  showLoading('Cargando datos…');
+
+  // Fetch all progress rows from Supabase
+  const rows = await db.query('progress?select=*&order=updated_at.desc') || [];
+  const users = await db.query('users?select=email,name,created_at') || [];
+  const userMap = {};
+  users.forEach(u => { userMap[u.email] = u; });
+
+  hideLoading();
+
+  const total = rows.length;
+  const bitDone = rows.filter(r => r.bit_done).length;
+  const allDone = rows.filter(r => Object.values(r.sesgos || {}).filter(s=>s.done).length === SESGOS.length).length;
+  const avgSesgos = total > 0
+    ? (rows.reduce((a,r) => a + Object.values(r.sesgos||{}).filter(s=>s.done).length, 0) / total).toFixed(1)
+    : 0;
+
+  document.getElementById('adminBody').innerHTML = `
+    <div style="margin-bottom:2rem">
+      <div style="font-family:var(--ff-display);font-size:1.6rem;color:var(--ink);margin-bottom:.25rem">Panel de Administración</div>
+      <div style="font-size:.85rem;color:var(--ink-4)">Datos en tiempo real desde Supabase · ${total} registros</div>
+    </div>
+
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="admin-stat-num">${total}</div><div class="admin-stat-label">Registrados</div></div>
+      <div class="admin-stat"><div class="admin-stat-num">${bitDone}</div><div class="admin-stat-label">BIT Completado</div></div>
+      <div class="admin-stat"><div class="admin-stat-num">${allDone}</div><div class="admin-stat-label">Jornada Completa</div></div>
+      <div class="admin-stat"><div class="admin-stat-num">${avgSesgos}</div><div class="admin-stat-label">Sesgos prom/alumno</div></div>
+    </div>
+
+    <div style="font-family:var(--ff-display);font-size:1.2rem;color:var(--ink);margin-bottom:1rem">Estudiantes</div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Perfil BIT</th>
+            <th>Sesgos</th>
+            <th>Última actividad</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.length === 0
+            ? `<tr><td colspan="5" style="text-align:center;color:var(--ink-4);padding:2rem">No hay datos aún</td></tr>`
+            : rows.map(r => {
+                const sesgosCount = Object.values(r.sesgos || {}).filter(s=>s.done).length;
+                const bitType = r.bit_result?.primary || '—';
+                const name = userMap[r.email]?.name || r.email;
+                const date = r.updated_at ? new Date(r.updated_at).toLocaleDateString('es-MX') : '—';
+                return `<tr>
+                  <td><strong>${name}</strong></td>
+                  <td style="color:var(--ink-4)">${r.email}</td>
+                  <td>${r.bit_done ? `<span class="admin-pill ${bitType}">${bitLabel(bitType)}</span>` : '<span style="color:var(--ink-4)">Pendiente</span>'}</td>
+                  <td>${sesgosCount} / ${SESGOS.length}</td>
+                  <td style="color:var(--ink-4)">${date}</td>
+                </tr>`;
+              }).join('')
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:1.5rem;text-align:right">
+      <button class="btn-ghost" onclick="exportCSVAdmin(${JSON.stringify(rows).replace(/</g,'&lt;')}, ${JSON.stringify(userMap).replace(/</g,'&lt;')})">↓ Exportar CSV</button>
+    </div>
+  `;
+}
+
+function exportCSVAdmin(rows, userMap) {
+  const cols = ['Email','Nombre','Perfil BIT','Perfil Secundario','PP','FF','II','AA','Sesgos Completados','Última Actividad'];
+  const data = rows.map(r => {
+    const b = r.bit_result || {};
+    const name = userMap[r.email]?.name || '';
+    return [
+      r.email, name,
+      b.primary || '', b.secondary || '',
+      b.scores?.PP || 0, b.scores?.FK || 0, b.scores?.II || 0, b.scores?.AA || 0,
+      Object.values(r.sesgos||{}).filter(s=>s.done).length,
+      r.updated_at || ''
+    ];
+  });
+  const csv = [cols, ...data].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = `ibero_finanzas_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+// ══════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showLoading(text = 'Cargando…') {
+  document.getElementById('loadingText').textContent = text;
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+}
+
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
+function showMsg(el, type, text) {
+  el.className = 'auth-msg ' + type;
+  el.textContent = text;
+  el.classList.remove('hidden');
+  setTimeout(() => el.classList.add('hidden'), 4000);
+}
+</script>
+</body>
+</html>

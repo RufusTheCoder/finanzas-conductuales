@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Finanzas Conductuales</title>
+  <link rel="stylesheet" href="public/css/styles.css">
+</head>
+<body>
+  <div id="screen-login" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111116;padding:2rem;">
+    <div style="width:100%;max-width:380px;">
+      <p style="text-align:center;color:rgba(255,255,255,.45);margin-bottom:1.5rem;font-weight:600;font-family:inherit;">Admin · Finanzas Conductuales</p>
+      <div class="card">
+        <p id="login-error" class="alert" style="display:none;"></p>
+        <form id="login-form">
+          <label>Email<input type="email" name="email" autocomplete="email" required /></label>
+          <label>Contraseña<input type="password" name="password" autocomplete="current-password" required /></label>
+          <button class="btn-primary" type="submit" style="width:100%;margin-top:.5rem;">Entrar</button>
+        </form>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button id="dev-skip" style="background:none;border:none;font-size:.72rem;color:rgba(255,255,255,.15);cursor:pointer;font-family:inherit;">dev</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-app" class="app-root" hidden>
+    <section class="card">
+      <div class="admin-header">
+        <h1>Admin Backoffice</h1>
+        <p>Gestión completa de usuarios, progreso y preguntas.</p>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="questions">Preguntas</button>
+        <button class="tab-btn" data-tab="users">Usuarios</button>
+        <button class="tab-btn" data-tab="progress">Progreso</button>
+        <button class="tab-btn" data-tab="reports">Reportes</button>
+      </div>
+
+      <div class="tab-content">
+        <div id="tab-questions" class="tab-pane active">
+          <div class="actions">
+            <button class="btn-primary" id="refresh-questions">Refrescar preguntas</button>
+          </div>
+          <div id="questions-table"></div>
+        </div>
+
+        <div id="tab-users" class="tab-pane">
+          <div class="actions">
+            <button class="btn-primary" id="refresh-users">Refrescar usuarios</button>
+          </div>
+          <div id="users-table"></div>
+        </div>
+
+        <div id="tab-progress" class="tab-pane">
+          <div class="actions">
+            <button class="btn-primary" id="refresh-progress">Refrescar progreso</button>
+          </div>
+          <div id="progress-table"></div>
+        </div>
+
+        <div id="tab-reports" class="tab-pane">
+          <div class="actions">
+            <button class="btn-primary" id="refresh-reports">Actualizar reportes</button>
+          </div>
+          <div id="reports-content"></div>
+        </div>
+      </div>
+
+      <div id="admin-status" class="alert" hidden></div>
+    </section>
+  </div>
+  <script type="module" src="public/js/admin.js"></script>
+</body>
+</html>
