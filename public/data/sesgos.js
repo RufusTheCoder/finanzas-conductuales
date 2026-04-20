@@ -1,0 +1,617 @@
+export const SESGOS = [
+  {
+    id: 'contabilidad-mental',
+    name: 'Contabilidad Mental',
+    nameEn: 'Mental Accounting',
+    tipo: 'cognitivo',
+    clase: 9,
+    definition: 'Tratamos sumas de dinero de manera diferente dependiendo de su origen o uso previsto, ignorando que el dinero es fungible.',
+    description: 'La Contabilidad Mental es un sesgo cognitivo descrito por Richard Thaler (Premio Nobel) en el que creamos "cuentas mentales" separadas para el dinero según su fuente o destino previsto. Esto nos lleva a tomar decisiones irracionales porque ignoramos el principio de fungibilidad: un peso es un peso, sin importar de dónde venga.',
+    mechanism: 'Nuestro Sistema 1 (Kahneman) segrega el dinero en compartimentos psicológicos: el dinero del trabajo es "sagrado", el dinero de la lotería es "para gastar", el dinero del bono es "extra". Esta segmentación viola la lógica económica básica.',
+    examples: [
+      { label: 'Inversión', text: 'Un inversor pierde $5,000 en cripto (cuenta de "aventuras") pero guarda intocable su fondo de emergencia. Económicamente son el mismo dinero, pero los trata diferente.' },
+      { label: 'Vida personal', text: 'Gastas sin culpa el dinero de un reembolso de impuestos en algo lujoso, aunque si lo pusieras en tu cuenta normal nunca lo gastarías así.' },
+      { label: 'Empresa', text: 'Una empresa asigna presupuesto por departamento y no lo transfiere aunque otro área lo necesite más urgentemente.' },
+    ],
+    trapQuestion: 'Imagina dos situaciones: (A) Vas al cine, pierdes un billete de $200 en la calle. ¿Compras la entrada? / (B) Vas al cine, ya compraste la entrada por $200 y la perdiste. ¿Compras otra? — La mayoría dice Sí a A y No a B. Pero la pérdida económica es idéntica en ambos casos.',
+    antidotes: [
+      'Visualiza todo tu dinero como un único fondo — antes de gastar pregúntate: ¿lo gastaría si viniera de mi nómina?',
+      'Consolida mentalmente tus cuentas: evalúa el portafolio total, no cada inversión en aislado.',
+      'Regla del "dinero extra": cualquier ingreso inesperado sigue las mismas reglas que tu ingreso normal.',
+      'Lleva un registro unificado de ingresos y gastos sin categorías emocionales.',
+    ],
+    questions: [
+      { situation: 'Vas al cine. La entrada cuesta $200. Al llegar, te das cuenta de que perdiste un billete de $200 en la calle. ¿Compras la entrada de todos modos?', options: [
+        { text: 'Sí, son cosas separadas — perder el billete no tiene que ver con el cine', reveal: 'Racional: correcto, el dinero es fungible' },
+        { text: 'No, ya perdí $200, no puedo gastar $200 más', reveal: 'Sesgo: tratas las pérdidas como vinculadas cuando no lo están' },
+      ]},
+      { situation: 'Recibes un reembolso de impuestos de $3,000. ¿Cómo lo tratas?', options: [
+        { text: 'Como dinero "extra" — me doy un gusto que no me daría con mi sueldo', reveal: 'Sesgo: el origen del dinero no cambia su valor' },
+        { text: 'Igual que cualquier otro ingreso — va a donde más lo necesito', reveal: 'Racional: correcto, la fungibilidad aplica independiente del origen' },
+      ]},
+      { situation: 'Tu portafolio tiene: Cetes +5% y una acción -30%. El Cetes venció hoy. ¿Qué haces con esos fondos?', options: [
+        { text: 'Los reinvierto en Cetes — no quiero mezclarlos con la acción que perdió', reveal: 'Sesgo: tratas cada inversión como cuenta separada en lugar del portafolio total' },
+        { text: 'Evalúo qué tiene mejor expectativa de retorno ajustado al riesgo hoy', reveal: 'Racional: correcto, el portafolio se optimiza en conjunto' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Por qué la contabilidad mental es un sesgo y no un sistema racional?', options: ['Porque trata el dinero de forma diferente según su origen, cuando en realidad $1 siempre vale $1', 'Porque hace que gastemos menos de lo que deberíamos', 'Porque solo afecta a personas con poco conocimiento financiero'] },
+      { question: 'Ganas $500 en el casino y los gastas en ropa que normalmente no comprarías. ¿Qué sesgo explica esto?', options: ['Contabilidad mental: creaste una cuenta de dinero ganado que sientes libre de gastar', 'Exceso de confianza: crees que seguirás ganando', 'Efecto manada: todos gastan cuando ganan en el casino'] },
+      { question: '¿Cuál es la implicación financiera más peligrosa de la contabilidad mental?', options: ['Que podemos tener deudas con intereses altos y ahorros simultáneamente sin ver la contradicción', 'Que nos hace ahorrar demasiado en cuentas separadas', 'Que nos impide invertir en más de un instrumento a la vez'] },
+    ],
+  },
+  {
+    id: 'confirmation-bias',
+    name: 'Sesgo de Confirmación',
+    nameEn: 'Confirmation Bias',
+    tipo: 'cognitivo',
+    clase: 10,
+    definition: 'Buscamos, notamos y recordamos la información que confirma nuestras creencias previas, ignorando la que las contradice.',
+    description: 'El Sesgo de Confirmación es uno de los sesgos más perniciosos en finanzas. Según el CFA Institute, pertenece a la subcategoría de Perseverancia de Creencias: nos negamos a actualizar nuestras opiniones aunque los datos apunten en otra dirección. No es malicia — es que el Sistema 1 construye historias coherentes, no precisas.',
+    mechanism: 'Daniel Kahneman explica que el Sistema 1 opera bajo WYSIATI ("What You See Is All There Is"): construye la mejor historia posible con la información disponible, ignorando lo que falta. La disonancia cognitiva hace doloroso enfrentar evidencia contradictoria.',
+    examples: [
+      { label: 'Inversión', text: 'Estás convencido de que Tesla va a subir. Lees solo artículos bullish, ignoras los que cuestionan su valuación. Tu "investigación" es en realidad validación.' },
+      { label: 'Decisión personal', text: 'Decides que cierta ciudad es perfecta para vivir. Recuerdas las buenas noticias sobre ella y olvidas las malas.' },
+      { label: 'Empresa', text: 'Un CEO comprometido con una estrategia ignora métricas que la cuestionan y enfatiza las que la apoyan en sus reportes trimestrales.' },
+    ],
+    trapQuestion: 'Estás convencido de que Bitcoin va a subir. ¿Qué buscas en Google? A) "Razones por las que Bitcoin subirá" o B) "Riesgos de invertir en Bitcoin hoy". — La mayoría elige A, buscando validar, no cuestionar.',
+    antidotes: [
+      'Practica el "empirismo negativo": intenta demostrar que tu idea es FALSA, no que es verdadera.',
+      'Steel-manning: construye el mejor argumento posible contra tu tesis antes de actuar.',
+      'Busca activamente artículos, analistas y datos que contradigan tu posición.',
+      'Antes de cualquier inversión, escribe explícitamente: ¿qué tendría que pasar para que esté equivocado?',
+    ],
+    questions: [
+      { situation: 'Estás convencido de que una acción va a subir. ¿Qué buscas en Google?', options: [
+        { text: 'Razones por las que la acción subirá', reveal: 'Sesgo: estás buscando validar, no investigar' },
+        { text: 'Riesgos y argumentos en contra de esa inversión', reveal: 'Racional: primero busca la hipótesis nula — por qué podrías estar equivocado' },
+      ]},
+      { situation: 'Un político que no te agrada hace una gran donación a caridad. ¿Tu primer pensamiento?', options: [
+        { text: 'Seguro lo hace para evadir impuestos o limpiar su imagen', reveal: 'Sesgo: interpretamos la misma evidencia diferente según nuestras creencias previas' },
+        { text: 'Finalmente hizo algo bueno, independientemente de sus motivaciones', reveal: 'Racional: separamos los hechos de nuestros prejuicios previos' },
+      ]},
+      { situation: 'Llevas 6 meses invirtiendo en una empresa que no ha dado resultados. Encuentras un artículo que dice que el CEO es brillante.', options: [
+        { text: 'Esto confirma que mi análisis fue correcto — hay que esperar más', reveal: 'Sesgo: usas información nueva para reforzar una posición que quizás debería revisarse' },
+        { text: 'Interesante, pero también busco artículos críticos del CEO antes de decidir', reveal: 'Racional: el nuevo dato se evalúa junto a toda la evidencia disponible' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué hace exactamente el sesgo de confirmación?', options: ['Buscar, interpretar y recordar información que confirma lo que ya creemos, ignorando lo que lo contradice', 'Confirmar decisiones pasadas sin importar si fueron correctas o no', 'Seguir la opinión de la mayoría para confirmar que nuestra decisión es correcta'] },
+      { question: 'Un inversor convencido de que una empresa es excelente lee solo análisis positivos. ¿Cuál es el riesgo concreto?', options: ['Perder señales de alerta reales porque activamente evita información negativa', 'Sobreestimar el riesgo porque tiene demasiada información sobre la empresa', 'Seguir el efecto manada al leer los mismos análisis que todos'] },
+      { question: '¿Cuál es el antídoto más efectivo contra el sesgo de confirmación?', options: ['Buscar activamente el mejor argumento en contra de tu propia tesis antes de decidir', 'Leer más fuentes de información para tener una visión más completa', 'Esperar a que otros tomen la decisión primero para validar tu análisis'] },
+    ],
+  },
+  {
+    id: 'disponibilidad-representatividad',
+    name: 'Disponibilidad y Representatividad',
+    nameEn: 'Availability & Representativeness',
+    tipo: 'cognitivo',
+    clase: 8,
+    definition: 'Juzgamos probabilidades por qué tan fácil recordamos ejemplos (disponibilidad) o por a qué categoría se parece algo (representatividad).',
+    description: 'Estas dos heurísticas son atajos mentales del Sistema 1. La Disponibilidad nos lleva a sobreestimar la frecuencia de eventos memorables o recientes. La Representatividad nos hace clasificar situaciones por estereotipos, ignorando probabilidades estadísticas reales.',
+    mechanism: 'Cuando enfrentamos una pregunta difícil (¿cuál es la probabilidad de X?), el cerebro la sustituye por una más fácil: ¿qué tan fácil recuerdo ejemplos de X? o ¿a qué categoría se parece X? Estas sustituciones son rápidas pero sistemáticamente erróneas.',
+    examples: [
+      { label: 'Disponibilidad', text: 'Después de ver las noticias sobre un robo, crees que la criminalidad aumentó drásticamente, aunque estadísticamente bajó. Lo memorable distorsiona tu percepción de frecuencia.' },
+      { label: 'Representatividad', text: 'Ves una empresa joven con fundador carismático y tecnología de moda — se parece a Apple en 1997. Inviertes sin revisar sus fundamentals. El parecido no es suficiente.' },
+      { label: 'Inversión', text: 'Después de tres meses de mercado alcista, crees que el rally continuará (disponibilidad reciente). Después de un crash, crees que todo seguirá cayendo.' },
+    ],
+    trapQuestion: 'Linda tiene 31 años, es muy inteligente y activista social. ¿Qué es más probable? A) Cajera de banco. B) Cajera de banco y feminista. — La mayoría elige B, aunque matemáticamente A siempre es más probable que A+B.',
+    antidotes: [
+      'Antes de estimar una probabilidad, pregunta: ¿cuál es la tasa base estadística real?',
+      'Desconfía de tu primera impresión cuando algo "se parece" a un patrón de éxito.',
+      'Los eventos dramáticos o recientes no son más probables — solo más memorables.',
+      'Busca datos duros antes de actuar sobre una intuición basada en lo que "recuerdas".',
+    ],
+    questions: [
+      { situation: '¿Qué causa más muertes anuales en México?', options: [
+        { text: 'Homicidios', reveal: 'Sesgo de disponibilidad: los homicidios aparecen más en noticias, parecen más frecuentes' },
+        { text: 'Diabetes y enfermedades crónicas', reveal: 'Correcto: enfermedades crónicas causan 5-10x más muertes, pero son menos "disponibles" en la memoria' },
+      ]},
+      { situation: 'Linda tiene 31 años, es inteligente y fue activista. ¿Qué es más probable que sea hoy?', options: [
+        { text: 'Cajera de banco y feminista activa', reveal: 'Sesgo de representatividad (Falacia de Conjunción): dos eventos juntos nunca pueden ser más probables que uno solo' },
+        { text: 'Cajera de banco', reveal: 'Correcto: P(A) siempre es ≥ P(A y B). El estereotipo nos distrae de la lógica básica' },
+      ]},
+      { situation: 'Una moneda justa cae cara 5 veces seguidas. ¿Qué esperas en el lanzamiento 6?', options: [
+        { text: 'Cruz es más probable — ya es "hora" de que salga', reveal: 'Falacia del jugador: cada lanzamiento es independiente. El pasado no influye en el futuro' },
+        { text: '50/50 — cada lanzamiento es independiente del anterior', reveal: 'Correcto: la moneda no tiene memoria. La representatividad nos hace ver patrones donde no existen' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué determina qué tan probable nos parece un evento según el sesgo de disponibilidad?', options: ['La facilidad con la que ejemplos de ese evento vienen a nuestra mente', 'La frecuencia estadística real con la que ocurre ese evento', 'La cantidad de información que tenemos sobre ese evento'] },
+      { question: 'Después de ver noticias sobre accidentes aéreos, muchas personas prefieren manejar. ¿Qué explica esta decisión?', options: ['La imagen vívida del accidente hace que el vuelo parezca más peligroso de lo que estadísticamente es', 'Manejar es objetivamente más seguro que volar en todos los contextos', 'Las personas hacen un análisis racional del riesgo basado en las noticias'] },
+      { question: '¿Cuál es el impacto del sesgo de disponibilidad en decisiones de inversión?', options: ['Sobreponderar activos que estuvieron en las noticias recientemente, sin importar sus fundamentos', 'Diversificar demasiado el portafolio por miedo a eventos poco probables', 'Ignorar completamente los eventos recientes al tomar decisiones'] },
+    ],
+  },
+  {
+    id: 'overconfidence',
+    name: 'Exceso de Confianza',
+    nameEn: 'Overconfidence Bias',
+    tipo: 'emocional',
+    clase: 12,
+    definition: 'Tenemos una fe injustificada en nuestro propio razonamiento, juicios y habilidades cognitivas.',
+    description: 'Kahneman afirma que si tuviera una varita mágica para eliminar un solo sesgo, eliminaría el exceso de confianza, ya que amplifica casi todos los demás. Se manifiesta como Ilusión de Conocimiento (creer que más información da más precisión) e Ilusión de Control (creer que podemos influir en lo aleatorio).',
+    mechanism: 'El Sistema 1 construye historias coherentes con la información disponible. Como la historia es coherente, la sentimos como verdadera y confiable. No nos detenemos a preguntar qué datos nos faltan — la confianza no viene de la evidencia, sino de la coherencia del relato.',
+    examples: [
+      { label: 'Inversión', text: 'Un estudio de Duke encontró que los CFOs de empresas dan rangos de confianza del 80% para el S&P500 que fallan el 67% de las veces. Prefieren parecer precisos aunque estén equivocados.' },
+      { label: 'Trading', text: 'Los inversores individuales que operan más activamente obtienen menores rendimientos que los pasivos — la actividad excesiva es señal de exceso de confianza.' },
+      { label: 'Personal', text: 'El 80% de las personas cree que sus habilidades para manejar están por encima del promedio. El 93% de estudiantes universitarios cree estar en el 50% superior de su clase.' },
+    ],
+    trapQuestion: 'En comparación con el promedio de tu grupo, ¿cómo calificarías tu capacidad para tomar decisiones financieras? A) Por encima del promedio. B) Promedio o por debajo. — En grupos educados, el 70-80% elige A, aunque estadísticamente es imposible.',
+    antidotes: [
+      'Lleva un diario de decisiones: registra tus predicciones y mide tu precisión real versus percibida.',
+      'Practica rangos de incertidumbre amplios: si el 90% de tus estimaciones están en el rango, el rango es correcto.',
+      'El test del "Outside View": ¿cuál es la tasa base de éxito para situaciones similares a la tuya?',
+      'Busca activamente quién sabe más que tú sobre este tema — no como señal de debilidad, sino de inteligencia.',
+    ],
+    questions: [
+      { situation: 'Comparado con tu grupo, ¿cómo calificarías tu capacidad para tomar decisiones financieras racionales?', options: [
+        { text: 'Por encima del promedio (top 50%)', reveal: 'Sesgo: estadísticamente, la mitad del grupo está por debajo. Si casi todos eligen esto, algo no cuadra' },
+        { text: 'Promedio o por debajo del promedio', reveal: 'Racional: la humildad epistémica — saber lo que no sabes — es la base de buenas decisiones' },
+      ]},
+      { situation: 'Llevas 3 años invirtiendo con buenos rendimientos. ¿A qué lo atribuyes?', options: [
+        { text: 'Mi estrategia y análisis — tomé las decisiones correctas', reveal: 'Posible sesgo de autoatribución: los mercados alcistas hacen que todos parezcan genios' },
+        { text: 'Una mezcla de proceso sólido y condiciones favorables de mercado', reveal: 'Racional: separar habilidad de suerte requiere un horizonte largo y análisis honesto' },
+      ]},
+      { situation: 'El S&P500 está en 5,000. Tu estimación a 12 meses con 90% de confianza sería:', options: [
+        { text: '4,800 – 5,300 (rango preciso)', reveal: 'Sesgo: los rangos estrechos fallan más del 60% de las veces en estudios de expertos' },
+        { text: '3,500 – 6,500 (rango amplio)', reveal: 'Racional: un 90% de confianza real requiere un rango mucho más amplio en sistemas complejos' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Cuál es la diferencia entre exceso de confianza e ilusión de conocimiento?', options: ['La ilusión de conocimiento es creer que más información nos hace más precisos, aunque esa información sea irrelevante', 'Son exactamente lo mismo: ambos describen sobreestimar las propias habilidades', 'El exceso de confianza solo aplica a expertos; la ilusión de conocimiento a novatos'] },
+      { question: 'Un trader revisa 20 indicadores antes de cada operación creyendo que por eso sus predicciones son más precisas. ¿Qué sesgo ilustra esto?', options: ['Ilusión de conocimiento: más datos no garantizan mejores predicciones si no añaden información real', 'Sesgo de confirmación: busca indicadores que confirmen su decisión previa', 'Efecto halo: los indicadores sofisticados le dan una imagen de experto'] },
+      { question: '¿Qué es el sesgo de autoatribución y cómo se relaciona con el exceso de confianza?', options: ['Atribuir los éxitos a la propia habilidad y los fracasos a factores externos, reforzando la confianza sin fundamento real', 'Creer que nuestras habilidades son superiores a las del promedio en todas las áreas', 'Confiar demasiado en las recomendaciones de otros sin analizarlas'] },
+    ],
+  },
+  {
+    id: 'self-attribution',
+    name: 'Auto-Atribución',
+    nameEn: 'Self-Attribution Bias',
+    tipo: 'emocional',
+    clase: 13,
+    definition: 'Atribuimos nuestros éxitos a nuestra habilidad y nuestros fracasos a factores externos.',
+    description: 'El Sesgo de Auto-Atribución es el "combustible" del Exceso de Confianza. Juntos forman un ciclo peligroso: gano → fue mi habilidad → aprendo que soy bueno → pierdo → fue mala suerte → no aprendo nada. Este ciclo destruye nuestra capacidad de calibrar el riesgo real.',
+    mechanism: 'El mecanismo es defensivo: el ego necesita proteger una autoimagen positiva. Atribuirse el mérito de los éxitos alimenta la autoestima; culpar al entorno de los fracasos protege de la autocrítica. El resultado es que nunca aprendemos de nuestros errores de manera sistemática.',
+    examples: [
+      { label: 'Inversión', text: 'Tu cartera subió 40% en 2021. Fue tu análisis brillante. En 2022 cayó 30%. Fue la Fed, el mercado, la guerra en Ucrania. El doble rasero impide aprendizaje real.' },
+      { label: 'Empresa', text: 'Un CEO reporta ganancias récord: "nuestra estrategia brillante." Reporta pérdidas: "condiciones macroeconómicas adversas sin precedentes."' },
+      { label: 'Personal', text: 'Pasaste un examen: estudiaste bien. Reprobaste: el profesor fue injusto o las preguntas eran ambiguas.' },
+    ],
+    trapQuestion: 'Tu cartera subió +25% este año. ¿Cuál fue el factor principal? A) Mi estrategia y selección (habilidad). B) Estuve en el sector correcto en el momento justo (suerte). — La mayoría elige A. ¿Y si la cartera hubiera bajado -25%?',
+    antidotes: [
+      'Diario de decisiones: registra ANTES de invertir tu razonamiento. Al revisar, evalúa el proceso, no solo el resultado.',
+      'Separar proceso de resultado: ¿fue una buena decisión dado lo que sabías entonces, independientemente del resultado?',
+      'Post-mortem honesto: cuando una inversión sale mal, identifica exactamente qué error cometiste, no qué factor externo falló.',
+      'Comparte tus análisis con alguien crítico antes de actuar — la exposición reduce el autoengaño.',
+    ],
+    questions: [
+      { situation: 'Tu inversión principal subió 35% este año. ¿A qué lo atribuyes principalmente?', options: [
+        { text: 'Mi análisis y timing — identifiqué bien la oportunidad', reveal: 'Sesgo de autoatribución (Self-Enhancement): podría ser habilidad, pero ¿verificaste que no fue suerte de mercado?' },
+        { text: 'Una combinación de análisis razonable y condiciones favorables', reveal: 'Racional: distinguir habilidad de suerte requiere múltiples ciclos de mercado, no un año' },
+      ]},
+      { situation: 'Tu inversión principal cayó 25% inesperadamente. ¿Cómo lo describes en tu análisis?', options: [
+        { text: 'Riesgo sistémico / evento impredecible — fue externo a mi análisis', reveal: 'Sesgo de autoprotección: ¿era realmente impredecible o ignoraste señales que no querías ver?' },
+        { text: 'Error de análisis — necesito identificar qué no vi correctamente', reveal: 'Racional: incluso si el shock fue externo, ¿el sizing del riesgo era correcto?' },
+      ]},
+      { situation: 'Un colega duplicó su inversión en criptomonedas este año. ¿Qué piensas?', options: [
+        { text: 'Es un inversor hábil que supo identificar la oportunidad', reveal: 'Doble estándar: si fuera tu pérdida, ¿también sería habilidad? Aplicamos raseros distintos a éxitos ajenos y propios' },
+        { text: 'Asumió riesgos altos y las condiciones lo favorecieron', reveal: 'Racional: consistencia en el rasero — aplica el mismo estándar a ti y a los demás' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es la aversión a la pérdida según Kahneman y Tversky?', options: ['Perder $100 duele aproximadamente el doble que el placer de ganar $100', 'Preferir siempre las inversiones más seguras independientemente del retorno', 'Evitar cualquier decisión que pueda resultar en pérdida'] },
+      { question: 'Un inversor mantiene una acción que bajó 40% esperando recuperarse pero vende rápido las que suben. ¿Cómo se llama este patrón?', options: ['Efecto disposición: vender ganadoras pronto y mantener perdedoras demasiado tiempo', 'Sesgo de confirmación: busca información que justifique mantener la acción', 'Exceso de confianza: cree que puede predecir cuándo se recuperará'] },
+      { question: '¿Qué es la aversión miope a la pérdida?', options: ['Revisar el portafolio con tanta frecuencia que las pérdidas a corto plazo dominan las decisiones de largo plazo', 'Negarse a invertir en activos que alguna vez tuvieron pérdidas históricas', 'Preferir instrumentos de renta fija por encima de cualquier otro activo'] },
+    ],
+  },
+  {
+    id: 'status-quo',
+    name: 'Sesgo de Status Quo',
+    nameEn: 'Status Quo Bias',
+    tipo: 'emocional',
+    clase: 14,
+    definition: 'Preferimos mantener las cosas como están, incluso cuando cambiar sería objetivamente mejor.',
+    description: 'Descrito por Samuelson y Zeckhauser (1988), este sesgo surge del confort de lo conocido y del miedo al arrepentimiento. La inercia psicológica es poderosa: moverse del estado actual implica el riesgo de equivocarse activamente, mientras que quedarse quieto se percibe como "no hacer nada malo".',
+    mechanism: 'El Sistema 1 evalúa opciones en relación a un punto de referencia neutral — el Status Quo. Dado que las pérdidas pesan el doble que las ganancias (Aversión a la Pérdida), cualquier cambio se percibe como potencialmente desventajoso. La pereza del Sistema 2 completa el cuadro.',
+    examples: [
+      { label: 'Pensiones', text: 'Cuando el plan de pensiones de una empresa cambia de opt-in a opt-out, la participación sube del 40% al 90%. El default lo es todo.' },
+      { label: 'Inversión', text: 'Un inversor hereda una cartera de bonos de su padre. Aunque las acciones tendrían mejor rendimiento esperado, mantiene los bonos porque "son lo que había".' },
+      { label: 'Empresa', text: 'Una empresa sigue usando el mismo proveedor de software durante 10 años, aunque hay opciones mejores y más baratas, simplemente porque "siempre ha sido así".' },
+    ],
+    trapQuestion: 'Te ofrecen cambiar tu portafolio actual por uno con mejores expectativas de rendimiento, pero requiere tomar acción activa. ¿Lo haces? — La mayoría dice que sí en frío. En la práctica, la inercia gana.',
+    antidotes: [
+      'Re-enmarca la decisión: "¿Elegiría este portafolio si empezara de cero hoy?"',
+      'Establece revisiones periódicas obligatorias — la inercia gana si no hay un trigger externo.',
+      'Separa el apego emocional del análisis financiero: herencia, tradición y hábito no son argumentos financieros.',
+      'El test de la acción inversa: ¿si hoy tuvieras lo que quieres cambiar, cambiarías a lo que tienes ahora?',
+    ],
+    questions: [
+      { situation: 'Llevas 5 años con el mismo fondo de inversión. Aparece uno nuevo con mejor historial ajustado al riesgo. ¿Qué haces?', options: [
+        { text: 'Me quedo con el mío — ya lo conozco y cambiar da pereza', reveal: 'Sesgo de status quo: la inercia y el confort de lo conocido impiden la decisión óptima' },
+        { text: 'Evalúo los dos con los mismos criterios y elijo el mejor sin importar cuál tenía antes', reveal: 'Racional: la decisión se hace con los datos actuales, no con el peso de lo que ya tienes' },
+      ]},
+      { situation: 'Heredaste un portafolio de bonos conservadores de tu abuelo. Las acciones tendrían mejor rendimiento esperado para tu horizonte de 30 años. ¿Qué haces?', options: [
+        { text: 'Lo mantengo tal cual — fue su elección y cambiar se siente mal', reveal: 'Sesgo de status quo + efecto dotación: el apego al origen del portafolio paraliza la optimización' },
+        { text: 'Evalúo si este portafolio es el adecuado para MI horizonte y perfil, independiente de su historia', reveal: 'Racional: el origen del portafolio no determina su idoneidad para tu situación actual' },
+      ]},
+      { situation: 'Tu banco te cobra $1,200/año en comisiones. Otro banco ofrece las mismas condiciones sin comisión. ¿Qué haces?', options: [
+        { text: 'Me quedo — cambiar de banco es un proceso tedioso', reveal: 'Sesgo de status quo: la fricción del cambio se percibe mayor que el beneficio real de $1,200 anuales' },
+        { text: 'Hago el cambio — $1,200 anuales son suficientes para dedicar 2 horas al proceso', reveal: 'Racional: el costo del cambio (tiempo) se compara explícitamente con el beneficio (ahorro real)' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Cuál es el mecanismo principal detrás del sesgo de status quo?', options: ['La aversión a la pérdida hace que cualquier cambio parezca más costoso que los beneficios potenciales', 'La falta de información sobre alternativas hace que mantener lo actual parezca más seguro', 'El miedo a equivocarse hace que las personas eviten cualquier decisión activa'] },
+      { question: 'Un experimento cambió el plan de pensiones de opt-in a opt-out. ¿Qué pasó con la participación?', options: ['Subió drásticamente — el default determina más el comportamiento que la preferencia real', 'Bajó — las personas rechazaron la inscripción automática por autonomía', 'No cambió significativamente — las personas tomaron la misma decisión independiente del default'] },
+      { question: '¿Cuál es la diferencia entre prudencia y sesgo de status quo?', options: ['La prudencia se basa en análisis deliberado; el status quo se basa en inercia e incomodidad con el cambio', 'La prudencia es un sesgo emocional; el status quo es una estrategia racional de bajo riesgo', 'No hay diferencia real: ambos llevan a mantener la situación actual'] },
+    ],
+  },
+  {
+    id: 'autocontrol',
+    name: 'Sesgo de Autocontrol',
+    nameEn: 'Self-Control Bias',
+    tipo: 'emocional',
+    clase: 15,
+    definition: 'No actuamos en pro de nuestros objetivos a largo plazo por falta de autodisciplina y preferencia por la gratificación inmediata.',
+    description: 'El Sesgo de Autocontrol (CFA) y el Descuento Hiperbólico (Thaler) describen el mismo fenómeno: somos incapaces de ejecutar hoy lo que en teoría queremos para el futuro. No es un problema de conocimiento — sabemos que debemos ahorrar. Es un problema de voluntad bajo presión.',
+    mechanism: 'Dan Ariely distingue el "yo en estado frío" (racional, planificador) del "yo en estado caliente" (impulsivo, bajo presión). En estado frío, elegimos virtuosamente. En estado caliente, el Sistema 1 toma el control. La "brecha de empatía" nos impide predecir cuánto diferirá nuestro yo caliente del yo frío.',
+    examples: [
+      { label: 'Ahorro', text: 'Sabes que debes ahorrar el 20% de tu sueldo. Cada mes "este mes es la excepción" por alguna razón. Nunca ahorramos tanto como planeamos en frío.' },
+      { label: 'Inversión', text: 'Planeas no revisar tu portafolio más de una vez al mes. Pero cuando el mercado cae, entras a la app cada hora y terminas vendiendo en el peor momento.' },
+      { label: 'Gasto', text: 'Decides no gastar en ropa este mes. Pero en el mall, ves una oferta "única" y el yo caliente gana.' },
+    ],
+    trapQuestion: '¿Cuánto planeas ahorrar el próximo mes? Ahora: ¿cuánto ahorraste este mes? La diferencia entre estos dos números es tu "brecha de autocontrol".',
+    antidotes: [
+      'Automatiza el ahorro: transfiere automáticamente antes de que el dinero llegue a tu cuenta corriente.',
+      'Usa la herramienta de Thaler: "Save More Tomorrow" — compromete hoy un % de tus futuros aumentos de sueldo.',
+      'Elimina la tentación del entorno: borra apps de trading si revisas en exceso; esconde tarjetas de crédito.',
+      'Contratos de compromiso (commitment devices): penalidades reales si no cumples tus metas.',
+    ],
+    questions: [
+      { situation: 'Recibes un bono de $10,000. Tienes una deuda de tarjeta al 20% de interés. ¿Qué haces?', options: [
+        { text: 'Pago la deuda inmediatamente — es el movimiento matemáticamente óptimo', reveal: 'Racional: eliminar deuda al 20% es un retorno garantizado del 20%, difícil de superar' },
+        { text: 'Gasto la mitad en algo que quería y pago la mitad de la deuda', reveal: 'Sesgo de autocontrol: el yo caliente interfiere con la decisión óptima del yo frío' },
+      ]},
+      { situation: 'Llevas 4 horas en una reunión agotadora. Pasan snacks. ¿Qué eliges?', options: [
+        { text: 'El chocolate/galletas — estoy agotado y lo necesito', reveal: 'Sesgo de autocontrol + Ego Depletion: el Sistema 2 está agotado y el Sistema 1 toma el control' },
+        { text: 'Frutos secos — aunque me cuesta, sigo mi plan de alimentación', reveal: 'Autocontrol activo: el Sistema 2 ejercita la disciplina incluso bajo fatiga' },
+      ]},
+      { situation: 'El mercado cayó 8% hoy. Tu portafolio bajó $15,000. ¿Qué haces?', options: [
+        { text: 'Reviso la app cada hora y eventualmente vendo para "detener las pérdidas"', reveal: 'Sesgo de autocontrol: el malestar del yo caliente destruye el plan del yo frío' },
+        { text: 'Recuerdo mi plan de largo plazo y no hago nada hasta la revisión programada', reveal: 'Racional: la aversión miope a la pérdida destruye retornos — el plan existe precisamente para momentos así' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es el descuento hiperbólico?', options: ['La tendencia a preferir recompensas pequeñas e inmediatas sobre recompensas mayores en el futuro', 'Descuentos que parecen atractivos pero tienen costos ocultos a largo plazo', 'La incapacidad de calcular correctamente el valor del dinero en el tiempo'] },
+      { question: 'Sabes que deberías ahorrar $2,000 al mes pero cada mes lo pospones. ¿Qué explica este patrón?', options: ['Sesgo del presente: el yo futuro se siente lejano y abstracto; el placer de gastar hoy se siente concreto e inmediato', 'Sesgo de status quo: prefieres mantener tus hábitos de gasto actuales', 'Aversión a la pérdida: sientes que ahorrar es perder dinero disponible'] },
+      { question: '¿Por qué los compromisos previos (precommitment) son efectivos contra este sesgo?', options: ['Porque eliminan la decisión en el momento de tentación, cuando el Sistema 1 domina', 'Porque aumentan la culpa cuando no cumplimos, lo que nos motiva más', 'Porque hacen que el ahorro sea más visible y fácil de monitorear'] },
+    ],
+  },
+  {
+    id: 'endowment-effect',
+    name: 'Efecto de Dotación',
+    nameEn: 'Endowment Effect',
+    tipo: 'emocional',
+    clase: 16,
+    definition: 'Valoramos más un activo simplemente porque lo poseemos.',
+    description: 'Descrito por Kahneman y Thaler, el Efecto de Dotación viola la teoría económica clásica: el precio al que estarías dispuesto a vender algo (WTA) debería ser igual al que pagarías por comprarlo (WTP). En la práctica, WTA siempre supera WTP — somos dueños sentimentales de nuestros activos.',
+    mechanism: 'Una vez que poseemos algo, dejarlo ir se siente como una pérdida. La aversión a la pérdida entra en juego: el dolor de perder la posesión supera el placer de ganar el dinero. Dan Ariely observó que empezamos a amar las cosas casi inmediatamente después de poseerlas, o incluso de imaginar que las poseemos.',
+    examples: [
+      { label: 'Inversión', text: 'Un inversor recibe acciones de su empresa como compensación. Aunque racionalmente sabe que está sobreexpuesto a un solo activo, no las vende porque "son mías, las gané yo".' },
+      { label: 'Inmuebles', text: 'Los vendedores de casas siempre creen que su propiedad vale más de lo que dice el mercado. El apego emocional infla la valuación.' },
+      { label: 'Negociación', text: 'En negociaciones, quien ya "tiene" algo (un contrato, un derecho) pide más para cederlo de lo que la contraparte pagaría para adquirirlo, bloqueando acuerdos eficientes.' },
+    ],
+    trapQuestion: 'Ganaste en un sorteo una entrada VIP de $1,500 para tu evento soñado. Alguien te ofrece $1,500 en efectivo por ella. ¿La vendes? — La mayoría dice no. Pero antes de ganarla, no habrías pagado $1,500 por ella.',
+    antidotes: [
+      'Test del nuevo dinero: "¿Si tuviera este activo en efectivo hoy, compraría esta posición a este precio?"',
+      'Valoración desde fuera: pide a alguien sin vínculo emocional que evalúe el activo.',
+      'Separar la historia del activo de su valor de mercado actual.',
+      'Revisión periódica forzada: "¿Qué tan objetivamente estoy valorando esto porque lo poseo?"',
+    ],
+    questions: [
+      { situation: 'Tienes acciones de tu empresa que recibiste como bono. Representan el 40% de tu portafolio. ¿Qué haces?', options: [
+        { text: 'Las mantengo — son "mis" acciones, las gané, confío en la empresa', reveal: 'Efecto de dotación: la posesión y el origen crean apego que nubla la evaluación de concentración de riesgo' },
+        { text: 'Evalúo si tener el 40% en una sola acción es prudente, independiente de su origen', reveal: 'Racional: las acciones deben evaluarse como cualquier otra inversión, sin privilegio por su historia' },
+      ]},
+      { situation: 'Compraste un auto hace 3 años. Quieres venderlo. El mercado lo valúa en $180,000. ¿A qué precio lo pones?', options: [
+        { text: '$220,000 o más — mi auto está en perfecto estado y vale más que el promedio', reveal: 'Efecto de dotación: todos los dueños creen que su auto es "especial" y está en mejor estado que el promedio' },
+        { text: '$180,000 o el precio de mercado — es lo que un comprador racional pagaría', reveal: 'Racional: el mercado ya incorpora el "perfecto estado" en su valuación promedio' },
+      ]},
+      { situation: 'Ganaste en un sorteo una entrada a un concierto valorada en $2,000. Alguien te ofrece $2,000 en efectivo por ella. ¿La vendes?', options: [
+        { text: 'No — ya es mía y la experiencia vale más que el dinero', reveal: 'Efecto de dotación: si antes de ganarla no habrías pagado $2,000, ¿por qué ahora vale más?' },
+        { text: 'Sí — si la entrada vale exactamente lo que me ofrecen, la decisión es neutra', reveal: 'Racional: la propiedad no debería crear valor adicional si el precio es de mercado' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué revela el experimento de las tazas de café de Kahneman sobre el efecto dotación?', options: ['Las personas piden más para vender algo que lo que pagarían por comprarlo, solo porque ya lo poseen', 'Las personas valoran más los objetos de uso cotidiano que los de inversión', 'El precio de mercado no refleja el valor real que los consumidores le dan a los productos'] },
+      { question: 'Un inversor se niega a vender acciones heredadas de su abuelo aunque tengan mal desempeño. ¿Cómo opera el efecto dotación aquí?', options: ['La propiedad y el vínculo emocional inflan el valor percibido más allá del valor financiero real', 'El sesgo de status quo le impide tomar decisiones activas sobre el portafolio', 'La aversión a la pérdida le hace temer cristalizar la pérdida vendiendo'] },
+      { question: '¿Cuál es la pregunta clave para neutralizar el efecto dotación en decisiones financieras?', options: ['"Si no tuviera este activo hoy, ¿lo compraría a este precio?" — si la respuesta es no, hay que replantearse tenerlo', '"¿Cuánto tiempo llevo con este activo?" — más tiempo justifica más apego', '"¿Qué harían otros inversores con este activo?" — la comparación social neutraliza el sesgo'] },
+    ],
+  },
+  {
+    id: 'halo-effect',
+    name: 'Efecto Halo',
+    nameEn: 'Halo Effect',
+    tipo: 'cognitivo',
+    clase: 17,
+    definition: 'Generalizamos un atributo positivo (o negativo) de una persona o empresa hacia todas sus demás características.',
+    description: 'El Efecto Halo es una obra maestra del Sistema 1: ante la ausencia de información completa, usamos la emoción que nos produce un rasgo visible para "rellenar" los espacios en blanco. Si una empresa hace un producto que adoramos, asumimos que sus finanzas, gestión y perspectivas también son brillantes.',
+    mechanism: 'Kahneman explica que el Sistema 1 detesta la ambigüedad y busca narrativas simples y coherentes. Ante la pregunta difícil "¿Es esta empresa una buena inversión?", sustituye por "¿Me gusta su producto?". La respuesta emocional llena los vacíos cognitivos.',
+    examples: [
+      { label: 'Inversión', text: 'Apple hace productos que amas. Sus acciones siempre valen más de lo que los fundamentals justifican porque el halo del producto contamina la valuación. "Buen producto = buena acción" es el Efecto Halo aplicado.' },
+      { label: 'Contratación', text: 'Un candidato atractivo y bien vestido parece más competente en la entrevista, independientemente de sus respuestas técnicas. El físico irradia halo hacia la inteligencia.' },
+      { label: 'Empresa', text: 'Un CEO carismático que habla bien en conferencias parece más capaz de ejecutar la estrategia, aunque los números digan otra cosa.' },
+    ],
+    trapQuestion: 'Tu teléfono favorito es de la marca X. Es rápido y hermoso. La empresa sale a bolsa. Tienes liquidez. ¿Qué haces? — Comprar porque el producto es genial es el Efecto Halo: producto ≠ acción.',
+    antidotes: [
+      'Separar explícitamente: "¿Me gusta el producto?" vs. "¿Es buena inversión la acción?"',
+      'Evalúa la empresa como si nunca hubieras usado su producto — ¿cómo ves los números?',
+      'Busca activamente debilidades en las empresas que más admiras.',
+      'El test del CEO feo: ¿evaluarías igual esta empresa si el CEO fuera antipático pero los números iguales?',
+    ],
+    questions: [
+      { situation: 'Eres fanático de una marca de autos de lujo. Acaban de sacar al mercado sus acciones. ¿Qué haces?', options: [
+        { text: 'Compro — si el producto es tan bueno, la empresa debe ser excelente', reveal: 'Efecto Halo: la admiración por el producto contamina la evaluación financiera de la acción' },
+        { text: 'Analizo el ratio deuda/capital, márgenes y perspectivas como si no conociera la marca', reveal: 'Racional: separar la experiencia como consumidor del análisis como inversor' },
+      ]},
+      { situation: 'Un gestor de fondos es guapo, articula perfectamente y tiene un MBA de Harvard. ¿Qué peso le das a su historial de retornos?', options: [
+        { text: 'El MBA y la presencia me dan mucha confianza — reviso el historial de forma', reveal: 'Efecto Halo: los atributos superficiales (apariencia, credenciales) contaminan la evaluación de lo que importa (resultados)' },
+        { text: 'El historial de retornos ajustados al riesgo es lo que determina mi decisión', reveal: 'Racional: los retornos auditados son el único indicador que predice futuro desempeño con algo de validez' },
+      ]},
+      { situation: 'Una empresa que hizo un producto que usas y adoras reporta pérdidas por tercer trimestre consecutivo. ¿Cómo reaccionas?', options: [
+        { text: 'Deben ser problemas temporales — es una empresa demasiado buena para fracasar', reveal: 'Efecto Halo inverso: el amor por la marca crea resistencia a actualizar la visión ante evidencia negativa' },
+        { text: 'Reviso si hay razones fundamentales para las pérdidas y actualizo mi tesis', reveal: 'Racional: los datos actuales pesan más que la historia emocional con la empresa' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es el efecto halo en el contexto de inversiones?', options: ['Generalizar atributos positivos de una empresa a todos sus demás aspectos, formando una imagen distorsionada', 'El brillo que genera un activo en todo el portafolio cuando sube de valor', 'La tendencia a invertir en empresas conocidas porque su marca genera confianza'] },
+      { question: 'Una empresa tech muy admirada lanza un producto en un mercado que no conoce. Los analistas la califican positivamente por inercia. ¿Qué sesgo opera?', options: ['Efecto halo: el éxito pasado en tecnología contamina la evaluación de una aventura en un sector diferente', 'Sesgo de disponibilidad: el éxito reciente de la empresa es fácil de recordar', 'Representatividad: se parece a otras empresas que diversificaron exitosamente'] },
+      { question: '¿Cuál es el antídoto más directo contra el efecto halo al evaluar una inversión?', options: ['Analizar cada dimensión por separado — producto, finanzas, equipo — sin dejar que una contamine las demás', 'Buscar opiniones de personas que no conozcan la empresa para evitar el sesgo', 'Comparar la empresa con su competencia directa antes de evaluarla de forma aislada'] },
+    ],
+  },
+  {
+    id: 'herding',
+    name: 'Efecto Manada',
+    nameEn: 'Herding Effect',
+    tipo: 'cognitivo',
+    clase: 18,
+    definition: 'Tendemos a seguir las decisiones de la multitud, abandonando nuestro análisis propio.',
+    description: 'El Efecto Manada (Social Proof) es la tendencia a asumir que si muchos están haciendo algo, debe ser correcto. En inversiones, este sesgo alimenta burbujas (todos compran) y crashes (todos venden). Según el CFA, es un Error Cognitivo: el inversor falla en procesar información de manera independiente.',
+    mechanism: 'El cerebro sustituye una pregunta difícil ("¿Cuáles son los fundamentals de este activo?") por una fácil ("¿Están todos los demás comprando?"). Bajo incertidumbre, el consenso actúa como proxy de la verdad. Robert Cialdini explica que este mecanismo se amplifica con dos condiciones: incertidumbre y similitud.',
+    examples: [
+      { label: 'Burbuja', text: 'En 2021, millones compraron NFTs porque "todos los demás lo hacían". Nadie quería perderse el rally. El resultado fue una caída del 97% en muchos activos.' },
+      { label: 'Institucional', text: 'Los gestores profesionales también sufren herding: es más seguro equivocarse con la mayoría ("todos perdimos") que equivocarse solo ("¿por qué tomaste esa posición?").' },
+      { label: 'FOMO', text: 'Una acción sube 30% en una semana. El volumen de búsquedas en Google explota. Nuevos inversores entran justo cuando los informados están saliendo.' },
+    ],
+    trapQuestion: 'Eres parte de un comité. Todos aprueban un proyecto con números frágiles. ¿Cómo actúas? — En frío, el 90% dice que votaría en contra. En la sala, la presión del grupo cambia el voto.',
+    antidotes: [
+      'Antes de cualquier decisión, escribe tu análisis ANTES de conocer la posición de los demás.',
+      'El test del contrarian: ¿qué argumento haría el mejor inversor que va en dirección opuesta?',
+      'El consenso es información, no verdad. Pregunta: ¿qué saben los que están comprando que yo no sé?',
+      'Huye de las decisiones tomadas bajo urgencia y presión social — es precisamente cuando el herding ataca.',
+    ],
+    questions: [
+      { situation: 'Un activo que no conoces subió 80% este mes. Todos tus amigos ya invirtieron. ¿Qué haces?', options: [
+        { text: 'Entro — si tanta gente está ganando, algo saben que yo no sé', reveal: 'Efecto Manada: el consenso actúa como sustituto del análisis. Pero quienes entraron primero ya están saliendo' },
+        { text: 'Investigo los fundamentals antes de moverme, independiente de lo que hagan mis amigos', reveal: 'Racional: cuando todos hablan de una inversión, suele ser tarde para entrar' },
+      ]},
+      { situation: 'En el comité de inversiones, 4 de 5 miembros aprueban un proyecto con proyecciones que te parecen optimistas. Eres el último en votar. ¿Qué haces?', options: [
+        { text: 'Voto a favor — si cuatro personas más inteligentes que yo lo aprobaron, algo ven', reveal: 'Herding institucional (Groupthink): los comités destruyen el valor de la información privada de cada miembro' },
+        { text: 'Voto en contra y explico mis dudas — el valor de estar en el comité es precisamente votar de forma independiente', reveal: 'Racional: la diversidad de opiniones en un comité es su principal activo. Ceder al consenso la elimina' },
+      ]},
+      { situation: 'El mercado cayó 15% en dos semanas. Todos venden. Los medios hablan de "colapso histórico". ¿Qué haces con tu portafolio de largo plazo?', options: [
+        { text: 'Vendo también para evitar pérdidas mayores — si todos salen, algo grave está pasando', reveal: 'Herding a la baja: las crisis generan el peor momento para seguir a la multitud — es cuando los informados compran' },
+        { text: 'Reviso si los fundamentals de mis posiciones cambiaron, no si el sentimiento del mercado cambió', reveal: 'Racional: el precio y el valor divergen más en pánico. El herding vende cuando debería comprar' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Por qué el efecto manada se intensifica en condiciones de incertidumbre?', options: ['Porque bajo incertidumbre, el consenso actúa como sustituto del análisis — si todos lo hacen, debe ser correcto', 'Porque en mercados volátiles la información individual pierde valor frente a la colectiva', 'Porque la incertidumbre activa el Sistema 2 que busca validación social antes de decidir'] },
+      { question: 'Los gestores profesionales de fondos también sufren efecto manada. ¿Por qué?', options: ['Porque equivocarse junto a todos es profesionalmente menos costoso que equivocarse solo con una posición contraria', 'Porque tienen acceso a la misma información y naturalmente llegan a las mismas conclusiones', 'Porque los reguladores les exigen mantener portafolios similares al índice de referencia'] },
+      { question: '¿Qué distingue al inversor que resiste el efecto manada del que cede?', options: ['Escribir y documentar su análisis antes de conocer la posición del mercado o de otros inversores', 'Tener más experiencia en mercados y conocer más casos históricos de burbujas', 'Invertir en activos menos seguidos por el mercado donde hay menos presión de grupo'] },
+    ],
+  },
+  {
+    id: 'optimism-bias',
+    name: 'Sesgo de Optimismo',
+    nameEn: 'Optimism Bias',
+    tipo: 'emocional',
+    clase: 19,
+    definition: 'Creemos sistemáticamente que tenemos menos probabilidad de vivir eventos negativos y más de vivir positivos que el promedio estadístico.',
+    description: 'El Sesgo de Optimismo es el "gemelo" del Exceso de Confianza. Juntos explican por qué los inversores asumen más riesgo del que deberían, los emprendedores subestiman el fracaso y los gestores prometen rendimientos imposibles. Nuestro ego necesita creer que el futuro será brillante y que somos excepcionales.',
+    mechanism: 'El Sistema 1 opera bajo WYSIATI: al planificar, se enfoca en el escenario ideal e ignora contingencias. La Falacia de Planificación (Kahneman) es su manifestación más clara: proyectos que siempre se entregan tarde y sobre presupuesto porque el plan asumió el mejor escenario.',
+    examples: [
+      { label: 'Falacia de planificación', text: 'El 90% de los proyectos de construcción de infraestructura llegan tarde y sobre presupuesto. El optimismo de los planificadores es sistemático, no accidental.' },
+      { label: 'Emprendimiento', text: 'El 90% de los emprendedores cree estar en el 10% que sobrevivirá. Estadísticamente, el 90% de las startups fracasan en 5 años.' },
+      { label: 'Inversión', text: 'Los inversores individuales estiman retornos promedios de 15-20% anual para sus portafolios, cuando el mercado históricamente da 8-10%.' },
+    ],
+    trapQuestion: 'Inicias un proyecto importante. ¿Defines el presupuesto y tiempo incluyendo un 30% de margen para imprevistos, o propones el escenario más optimista para "demostrar rentabilidad"? — En frío, todos dicen que incluyen margen. En la práctica, casi nadie lo hace.',
+    antidotes: [
+      'Outside View (Visión Externa): ¿cuál es la tasa base de éxito para proyectos similares al tuyo?',
+      'Pre-mortem: imagina que tu plan falló — ¿cuáles fueron las 3 razones principales?',
+      'Planifica con el escenario pesimista como base, no el optimista.',
+      'Comparte tus planes con alguien que no tenga stake emocional para que identifique los puntos ciegos.',
+    ],
+    questions: [
+      { situation: 'Estás lanzando un negocio. ¿Cómo defines tu presupuesto y timeline inicial?', options: [
+        { text: 'Propongo el escenario más rápido y barato — hay que mostrar rentabilidad atractiva', reveal: 'Sesgo de optimismo / Falacia de Planificación: el 90% de proyectos llegan tarde y sobre presupuesto por exactamente esta razón' },
+        { text: 'Añado 30-40% de tiempo y capital extra sobre mi estimación base', reveal: 'Racional: la "Visión Externa" muestra que los proyectos siempre cuestan más y tardan más de lo planeado' },
+      ]},
+      { situation: '¿Cuál crees que es la probabilidad de que tu próxima inversión te dé retornos por encima del mercado?', options: [
+        { text: 'Alta (70%+) — tengo información y análisis que el mercado no incorporó', reveal: 'Sesgo de optimismo: los mercados son competitivos. La mayoría de inversores activos no supera al índice consistentemente' },
+        { text: 'Modesta (50% o menos) — los mercados son eficientes y la superioridad consistente es rara', reveal: 'Racional: la humildad estadística es el punto de partida correcto. Superar al mercado es posible pero difícil' },
+      ]},
+      { situation: 'Tu startup tiene 18 meses de capital. Planificas el próximo fundraising. ¿Cuánto tiempo antes empiezas?', options: [
+        { text: '3-4 meses antes — con mis métricas no debería tardar tanto en cerrar', reveal: 'Sesgo de optimismo: fundraisings toman en promedio 6-9 meses. La mayoría de founders empieza tarde por exactamente esta razón' },
+        { text: '9-12 meses antes — el proceso siempre tarda más de lo esperado', reveal: 'Racional: planificar desde el escenario pesimista da margen para el mundo real' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es la Falacia de Planificación y quién la describió?', options: ['La tendencia sistemática a subestimar el tiempo, costo y riesgos de proyectos futuros, descrita por Kahneman', 'El error de planificar con escenarios pesimistas que nunca se materializan, descrito por Thaler', 'La dificultad de hacer planes a largo plazo cuando el futuro es muy incierto, descrita por Ariely'] },
+      { question: 'El 90% de los conductores cree que maneja mejor que el promedio. ¿Qué ilustra esto?', options: ['Que sistemáticamente nos ubicamos por encima del promedio en habilidades, lo cual es estadísticamente imposible para la mayoría', 'Que las personas mienten sobre sus habilidades para parecer mejores ante los demás', 'Que el optimismo es una estrategia racional para mantener la motivación'] },
+      { question: '¿Qué es el "outside view" (visión externa) y por qué combate el sesgo de optimismo?', options: ['Preguntar cuál es la tasa base de éxito para proyectos similares al tuyo, en lugar de enfocarte solo en tu caso particular', 'Pedir la opinión de personas externas a tu equipo antes de tomar una decisión importante', 'Analizar los datos históricos del mercado en lugar de proyecciones futuras'] },
+    ],
+  },
+  {
+    id: 'authority-bias',
+    name: 'Sesgo de Autoridad',
+    nameEn: 'Authority Bias',
+    tipo: 'cognitivo',
+    clase: 20,
+    definition: 'Damos demasiado peso a la opinión de figuras que percibimos como expertos, sin cuestionar si realmente lo son.',
+    description: 'El Sesgo de Autoridad (Cialdini) es uno de sus seis Principios de Influencia: estamos programados para obedecer a figuras de autoridad como atajo cognitivo. En finanzas, esto nos hace abandonar nuestro análisis ante cualquier figura con credenciales, título o confianza aparente.',
+    mechanism: 'El cerebro está biológicamente diseñado para usar la autoridad como señal de fiabilidad — evolutivamente ahorró energía y tiempo. El Sistema 1 convierte credenciales (título, ropa, confianza) en permiso para no pensar. El problema: las credenciales no siempre predicen competencia, y los expertos tienen conflictos de interés.',
+    examples: [
+      { label: 'Finanzas', text: 'Madoff manejó el mayor fraude financiero de la historia ($65B) durante décadas. Los inversores nunca auditaron sus estrategias porque su autoridad como ex-presidente del NASDAQ era suficiente señal.' },
+      { label: 'Inversión', text: 'Un Nobel de Economía publica un modelo. Los fondos lo adoptan sin cuestionar sus supuestos. LTCM quebró con dos nobeles en el equipo.' },
+      { label: 'Redes sociales', text: 'Influencers financieros con millones de seguidores mueven mercados. La audiencia asume que quien tiene muchos seguidores sabe más.' },
+    ],
+    trapQuestion: 'Un célebre Nobel de Economía publica un modelo de inversión innovador. ¿Qué haces? A) Revisar el modelo con cautela buscando vulnerabilidades. B) Adoptarlo — su nivel garantiza resultados. — LTCM tenía dos Nobeles y quebró espectacularmente.',
+    antidotes: [
+      'Separa las credenciales del argumento: ¿el argumento se sostiene por sí solo, sin importar quién lo dice?',
+      'Pregunta siempre: ¿qué incentivos tiene esta persona para darme este consejo?',
+      'Busca la opinión de expertos en el otro lado — si solo escuchas un lado, estás bajo el sesgo.',
+      'La prueba del historial auditado: ¿cuál es el track record real de esta persona en situaciones similares?',
+    ],
+    questions: [
+      { situation: 'Un famoso gestor de fondos con 30 años de experiencia recomienda una acción en televisión. ¿Qué haces?', options: [
+        { text: 'Si él lo dice con tanto conviction, debe saber algo — compro', reveal: 'Sesgo de autoridad: los expertos también se equivocan. ¿Tiene posición en esa acción? ¿Cuál es su track record reciente?' },
+        { text: 'Uso su tesis como punto de partida para mi propio análisis, no como conclusión', reveal: 'Racional: la autoridad puede señalar ideas interesantes, pero no reemplaza el análisis propio' },
+      ]},
+      { situation: 'Tu asesor bancario — corbata, oficina lujosa, MBA — te recomienda un fondo de inversión con comisiones del 2.5% anual. ¿Qué haces?', options: [
+        { text: 'Si me lo recomienda el banco, debe ser bueno — contrato', reveal: 'Sesgo de autoridad: los asesores bancarios tienen incentivos para recomendar productos del banco. El 2.5% es altísimo' },
+        { text: 'Pregunto qué comisión recibe por recomendarlo, comparo con ETFs y decido con información', reveal: 'Racional: en finanzas, los incentivos del asesor frecuentemente divergen de tu interés' },
+      ]},
+      { situation: 'Un influencer con 3M de seguidores, que parece muy exitoso, recomienda "la criptomoneda del momento". ¿Qué haces?', options: [
+        { text: 'Si 3M de personas lo siguen, algo sabe — al menos meto un poco', reveal: 'Sesgo de autoridad + herding: los seguidores son prueba social, no de competencia. Muchos influencers fueron pagados para promover' },
+        { text: 'Investigo si tiene posición en ese activo, cuál es su historial real y los fundamentos del proyecto', reveal: 'Racional: los incentivos y el historial son lo que importa, no los seguidores ni la apariencia de éxito' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es la negligencia de la tasa base en el sesgo de representatividad?', options: ['Ignorar la probabilidad estadística real de que algo ocurra porque un caso concreto parece muy representativo', 'No considerar los costos base al calcular el retorno de una inversión', 'Subestimar la importancia de las tasas de interés en decisiones financieras'] },
+      { question: 'Una startup tiene un fundador joven con hoodie y oficina en Silicon Valley. La describes como "la próxima Apple". ¿Qué sesgo opera?', options: ['Representatividad: el parecido superficial con el estereotipo de empresa exitosa sustituye el análisis real', 'Efecto halo: los atributos positivos del fundador se transfieren a la empresa', 'Sesgo de disponibilidad: recuerdas fácilmente casos de startups exitosas similares'] },
+      { question: '¿Qué hace el cerebro cuando aplica el sesgo de representatividad?', options: ['Clasifica algo nuevo según su parecido con un estereotipo, ignorando la probabilidad estadística real', 'Representa mentalmente los escenarios futuros para tomar mejores decisiones', 'Usa la experiencia pasada de forma sistemática y precisa para evaluar situaciones nuevas'] },
+    ],
+  },
+  {
+    id: 'regret-aversion',
+    name: 'Aversión al Arrepentimiento',
+    nameEn: 'Regret Aversion',
+    tipo: 'emocional',
+    clase: 11,
+    definition: 'Evitamos tomar decisiones por miedo a que el resultado sea malo y nos haga sentir responsables de la pérdida.',
+    description: 'La Aversión al Arrepentimiento es distinta de la Aversión al Riesgo clásica: no es miedo a perder dinero, es miedo a sentirte responsable de haberlo perdido. Esto lleva a dos comportamientos opuestos: parálisis (no hacer nada para no equivocarse activamente) y comportamiento de manada (si todos se equivocan, no es tu culpa).',
+    mechanism: 'Kahneman explica que el arrepentimiento es una emoción contrafactual: el cerebro simula la realidad alternativa ("si tan solo hubiera…"). El dolor es más intenso cuando la pérdida resulta de una acción que tomamos que de una omisión. Esto crea una asimetría que paraliza la toma de decisiones.',
+    examples: [
+      { label: 'Efecto disposición', text: 'Un inversor mantiene una acción perdedora durante años porque venderla "haría real" la pérdida y tendría que admitir que se equivocó. Vende las ganadoras para asegurar ganancias antes de que "se vayan".' },
+      { label: 'Manada', text: 'Un gestor invierte en lo mismo que todos sus colegas. Si pierde, "todos perdimos" — el arrepentimiento se diluye. Si hubiera tomado una posición contraria y perdido, habría sido culpa exclusivamente suya.' },
+      { label: 'Inacción', text: 'Una persona con dinero en efectivo por un año que "espera el momento correcto" para invertir. El miedo al arrepentimiento de entrar en el momento equivocado supera el costo de oportunidad de no estar invertido.' },
+    ],
+    trapQuestion: 'Fondo A perdió 10% manteniendo su estrategia estándar. Fondo B perdió 10% tras intentar una nueva estrategia. ¿A cuál gestor despides? — La mayoría despide al de B, aunque el resultado es idéntico. Castigamos más el error por acción que por omisión.',
+    antidotes: [
+      'Distinguir proceso de resultado: ¿fue una buena decisión dado lo que sabías, aunque el resultado fuera malo?',
+      'Re-enmarcar el inmovilismo: no decidir también es una decisión — y también puede generar arrepentimiento.',
+      'Regla del "10-10-10" (Suzy Welch): ¿cómo te sentirás sobre esta decisión en 10 minutos, 10 meses, 10 años?',
+      'Portafolio de "arrepentimiento mínimo": diseña tu estrategia para que puedas vivir con el peor escenario posible.',
+    ],
+    questions: [
+      { situation: 'Fondo A perdió -10% manteniendo su estrategia conservadora de siempre. Fondo B perdió -10% tras cambiar a una estrategia nueva. ¿A quién despides?', options: [
+        { text: 'Al gestor de Fondo B — intentó algo nuevo y falló', reveal: 'Sesgo de omisión: castigamos más los errores por acción que por inacción, aunque el resultado sea idéntico' },
+        { text: 'A ninguno / Son equivalentes — el resultado fue el mismo', reveal: 'Racional: el resultado fue idéntico. Si Fondo B habría ganado con la nueva estrategia, habrías felicitado al gestor por la misma decisión' },
+      ]},
+      { situation: 'Tienes $500,000 en efectivo esperando "el momento correcto" para invertir. Llevas 14 meses esperando. ¿Qué haces?', options: [
+        { text: 'Sigo esperando — si entro y el mercado cae, me voy a arrepentir de no haber esperado', reveal: 'Aversión al arrepentimiento por acción: pero ¿cuánto costó de oportunidad ese año y medio en efectivo?' },
+        { text: 'Entro de forma escalonada — el costo de oportunidad de esperar también genera arrepentimiento', reveal: 'Racional: la inacción también genera arrepentimiento futuro. El dollar-cost averaging reduce el dolor de "entrar en el tope"' },
+      ]},
+      { situation: 'Necesitas liquidar una posición urgentemente. Tienes: Acción A (+20%) y Acción B (-25%). Ambas con igual potencial a futuro. ¿Cuál vendes?', options: [
+        { text: 'Vendo la A (+20%) — aseguro la ganancia y no "hago real" la pérdida en B', reveal: 'Efecto disposición / Aversión al arrepentimiento: vender la ganadora y mantener la perdedora es el sesgo clásico de Shefrin & Statman' },
+        { text: 'Evalúo cuál tiene mejor perspectiva a futuro y vendo la que menos me convence', reveal: 'Racional: el precio de entrada es irrelevante para la decisión de hoy. Solo importa el potencial futuro' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Cuál es la diferencia entre un error de comisión y uno de omisión en la aversión al arrepentimiento?', options: ['El error de comisión es actuar y que salga mal; el de omisión es no actuar y perder una oportunidad — el primero duele más', 'El error de comisión es no hacer nada; el de omisión es actuar sin suficiente información', 'Ambos generan el mismo nivel de arrepentimiento según las investigaciones de Kahneman'] },
+      { question: 'Un inversor no vende una posición perdedora porque "si vendo y sube, no me lo voy a perdonar". ¿Qué sesgo explica la parálisis?', options: ['Aversión al arrepentimiento: el miedo al arrepentimiento futuro pesa más que el análisis racional presente', 'Efecto dotación: sobrevalora la posición porque ya la posee', 'Sesgo de status quo: prefiere no tomar decisiones activas'] },
+      { question: '¿Cómo el comportamiento de manada puede ser una forma de gestionar el arrepentimiento?', options: ['Si perdemos dinero siguiendo a todos, el arrepentimiento es menor porque todos perdieron — equivocarse solo duele más', 'Seguir a la manada reduce el arrepentimiento porque la decisión colectiva siempre es más precisa', 'El comportamiento de manada elimina el arrepentimiento porque distribuye la responsabilidad legalmente'] },
+    ],
+  },
+  {
+    id: 'escalation-commitment',
+    name: 'Escalada de Compromiso',
+    nameEn: 'Escalation of Commitment / Sunk Cost Fallacy',
+    tipo: 'dual',
+    clase: 21,
+    definition: 'Continuamos invirtiendo en un proyecto o posición porque ya invertimos en él, no porque tenga potencial futuro.',
+    description: 'La Falacia del Costo Hundido es una combinación de Error Cognitivo (Contabilidad Mental, Encuadre Estrecho) y Sesgo Emocional (Aversión a la Pérdida, Aversión al Arrepentimiento). Es el sesgo que mantiene proyectos fallidos vivos, carteras llenas de posiciones perdedoras y personas en relaciones que ya no funcionan.',
+    mechanism: 'Kahneman explica que nos negamos a "cerrar la cuenta mental" con saldo negativo. La aversión a la pérdida hace que invertir más parezca la única manera de "recuperar". La responsabilidad personal amplifica el efecto: cuanto más fuimos los creadores de la decisión original, más difícil es abandonarla.',
+    examples: [
+      { label: 'Empresarial (Concorde)', text: 'Los gobiernos de Francia y Reino Unido siguieron financiando el Concorde durante años después de saber que era económicamente inviable. No podían admitir el error.' },
+      { label: 'Inversión', text: 'Una acción que compraste a $100 está en $30. La sigues manteniendo y comprando más, no porque creas en la empresa, sino porque "no puedes vender a ese precio".' },
+      { label: 'Personal', text: 'Llevas 2 años en un posgrado que no te gusta y no es relevante para tu carrera. Sigues porque "ya invertí mucho tiempo y dinero".' },
+    ],
+    trapQuestion: 'Eres consultor externo. Un cliente lleva años financiando un proyecto que ya no tiene demanda. ¿Qué recomiendas? — En frío, el 90% dice "cancelar". Pero cuando es TU proyecto, con TU dinero, la respuesta cambia.',
+    antidotes: [
+      'Test del Nuevo CEO: "¿Si yo llegara hoy sin historia con este proyecto, continuaría o lo cancelaría?"',
+      'Reformular la pregunta: "¿Cuánto invertiría HOY en esto si empezara de cero?"',
+      'Stop-loss predefinidos: antes de invertir, define cuándo y bajo qué condiciones saldrías.',
+      'Re-etiquetar el fracaso: la pérdida ya ocurrió — la pregunta es solo qué hacer hacia adelante.',
+    ],
+    questions: [
+      { situation: 'Compraste acciones de una empresa a $100. Hoy valen $40. Llevas 8 meses esperando que se recupere. ¿Qué preguntas te haces?', options: [
+        { text: '¿Cómo puedo recuperar los $60 que perdí?', reveal: 'Escalada de compromiso: los $60 ya se perdieron. La pregunta correcta es sobre el futuro, no el pasado' },
+        { text: '¿Si tuviera $40 en efectivo hoy, compraría esta acción a $40?', reveal: 'Racional: este es el Test del Nuevo CEO — la decisión debe basarse en el futuro, no en recuperar el pasado' },
+      ]},
+      { situation: 'Tu startup lleva 18 meses sin tracción. Ya gastaste $800K. Los clientes no adoptan el producto. Tienes $200K en caja. ¿Qué haces?', options: [
+        { text: 'Inyecto los $200K restantes — no puedo darme por vencido después de tanto sacrificio', reveal: 'Escalada de compromiso: los $800K ya no se pueden recuperar. La pregunta es si los $200K tienen mejor retorno en este proyecto o en otro' },
+        { text: 'Evalúo si hay evidencia nueva que justifique continuar, o si es momento de un pivot o cierre', reveal: 'Racional: la decisión se hace con los datos actuales, no con el peso emocional del pasado' },
+      ]},
+      { situation: 'Llevas 3 años en un proyecto laboral que te tiene infeliz. Tu lógica para quedarte es "ya invertí mucho aquí". ¿Es un buen argumento?', options: [
+        { text: 'Sí — es válido considerar todo lo que construí antes de renunciar', reveal: 'Escalada de compromiso: lo que ya invertiste no cambia lo que ganarás o perderás hacia adelante. La decisión se hace desde hoy' },
+        { text: 'No — lo que ya invertí no recuperaré. La pregunta es qué quiero construir a partir de hoy', reveal: 'Racional: el tiempo pasado no se puede recuperar. Solo el tiempo futuro está en juego' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué distingue la escalada de compromiso de simplemente ser perseverante?', options: ['La escalada ignora nueva evidencia negativa y continúa por lo ya invertido; la perseverancia responde a fundamentos reales', 'La escalada solo ocurre en grandes inversiones; la perseverancia aplica a decisiones cotidianas', 'La perseverancia es siempre racional; la escalada siempre es irracional sin excepción'] },
+      { question: 'Un CEO lleva 3 años defendiendo una división que pierde dinero. Los datos empeoran cada trimestre. ¿Qué sesgos combinados explican su comportamiento?', options: ['Escalada de compromiso + aversión a la pérdida + ilusión de control: no puede admitir el fracaso y cree que puede revertirlo', 'Exceso de confianza + efecto manada: confía en que el mercado eventualmente validará su estrategia', 'Sesgo de confirmación + representatividad: interpreta los datos negativos como casos excepcionales'] },
+      { question: '¿Qué es la "táctica del nuevo CEO" como antídoto a la escalada?', options: ['Preguntarse: "Si llegara hoy sin historia en este proyecto, ¿tomaría esta misma decisión?" — juzgar sin equipaje emocional', 'Contratar un consultor externo que no tenga vínculos con el proyecto para que evalúe objetivamente', 'Establecer desde el inicio criterios claros de éxito y fracaso que no puedan modificarse después'] },
+    ],
+  },
+  {
+    id: 'anclaje',
+    name: 'Anclaje y Ajuste',
+    nameEn: 'Anchoring & Adjustment',
+    tipo: 'cognitivo',
+    clase: 5,
+    definition: 'Dependemos excesivamente de un valor inicial (el "ancla") para hacer estimaciones, ajustando insuficientemente desde ese punto.',
+    description: 'El sesgo de Anclaje, descrito por Kahneman y Tversky, muestra que cualquier número que veamos primero actúa como punto de referencia que contamina todas las estimaciones posteriores. Dan Ariely lo llama "Coherencia Arbitraria": el primer precio que vemos se convierte en el estándar mental, incluso si fue completamente aleatorio.',
+    mechanism: 'El Sistema 1 es insuficientemente crítico con el ancla inicial. El ajuste desde el ancla siempre es insuficiente porque nos detenemos en el primer valor "plausible". No importa si el ancla es relevante o ridícula — su efecto persiste.',
+    examples: [
+      { label: 'Negociación', text: 'En una negociación salarial, quien pone el primer número sobre la mesa ancla toda la discusión. El que responde siempre ajusta desde ese punto, no desde su valor real.' },
+      { label: 'Inversión', text: 'Una acción que compraste a $200 y ahora vale $80. Tu ancla es $200 y percibes $80 como "barata", aunque $80 pueda ser todavía cara según los fundamentals actuales.' },
+      { label: 'Precios', text: 'En un restaurante, el vino más caro del menú existe para hacer que el segundo más caro parezca razonable — el precio alto ancla la percepción de valor.' },
+    ],
+    trapQuestion: '¿Cuánta gente hay en Turquía? Ahora: primero dime, ¿hay más o menos de 10 millones? — Después de pensar en 10M, tu respuesta será diferente que si te hubiera dicho 100M primero. El número arbitrario te ancló.',
+    antidotes: [
+      'Define tu estimación ANTES de ver cualquier precio o número de referencia.',
+      'Pregúntate: "¿Sería mi estimación la misma si nunca hubiera visto ese número?"',
+      'Usa múltiples metodologías de valuación independientes antes de comparar.',
+      'En negociaciones: si el otro ancla primero, señala explícitamente que el ancla es arbitraria antes de contra-proponer.',
+    ],
+    questions: [
+      { situation: 'Una acción que compraste a $150 ahora cotiza a $60. El analista dice que el precio justo es $55. ¿Cómo percibes $60?', options: [
+        { text: 'Está barata — está muy por debajo de los $150 que pagué', reveal: 'Anclaje: tu precio de compra ($150) contamina tu percepción del valor actual. $60 puede ser caro si el valor es $55' },
+        { text: 'Evalúo si $60 es barata o cara basándome en el análisis actual, no en lo que pagué', reveal: 'Racional: el precio de compra es históricamente irrelevante para la decisión de hoy' },
+      ]},
+      { situation: 'Vas a negociar tu sueldo. ¿Cuál es tu estrategia?', options: [
+        { text: 'Espero a que el empleador proponga primero — no quiero quedar mal pidiendo mucho', reveal: 'Error: quien ancla primero tiene ventaja. El primero que menciona un número establece el punto de referencia para toda la negociación' },
+        { text: 'Propongo primero un número alto pero razonable — quiero anclar yo la conversación', reveal: 'Racional: anclar primero con un número ambicioso pero creíble sesga el acuerdo final hacia tu favor' },
+      ]},
+      { situation: 'Ves un reloj de $5,000 en el aparador de una tienda de lujo. Entras a preguntar por un reloj que buscabas. Te ofrecen uno a $1,200. ¿Cómo lo percibes?', options: [
+        { text: 'Parece razonable — es mucho menos que el de $5,000 de la vitrina', reveal: 'Anclaje por diseño: las tiendas de lujo ponen artículos caros en la vitrina precisamente para anclar tu percepción de valor' },
+        { text: 'Evalúo $1,200 como si no hubiera visto el reloj de $5,000 — ¿es ese precio justo para lo que quiero?', reveal: 'Racional: el ancla fue colocada intencionalmente para contaminar tu evaluación' },
+      ]},
+    ],
+    fixationQuestions: [
+      { question: '¿Qué es el "ancla" en el sesgo de anclaje?', options: ['El primer dato que recibimos y que influye desproporcionadamente en nuestra estimación', 'El precio final que pagamos por un producto', 'La decisión más racional en una negociación'] },
+      { question: 'Un vendedor anuncia precio original $10,000 con 50% de descuento. ¿Cuál es el efecto del anclaje?', options: ['El descuento nos hace creer que $5,000 es una ganga, aunque no sepamos si ese era el precio justo', 'El precio de $5,000 es objetivamente barato porque bajó', 'Solo hay anclaje si el comprador conocía el precio original antes'] },
+      { question: 'Según Dan Ariely, ¿qué es la "coherencia arbitraria"?', options: ['Los precios iniciales aleatorios se vuelven el estándar mental con el que comparamos todo lo demás', 'Las personas siempre negocian de forma coherente aunque los precios sean arbitrarios', 'El cerebro ignora los precios iniciales y decide solo con información nueva'] },
+    ],
+  },
+];

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backoffice · Finanzas Conductuales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="screen-login" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink)">
+  <div style="width:100%;max-width:360px;padding:2rem">
+    <div style="font-family:var(--ff-display);font-size:1.6rem;color:white;margin-bottom:.5rem">Backoffice</div>
+    <div style="font-size:.85rem;color:var(--ink-4);margin-bottom:2rem">Finanzas Conductuales · Ibero CDMX</div>
+    <form id="login-form" style="display:flex;flex-direction:column;gap:12px">
+      <input type="email" name="email" placeholder="Correo admin" class="auth-input" required>
+      <input type="password" name="password" placeholder="Contraseña" class="auth-input" required>
+      <button type="submit" class="btn-primary">Entrar</button>
+      <div id="login-error" style="display:none;font-size:.85rem;color:#FCA5A5;text-align:center"></div>
+    </form>
+    <div style="margin-top:1.5rem;text-align:center">
+      <button id="dev-skip" style="background:none;border:none;font-size:.72rem;color:rgba(255,255,255,.2);cursor:pointer;font-family:var(--ff-body)">dev skip</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="admin-app" hidden>
+  <nav class="admin-nav">
+    <div class="admin-nav-title">Backoffice · Finanzas Conductuales</div>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <button class="btn-ghost" id="btn-refresh" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.2)">↻ Actualizar</button>
+      <a href="index.html" style="color:rgba(255,255,255,.4);font-size:.8rem;text-decoration:none">← App</a>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="overview">Resumen</button>
+      <button class="tab-btn" data-tab="actividad">Actividad</button>
+      <button class="tab-btn" data-tab="alumnos">Alumnos</button>
+      <button class="tab-btn" data-tab="preguntas">Preguntas</button>
+      <button class="tab-btn" data-tab="banco">Banco</button>
+    </div>
+
+    <div class="tab-content">
+      <div id="tab-overview"  class="tab-pane active"><p style="color:var(--ink-4)">Cargando…</p></div>
+      <div id="tab-actividad" class="tab-pane"><p style="color:var(--ink-4)">Cargando…</p></div>
+      <div id="tab-alumnos"   class="tab-pane"><p style="color:var(--ink-4)">Cargando…</p></div>
+      <div id="tab-preguntas" class="tab-pane"><p style="color:var(--ink-4)">Cargando…</p></div>
+      <div id="tab-banco"     class="tab-pane"><p style="color:var(--ink-4)">Cargando…</p></div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
