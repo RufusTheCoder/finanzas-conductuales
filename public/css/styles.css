@@ -2101,6 +2101,41 @@ label { display: block; margin-bottom: 1rem; font-weight: 600; }
 .plan-other-name { font-weight: 700; font-size: 1.05rem; margin-bottom: .25rem; }
 .plan-other-cov { font-size: .82rem; color: var(--ink-4); margin-bottom: .4rem; }
 .plan-other-mecs { display: flex; flex-wrap: wrap; gap: 2px; }
+.plan-other { flex-direction: column; }
+.plan-other-head { display: flex; gap: 1rem; align-items: flex-start; }
+
+.antidoto-what, .antidoto-how {
+  margin-top: 1.25rem;
+  padding: 1rem 1.2rem;
+  background: rgba(0, 0, 0, .03);
+  border-radius: 8px;
+  text-align: left;
+}
+.antidoto-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: .4rem;
+}
+.antidoto-text { font-size: .9rem; line-height: 1.6; color: var(--ink-2); }
+
+.antidoto-what-sm, .antidoto-how-sm {
+  margin-top: .85rem;
+  padding: .75rem 1rem;
+  background: rgba(0, 0, 0, .03);
+  border-radius: 6px;
+}
+.antidoto-label-sm {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: .3rem;
+}
+.antidoto-text-sm { font-size: .85rem; line-height: 1.55; color: var(--ink-2); }
 
 /* Step 3 — Severidad */
 .severidad-bars { display: flex; flex-direction: column; gap: .85rem; }
@@ -2135,7 +2170,24 @@ label { display: block; margin-bottom: 1rem; font-weight: 600; }
 .mec-pct { font-weight: 700; font-family: var(--ff-display); font-size: 1rem; color: var(--ink-3); }
 .mec-track { height: 10px; background: rgba(0, 0, 0, .06); border-radius: 5px; overflow: hidden; margin-bottom: .4rem; }
 .mec-fill { height: 100%; border-radius: 5px; transition: width .5s; }
-.mec-biases { font-size: .76rem; color: var(--ink-4); line-height: 1.4; }
+.mec-phrase { font-size: .85rem; font-style: italic; color: var(--ink-3); margin-bottom: .85rem; }
+.mec-desc {
+  margin-top: .75rem;
+  padding: .75rem 1rem;
+  background: rgba(0, 0, 0, .03);
+  border-radius: 6px;
+}
+.mec-desc-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: .3rem;
+}
+.mec-desc-text { font-size: .85rem; line-height: 1.55; color: var(--ink-2); }
+.mec-biases-label { font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-4); margin-top: .85rem; margin-bottom: .3rem; }
+.mec-biases { font-size: .8rem; color: var(--ink-3); line-height: 1.5; }
 
 /* Step 5 — Autoconciencia */
 .scatter-wrap {

@@ -7,11 +7,21 @@ const app = document.getElementById('app');
 
 // ── MECANISMOS + DATOS CLASE 23 ──────────────────
 const MECANISMOS = [
-  { id: 'dolor',  icon: '🔴', name: 'Aversión al Dolor',        color: '#922B21', phrase: 'El cerebro evita registrar pérdidas' },
-  { id: 'ego',    icon: '🛡️', name: 'Protección del Ego',        color: '#6C3483', phrase: 'El cerebro distorsiona hechos para preservar la autoimagen' },
-  { id: 'econ',   icon: '⚡', name: 'Economía Cognitiva',         color: '#1A5276', phrase: 'El cerebro sustituye preguntas difíciles por atajos' },
-  { id: 'grupo',  icon: '🔥', name: 'Necesidad de Pertenencia',   color: '#1E8449', phrase: 'El cerebro terceriza decisiones al grupo' },
-  { id: 'tiempo', icon: '⏳', name: 'Presente vs. Futuro',        color: '#9A7D0A', phrase: 'El cerebro sobrevalora el ahora' },
+  { id: 'dolor', icon: '🔴', name: 'Aversión al Dolor', color: '#922B21', phrase: 'El cerebro evita registrar pérdidas',
+    desc: 'El cerebro siente el dolor de perder aproximadamente el doble que el placer de ganar (Kahneman & Tversky). Para evitar ese dolor, distorsiona la realidad — aplaza decisiones, inventa justificaciones, se aferra al pasado.',
+    relation: 'Los sesgos de este mecanismo te hacen mantener inversiones perdedoras "para no realizar la pérdida", valorar de más lo que ya posees, y seguir metiendo dinero en decisiones fallidas por el costo hundido.' },
+  { id: 'ego', icon: '🛡️', name: 'Protección del Ego', color: '#6C3483', phrase: 'El cerebro distorsiona hechos para preservar la autoimagen',
+    desc: 'Tenemos una necesidad profunda de mantener una autoimagen positiva y coherente. Cuando la realidad amenaza esa imagen, el cerebro prefiere distorsionar los hechos antes que revisar la creencia sobre sí mismo.',
+    relation: 'Los sesgos de este mecanismo te hacen ver solo la información que confirma tu tesis, atribuir tus éxitos a tu habilidad y los fracasos al mercado, y sobreestimar sistemáticamente tu precisión al predecir.' },
+  { id: 'econ', icon: '⚡', name: 'Economía Cognitiva', color: '#1A5276', phrase: 'El cerebro sustituye preguntas difíciles por atajos',
+    desc: 'El cerebro es perezoso por diseño — pensar quema energía. Para ahorrarla, sustituye preguntas difíciles ("¿cuál es el valor intrínseco?") por atajos fáciles ("¿cómo se ve?"). El problema es que no avisa cuando lo está haciendo.',
+    relation: 'Los sesgos de este mecanismo te hacen anclarte en el primer número que viste, tratar el dinero de modo diferente según su origen, y juzgar probabilidades por la facilidad con que recuerdas ejemplos.' },
+  { id: 'grupo', icon: '🔥', name: 'Necesidad de Pertenencia', color: '#1E8449', phrase: 'El cerebro terceriza decisiones al grupo',
+    desc: 'El aislamiento fue históricamente peligroso; por eso desarrollamos un instinto potente de alinearnos con el consenso, especialmente bajo incertidumbre. El cerebro trata al grupo como proxy de la verdad.',
+    relation: 'Los sesgos de este mecanismo te hacen entrar a inversiones porque "todos están entrando", obedecer a figuras de autoridad sin cuestionar, y generalizar una buena impresión a toda una empresa o persona.' },
+  { id: 'tiempo', icon: '⏳', name: 'Presente vs. Futuro', color: '#9A7D0A', phrase: 'El cerebro sobrevalora el ahora',
+    desc: 'El cerebro tiene dificultad genuina para imaginar al yo futuro como una persona real. Esta asimetría nos empuja a sacrificar sistemáticamente el futuro por el presente — no por falta de información, sino por una limitación cognitiva.',
+    relation: 'Los sesgos de este mecanismo te hacen mantener el status quo por inercia, fallar en el ahorro de largo plazo por gastar hoy, y postergar decisiones importantes cuando requieren esfuerzo presente.' },
 ];
 
 // sesgo id → índice de mecanismo primario (0..4)
@@ -42,14 +52,30 @@ const MECH_WEIGHTS_BY_PROFILE = {
 };
 
 const ANTIDOTOS = [
-  { id: 'precom',    icon: '📌', name: 'Pre-compromiso',       coverage: [2, 0, 1, 1, 2] },
-  { id: 'diario',    icon: '📓', name: 'Diario de Decisiones', coverage: [1, 2, 1, 0, 0] },
-  { id: 's2',        icon: '🧘', name: 'Activar Sistema 2',    coverage: [1, 1, 2, 1, 1] },
-  { id: 'votcie',    icon: '🗳️', name: 'Votación Ciega',        coverage: [0, 1, 0, 2, 0] },
-  { id: 'testnd',    icon: '💰', name: 'Test del Dinero Nuevo', coverage: [1, 0, 0, 0, 2] },
-  { id: 'premortem', icon: '🔍', name: 'Pre-mortem',            coverage: [0, 2, 1, 0, 0] },
-  { id: 'steelman',  icon: '⚔️', name: 'Steel-manning',          coverage: [0, 2, 0, 1, 0] },
-  { id: 'chklist',   icon: '✅', name: 'Checklist de Sistema 2', coverage: [0, 0, 2, 0, 0] },
+  { id: 'precom', icon: '📌', name: 'Pre-compromiso', coverage: [2, 0, 1, 1, 2],
+    what: 'Tomar la decisión en frío, por escrito y por adelantado — antes de que aparezca la situación emocional.',
+    how: 'Define hoy reglas claras: "Si el mercado cae X%, rebalanceo. Si tengo sobrante a fin de mes, va automático a mi fondo indexado." Automatiza donde puedas (transferencias programadas) para que tu yo futuro no tenga que decidir en el momento.' },
+  { id: 'diario', icon: '📓', name: 'Diario de Decisiones', coverage: [1, 2, 1, 0, 0],
+    what: 'Registro escrito de cada decisión de inversión: tesis, razones, resultado esperado, fecha — para poder revisar después si hubo habilidad o suerte.',
+    how: 'Antes de cada inversión, escribe en 5 líneas: "Compro X porque Y. Espero Z resultado para la fecha W. Vendo si pasa A." Revisa mensualmente. Con el tiempo verás el patrón real de tus aciertos vs tus justificaciones post-hoc.' },
+  { id: 's2', icon: '🧘', name: 'Activar Sistema 2', coverage: [1, 1, 2, 1, 1],
+    what: 'Interrumpir deliberadamente el modo automático (Sistema 1, rápido y emocional) para pasar al modo analítico (Sistema 2, lento y deliberado) antes de decidir.',
+    how: 'Impón una pausa: 24 horas entre el impulso y la acción. Durante esa pausa, hazte 3 preguntas por escrito: "¿Qué información me falta? ¿Qué asumo sin verificar? ¿Cómo sabré si me equivoqué?" Si las respuestas no son claras, no decidas aún.' },
+  { id: 'votcie', icon: '🗳️', name: 'Votación Ciega', coverage: [0, 1, 0, 2, 0],
+    what: 'Expresar tu opinión por escrito antes de escuchar la del grupo, para evitar que el consenso te contamine.',
+    how: 'En reuniones o comités: antes de abrir la discusión, cada participante escribe su posición en un papel. Se revelan simultáneamente. Así se rompe el efecto cascada donde todos se alinean con el primero que habló.' },
+  { id: 'testnd', icon: '💰', name: 'Test del Dinero Nuevo', coverage: [1, 0, 0, 0, 2],
+    what: 'Tratar cada peso como si acabara de llegar a tus manos — ignorando su origen y tu historial con él.',
+    how: 'Ante una inversión perdedora pregúntate: "Si me dieran este dinero hoy en efectivo, ¿compraría esta posición?" Si la respuesta es no, véndela. El precio al que compraste es irrelevante — solo cuenta el presente y el futuro.' },
+  { id: 'premortem', icon: '🔍', name: 'Pre-mortem', coverage: [0, 2, 1, 0, 0],
+    what: 'Imaginar que tu decisión ya fracasó, y retroceder para identificar por qué — antes de tomarla.',
+    how: 'Antes de actuar, escribe: "Estamos en 12 meses en el futuro. Esta inversión fue un desastre. ¿Qué salió mal?" Enumera 5 razones plausibles. Si alguna tiene probabilidad real, ajusta el plan o no inviertas. Funciona porque desactiva el exceso de optimismo.' },
+  { id: 'steelman', icon: '⚔️', name: 'Steel-manning', coverage: [0, 2, 0, 1, 0],
+    what: 'Construir el mejor argumento posible CONTRA tu propia tesis — el opuesto al "straw-man" que simplifica al oponente.',
+    how: 'Antes de invertir: escribe el caso más fuerte para NO hacerlo. Busca activamente análisis contrarios, bajistas, críticos. Si después de leer el mejor contra-argumento sigues convencido, procede. Si no puedes formular un contra-argumento serio, probablemente tienes confirmation bias.' },
+  { id: 'chklist', icon: '✅', name: 'Checklist de Sistema 2', coverage: [0, 0, 2, 0, 0],
+    what: 'Lista fija de preguntas que te obligas a responder antes de cualquier decisión financiera — como los pilotos antes de despegar.',
+    how: 'Arma tu checklist de 5–7 ítems: "¿Conozco los costos? ¿Cuál es el peor escenario? ¿Cuánto perdería? ¿Qué evidencia contraria ignoré? ¿Esto cabe en mi plan?" Fuerza la pausa analítica y evita decisiones por impulso o por historia coherente pero no verificada.' },
 ];
 
 const DECISION_MATRIX = {
@@ -1445,6 +1471,18 @@ async function renderSesgoResult() {
 
 // ── FINAL REPORT — HELPERS ────────────────────────
 
+function getIntensidad(sesgoData, sesgoDef) {
+  if (!sesgoData) return 0;
+  if (typeof sesgoData.intensidad === 'number') return sesgoData.intensidad;
+  if (!Array.isArray(sesgoData.answers) || !sesgoDef?.questions) return 0;
+  const sesgadas = sesgoData.answers.filter((ans, i) => {
+    if (ans === null || ans === undefined) return false;
+    const reveal = sesgoDef.questions[i]?.options?.[ans]?.reveal || '';
+    return !reveal.toLowerCase().startsWith('racional') && !reveal.toLowerCase().startsWith('correcto');
+  }).length;
+  return sesgoData.answers.length ? sesgadas / sesgoData.answers.length : 0;
+}
+
 function computeMechanismSeverity(sesgos) {
   const buckets = [[], [], [], [], []];
   SESGOS.forEach(s => {
@@ -1452,7 +1490,7 @@ function computeMechanismSeverity(sesgos) {
     if (mecIdx === undefined) return;
     const data = sesgos[s.id];
     if (!data) return;
-    buckets[mecIdx].push(data.intensidad ?? 0);
+    buckets[mecIdx].push(getIntensidad(data, s));
   });
   return buckets.map(arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
 }
@@ -1480,7 +1518,7 @@ function computeAwarenessGap(sesgos) {
     const d = sesgos[s.id];
     if (!d) return;
     if (d.selfAssessment === undefined || d.selfAssessment === null) return;
-    const observed = Math.round((d.intensidad ?? 0) * 100);
+    const observed = Math.round(getIntensidad(d, s) * 100);
     const self = d.selfAssessment;
     const gap = observed - self;
     let category;
@@ -1532,18 +1570,36 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
         <div class="plan-top1-mecs">
           ${top1.mecsCovered.map(m => `<span class="mec-pill" style="background:${m.mec.color}15;color:${m.mec.color};border-color:${m.mec.color}40">${m.mec.icon} ${m.mec.name}</span>`).join('')}
         </div>
+        <div class="antidoto-what">
+          <div class="antidoto-label">¿Qué es?</div>
+          <div class="antidoto-text">${top1.what}</div>
+        </div>
+        <div class="antidoto-how">
+          <div class="antidoto-label">¿Cómo se implementa?</div>
+          <div class="antidoto-text">${top1.how}</div>
+        </div>
       </div>
       <div class="plan-others-title">Tus otros 2 antídotos de mayor retorno:</div>
       <div class="plan-others">
         ${top3.slice(1).map((a, i) => `
           <div class="plan-other">
-            <div class="plan-other-rank">#${i + 2}</div>
-            <div style="flex:1">
-              <div class="plan-other-name">${a.icon} ${a.name}</div>
-              <div class="plan-other-cov">Cubre ${a.coveragePct}% de tu peso sesgado</div>
-              <div class="plan-other-mecs">
-                ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+            <div class="plan-other-head">
+              <div class="plan-other-rank">#${i + 2}</div>
+              <div style="flex:1">
+                <div class="plan-other-name">${a.icon} ${a.name}</div>
+                <div class="plan-other-cov">Cubre ${a.coveragePct}% de tu peso sesgado</div>
+                <div class="plan-other-mecs">
+                  ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+                </div>
               </div>
+            </div>
+            <div class="antidoto-what-sm">
+              <div class="antidoto-label-sm">¿Qué es?</div>
+              <div class="antidoto-text-sm">${a.what}</div>
+            </div>
+            <div class="antidoto-how-sm">
+              <div class="antidoto-label-sm">¿Cómo se implementa?</div>
+              <div class="antidoto-text-sm">${a.how}</div>
             </div>
           </div>`).join('')}
       </div>
@@ -1553,7 +1609,8 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
 function renderReportStep3_Severidad(profile, sesgos) {
   const rows = SESGOS.map(s => {
     const d = sesgos[s.id] || {};
-    return { s, intensidad: d.intensidad ?? 0, has: !!d.done };
+    const has = !!d.done || Array.isArray(d.answers);
+    return { s, intensidad: getIntensidad(d, s), has };
   }).filter(r => r.has).sort((a, b) => b.intensidad - a.intensidad);
 
   return `
@@ -1596,7 +1653,11 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
       <div class="mec-bars">
         ${ranked.map(({ m, i, sev }) => {
           const pct = Math.round(sev * 100);
-          const belongs = SESGOS.filter(s => SESGO_MECANISMO[s.id] === i).map(s => s.name);
+          const belongs = SESGOS.filter(s => SESGO_MECANISMO[s.id] === i).map(s => {
+            const d = sesgos[s.id];
+            const sPct = d ? Math.round(getIntensidad(d, s) * 100) : null;
+            return sPct !== null ? `${s.name} (${sPct}%)` : s.name;
+          });
           return `
             <div class="mec-row">
               <div class="mec-row-head">
@@ -1605,6 +1666,16 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
                 <span class="mec-pct">${pct}%</span>
               </div>
               <div class="mec-track"><div class="mec-fill" style="width:${pct}%;background:${m.color}"></div></div>
+              <div class="mec-phrase">"${m.phrase}"</div>
+              <div class="mec-desc">
+                <div class="mec-desc-label">Qué es este mecanismo</div>
+                <div class="mec-desc-text">${m.desc}</div>
+              </div>
+              <div class="mec-desc">
+                <div class="mec-desc-label">Cómo se relaciona con tus sesgos</div>
+                <div class="mec-desc-text">${m.relation}</div>
+              </div>
+              <div class="mec-biases-label">Tus sesgos en este mecanismo:</div>
               <div class="mec-biases">${belongs.join(' · ')}</div>
             </div>`;
         }).join('')}
