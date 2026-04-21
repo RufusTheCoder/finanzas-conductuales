@@ -66,3 +66,27 @@ Copy `.env.example` to `.env` and fill in `SUPABASE_ANON_KEY`. In the multi-file
 ## Deploy
 
 Push to `master` → Netlify auto-deploys from that branch. No CI beyond that.
+
+## Notion sync (bugs & errors → Tarefas)
+
+Automated routine that pulls unsynchronized rows from Supabase `bug_reports` and `client_errors` and creates tasks in the Notion database `Tarefas` (Projeto=IBERO).
+
+- **Notion data source id:** `3c807d54-ad67-413a-acca-00b2e7afab20`
+- **Tracking columns:** `bug_reports.notion_task_url`, `client_errors.notion_task_url`, `client_errors.dedupe_hash`
+- **client_errors dedupe:** `op || '|' || LEFT(message, 120)` — one task per distinct error in a 7-day window, even if it fires many times.
+- **Priority heuristic for client_errors:** Alta if `users_affected >= 3` OR `http_status >= 500`, else Média.
+
+### Session bootstrap
+
+At the start of every session, call `CronList` and check for a recurring job whose prompt mentions `finanzas-conductuales` and `bug_reports`. If none exists, recreate it with `CronCreate` using:
+
+- `cron`: `13 */2 * * *` (every 2 hours at :13 local)
+- `recurring`: true
+- `durable`: true
+- `prompt`: the full sync procedure (same as the one currently running — read `notion_sync_prompt.md` for the canonical text).
+
+Crons in this environment are session-only and auto-expire after 7 days, so this bootstrap check must run every session to keep the pipeline alive.
+
+### Manual trigger
+
+To run the sync immediately without waiting for the next cron fire, ask: "roda o sync do Notion agora".
