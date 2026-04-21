@@ -1343,17 +1343,47 @@ function renderReport() {
             const intensidad = data.intensidad || 0;
             const label = intensidad === 0 ? 'No detectado' : intensidad <= 0.34 ? 'Leve' : intensidad <= 0.67 ? 'Moderado' : 'Dominante';
             const color = intensidad === 0 ? '#059669' : intensidad <= 0.67 ? '#D97706' : '#DC2626';
+            const fixScore = data.fixationScore ?? (Array.isArray(data.fixation) ? data.fixation.filter(x => x === 0).length : 0);
+            const fixTotal = s.fixationQuestions?.length ?? 3;
             return `
               <div class="report-sesgo-card">
                 <div class="report-sesgo-title">${s.name}</div>
                 <div class="report-sesgo-type">${s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional'} · Clase ${s.clase}</div>
                 <div class="report-sesgo-finding" style="border-left:3px solid ${color}">
-                  <span style="color:${color};font-weight:700">${label}</span> — ${Math.round(intensidad * 100)}% respuestas sesgadas · Verificación: ${data.fixationScore}/${s.fixationQuestions.length}
+                  <span style="color:${color};font-weight:700">${label}</span> — ${Math.round(intensidad * 100)}% respuestas sesgadas · Verificación: ${fixScore}/${fixTotal}
                 </div>
                 <div class="report-sesgo-antidote">→ ${s.antidotes[0]}</div>
               </div>`;
           }).join('')}
         </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-label">Plan personalizado</div>
+        <div class="report-section-title">Recomendaciones para tu perfil</div>
+        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.25rem">Valora qué tan útil te parece cada recomendación — tus respuestas nos ayudan a afinar el contenido del curso.</p>
+        <div class="reco-list">
+          ${profile.recommendations.map((r, i) => {
+            const val = state.reportRecoRatings?.[i] ?? 3;
+            const touched = state.reportRecoTouched?.[i];
+            return `
+              <div class="reco-item reco-item-rateable">
+                <div class="reco-icon">${i + 1}</div>
+                <div style="flex:1">
+                  <div class="reco-text">${r}</div>
+                  <div class="reco-rating-slider" data-idx="${i}">
+                    <div class="slider-row">
+                      <span class="slider-end-label">Nada útil</span>
+                      <input type="range" class="fit-slider report-reco-slider" data-idx="${i}" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
+                      <span class="slider-end-label">Muy útil</span>
+                    </div>
+                    <div class="slider-value-label report-reco-slider-val" data-idx="${i}">${touched ? SLIDER_LABELS[val] : 'Mueve el deslizador'}</div>
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+        <div id="report-reco-status" class="bit-gate-hint" style="margin-top:1rem"></div>
       </div>
 
       <div class="report-cta">
@@ -1366,6 +1396,37 @@ function renderReport() {
   app.appendChild(c);
   document.getElementById('btn-report-back').addEventListener('click', () => { state.screen = 'dashboard'; render(); });
   document.getElementById('btn-report-dash').addEventListener('click', () => { state.screen = 'dashboard'; render(); });
+
+  state.reportRecoRatings = state.reportRecoRatings || {};
+  state.reportRecoTouched = state.reportRecoTouched || {};
+  const status = document.getElementById('report-reco-status');
+  let saveTimer = null;
+  const flushReportRecos = () => {
+    const rows = Object.entries(state.reportRecoRatings).map(([idx, rating]) => ({
+      email: state.user.email,
+      q_type: 'report_reco_useful',
+      question_id: `report_reco_${idx}`,
+      sesgo_id: null,
+      rating,
+    }));
+    if (!rows.length) return;
+    logQuestionFeedback(rows)
+      .then(() => { if (status) { status.textContent = '✓ Valoraciones guardadas'; status.style.color = '#059669'; } })
+      .catch(() => { if (status) { status.textContent = '⚠ No se pudo guardar'; status.style.color = '#DC2626'; } });
+  };
+  document.querySelectorAll('.report-reco-slider').forEach(slider => {
+    const idx = parseInt(slider.dataset.idx);
+    slider.addEventListener('input', () => {
+      const v = parseInt(slider.value);
+      state.reportRecoRatings[idx] = v;
+      state.reportRecoTouched[idx] = true;
+      const lbl = document.querySelector(`.report-reco-slider-val[data-idx="${idx}"]`);
+      if (lbl) lbl.textContent = SLIDER_LABELS[v];
+      if (status) { status.textContent = 'Guardando…'; status.style.color = 'var(--ink-4)'; }
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(flushReportRecos, 600);
+    });
+  });
 }
 
 // ── SESSION TRACKING ─────────────────────────────
