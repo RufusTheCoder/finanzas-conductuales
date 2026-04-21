@@ -1111,7 +1111,7 @@ function openUserDetail(email) {
   const stage       = userStage(progress);
   const profile     = progress?.bit_result?.primary;
 
-  const close = () => { drawer.hidden = true; document.removeEventListener('keydown', onKey); };
+  const close = () => { drawer.style.display = 'none'; document.removeEventListener('keydown', onKey); };
   const onKey = (e) => { if (e.key === 'Escape') close(); };
   document.addEventListener('keydown', onKey);
   document.getElementById('user-detail-backdrop').onclick = close;
@@ -1171,7 +1171,7 @@ function openUserDetail(email) {
     ${renderRawResponses(responses)}
   `;
 
-  drawer.hidden = false;
+  drawer.style.display = 'flex';
   document.getElementById('ud-close').onclick = close;
 }
 
