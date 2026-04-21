@@ -67,11 +67,20 @@ Copy `.env.example` to `.env` and fill in `SUPABASE_ANON_KEY`. In the multi-file
 
 Push to `master` → Netlify auto-deploys from that branch. No CI beyond that.
 
-## Notion sync (bugs & errors → Tarefas)
+## Notion hub & sync
+
+**Project hub page (Notion):** [🎓 Ibero CDMX — Finanzas Conductuales](https://www.notion.so/349f4525168281d58ef1da6329b849d1) — subpage of `Claude_Projects_Rufus`. Contains:
+- Quick links (app, admin, Supabase, GitHub)
+- `Reuniões IBERO` database (data source id `2386ec2e-8766-4e90-870c-6fc2563fd13c`) for transcripts, notes, emails, student feedback. Schema mirrors Karen-Kota's: Título, Tipo, Data, Participantes, Processamento (Pendente/Processada/Ignorar), Tarefas geradas (relation → Tarefas).
+- Linked view `Tarefas IBERO — Ativas` filtered by Projeto=IBERO.
+
+When user posts a meeting/email/feedback row in `Reuniões IBERO` with Processamento=Pendente, extract action items and create rows in the Tarefas database (Projeto=IBERO), then set the relation `Tarefas geradas` and flip Processamento to Processada.
+
+### Bugs & errors auto-sync
 
 Automated routine that pulls unsynchronized rows from Supabase `bug_reports` and `client_errors` and creates tasks in the Notion database `Tarefas` (Projeto=IBERO).
 
-- **Notion data source id:** `3c807d54-ad67-413a-acca-00b2e7afab20`
+- **Notion data source id (Tarefas):** `3c807d54-ad67-413a-acca-00b2e7afab20`
 - **Tracking columns:** `bug_reports.notion_task_url`, `client_errors.notion_task_url`, `client_errors.dedupe_hash`
 - **client_errors dedupe:** `op || '|' || LEFT(message, 120)` — one task per distinct error in a 7-day window, even if it fires many times.
 - **Priority heuristic for client_errors:** Alta if `users_affected >= 3` OR `http_status >= 500`, else Média.
