@@ -1,4 +1,5 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation } from './supabase.js';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext } from './supabase.js';
+import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
@@ -144,6 +145,15 @@ const state = {
   reportStepTouched: {},
   reportRecoRatings: {},
   reportRecoTouched: {},
+  // Dashboard journey tab
+  journeyTab: null, // 'bit' | 'sesgos' | 'informe' | 'next' (null = auto-pick)
+  // Onboarding
+  onboardingSeen: false,
+  // Próximos pasos
+  nextSteps: { interests: [], other: '' },
+  nextStepsSaved: false,
+  nextStepsCounts: null,
+  nextStepsSaving: false,
 };
 
 // Dark mode init
@@ -168,13 +178,16 @@ function handleApiError(e, context = '') {
 
 function render() {
   app.innerHTML = '';
+  setErrorContext({ email: state.user?.email || null, screen: state.screen });
   if (state.screen !== 'auth') trackScreen(state.screen);
   switch (state.screen) {
+    case 'onboarding':   return renderOnboarding();
     case 'dashboard':    return renderDashboard();
     case 'bit':          return renderBit();
     case 'bit-result':   return renderBitResult();
     case 'sesgo':        return renderSesgoPhase();
     case 'report':       return renderReport();
+    case 'next-steps':   return renderNextSteps();
     default:             return renderAuth();
   }
 }
@@ -182,6 +195,8 @@ function render() {
 // ── AUTH ─────────────────────────────────────────
 
 const GOOGLE_SVG = `<svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>`;
+const FACEBOOK_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.88 11.85v-8.38H7.08V12h3.04V9.36c0-3 1.79-4.67 4.53-4.67 1.31 0 2.68.23 2.68.23v2.95h-1.51c-1.49 0-1.95.92-1.95 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12z"/></svg>`;
+const APPLE_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.88-3.08.41-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.41C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.32-.89 3.51-.84 1.54.07 2.7.64 3.44 1.77-3.14 1.88-2.29 5.13.57 6.26-.65 1.7-1.51 3.38-2.6 4.98zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>`;
 
 const SLIDER_LABELS = ['Nada', 'Muy poco', 'Algo', 'Bastante', 'Mucho', 'Totalmente'];
 const RATING_EMOJIS = ['😵', '😕', '😐', '😊', '🤩'];
@@ -246,11 +261,22 @@ async function afterAuth(auth) {
   try { await createUserProfile(auth.user.email); } catch(e) {}
   persistSession();
   state.progress = await loadUserProgress(state.user.email);
-  state.screen = 'dashboard';
+  state.onboardingSeen = await checkOnboardingSeen(state.user.email);
+  state.screen = state.onboardingSeen ? 'dashboard' : 'onboarding';
   state.authMode = 'login';
   state.authError = null;
   await startSession();
   render();
+}
+
+async function checkOnboardingSeen(email) {
+  try {
+    const rows = await getUserProfile(email);
+    const row = Array.isArray(rows) ? rows[0] : rows;
+    return !!row?.onboarding_seen_at;
+  } catch(e) {
+    return true; // fail open: don't block user
+  }
 }
 
 function renderAuth() {
@@ -463,6 +489,30 @@ async function handleNewPasswordSubmit(e) {
 
 // ── DASHBOARD ────────────────────────────────────
 
+const DEV_EMAILS = ['rodrigomarques.finance@gmail.com'];
+function isDevUser() {
+  return DEV_EMAILS.includes((state.user?.email || '').toLowerCase());
+}
+
+// ── DASHBOARD · journey tabs ────────────────────
+const JOURNEY_STAGES = [
+  { key: 'bit',     num: 1, label: 'Test BIT',     short: 'BIT' },
+  { key: 'sesgos',  num: 2, label: 'Sesgos',       short: 'Sesgos' },
+  { key: 'informe', num: 3, label: 'Informe',      short: 'Informe' },
+  { key: 'next',    num: 4, label: 'Próximos pasos', short: 'Próximos' },
+];
+
+function autoJourneyTab() {
+  const bitDone = state.progress?.bit_done;
+  const sesgos = state.progress?.sesgos || {};
+  const completed = Object.values(sesgos).filter(s => s.done).length;
+  const nextDone = state.progress?.next_steps_done;
+  if (!bitDone) return 'bit';
+  if (completed < SESGOS.length) return 'sesgos';
+  if (!state.progress?.report_seen_at) return 'informe';
+  return nextDone ? 'next' : 'informe';
+}
+
 function renderDashboard() {
   const bitDone = state.progress?.bit_done;
   const bitResult = state.progress?.bit_result;
@@ -470,8 +520,12 @@ function renderDashboard() {
   const completedSesgos = Object.values(sesgos).filter(s => s.done).length;
   const totalSesgos = SESGOS.length;
   const allDone = bitDone && completedSesgos === totalSesgos;
+  const informeUnlocked = allDone;
+  const nextUnlocked = allDone; // open once report is reachable
 
   const bitProfile = bitResult ? BIT_PROFILES[bitResult.primary] : null;
+  const activeTab = state.journeyTab || autoJourneyTab();
+  state.journeyTab = activeTab;
 
   const c = document.createElement('div');
   c.className = 'dash-wrap';
@@ -481,8 +535,9 @@ function renderDashboard() {
       <div class="dash-nav-right">
         <span class="dash-user">${state.user.email}</span>
         <button class="btn-icon" id="btn-dark-mode" title="Cambiar modo claro/oscuro">${document.body.classList.contains('dark') ? '☀️' : '🌙'}</button>
+        ${isDevUser() ? `
         <button class="btn-link" id="btn-dev-fill" style="font-size:.72rem;color:var(--ink-4);opacity:.5" title="Rellenar todo aleatoriamente">⚡ dev</button>
-        <button class="btn-link" id="btn-dev-clear" style="font-size:.72rem;color:#DC2626;opacity:.5" title="Borrar todo el progreso">🗑 clear</button>
+        <button class="btn-link" id="btn-dev-clear" style="font-size:.72rem;color:#DC2626;opacity:.5" title="Borrar todo el progreso">🗑 clear</button>` : ''}
         <button class="btn-link" id="btn-logout">Salir</button>
       </div>
     </nav>
@@ -492,92 +547,38 @@ function renderDashboard() {
       <button id="btn-resend-dash" style="background:none;border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 12px;color:white;font-size:.78rem;font-family:var(--ff-body);cursor:pointer;white-space:nowrap">Reenviar →</button>
     </div>` : ''}
     <div class="dash-body">
-      <div class="dash-hero">
-        <h1 class="dash-hero-title">Hola, ${state.user.email.split('@')[0]}</h1>
-        <p class="dash-hero-sub">Completa el test BIT primero, luego explora cada sesgo a tu ritmo. Al finalizar todos, obtendrás tu informe completo.</p>
-        <div class="dash-progress-bar">
-          <div class="dash-progress-fill" style="width:${allDone ? 100 : bitDone ? Math.round((completedSesgos / totalSesgos) * 90 + 5) : 3}%"></div>
-        </div>
-        <div class="dash-progress-label">${bitDone ? completedSesgos + ' / ' + totalSesgos + ' sesgos completados' : 'Empieza con el Test BIT'}</div>
-      </div>
-
-      <div class="dash-section">
-        <div class="dash-section-header">
-          <div class="dash-section-label">Paso 1 · Test BIT</div>
-          <div class="dash-section-badge ${bitDone ? 'done' : ''}">${bitDone ? '✓ Completado' : 'Pendiente'}</div>
-        </div>
-        <div class="bit-card ${bitDone ? 'done' : ''}" id="bit-card">
-          <div class="bit-card-banner" style="${bitProfile ? 'background:linear-gradient(90deg,' + bitProfile.color + '22,' + bitProfile.color + '44)' : ''}"></div>
-          <div class="bit-card-body">
-            <div class="bit-card-icon">🧠</div>
-            <div class="bit-card-info">
-              <div class="bit-card-title">Behavioral Investor Type (BIT)</div>
-              <div class="bit-card-desc">${bitDone && bitProfile
-                ? bitProfile.name + ' · ' + bitProfile.tagline
-                : 'Descubre tu perfil como inversionista. Identifica si eres PP, FF, II o AA.'
-              }</div>
-              <div class="bit-card-meta"><span>📋 20 preguntas</span></div>
-            </div>
-            <button class="btn-cta" id="btn-bit">${bitDone ? 'Ver resultado →' : 'Comenzar →'}</button>
-          </div>
+      <div class="journey-hero">
+        <h1 class="journey-hero-title">Hola, ${state.user.email.split('@')[0]}</h1>
+        <p class="journey-hero-sub">Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.</p>
+        <div class="journey-progress-bar">
+          <div class="journey-progress-fill" style="width:${journeyPercent(bitDone, completedSesgos, totalSesgos)}%"></div>
         </div>
       </div>
 
-      <div class="dash-section">
-        <div class="dash-section-header">
-          <div class="dash-section-label">Paso 2 · Módulos de Sesgos</div>
-          <div class="dash-section-badge ${completedSesgos === totalSesgos && bitDone ? 'done' : ''}">${completedSesgos} / ${totalSesgos}</div>
-        </div>
-        ${[
-          { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB', desc: 'Fallas en el procesamiento de información' },
-          { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626', desc: 'Decisiones influidas por emociones' },
-          { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED', desc: 'Combinación de ambos mecanismos' },
-        ].map(grupo => {
-          const items = SESGOS.filter(s => s.tipo === grupo.key);
-          if (!items.length) return '';
-          const doneInGroup = items.filter(s => sesgos[s.id]?.done).length;
+      <div class="journey-tabs" role="tablist">
+        ${JOURNEY_STAGES.map(stage => {
+          const stageState = stageStatus(stage.key, bitDone, completedSesgos, totalSesgos, nextUnlocked);
+          const locked = stageState === 'locked';
           return `
-            <div class="sesgo-group">
-              <div class="sesgo-group-header">
-                <span class="sesgo-group-dot" style="background:${grupo.color}"></span>
-                <span class="sesgo-group-label">${grupo.label}</span>
-                <span class="sesgo-group-count ${doneInGroup === items.length ? 'done' : ''}">${doneInGroup}/${items.length}</span>
-              </div>
-              <div class="sesgos-grid">
-                ${items.map(s => {
-                  const i = SESGOS.indexOf(s);
-                  const done = sesgos[s.id]?.done;
-                  const locked = !bitDone;
-                  const cls = done ? 'done' : locked ? 'locked' : 'active';
-                  const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
-                  return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
-                    <div class="sesgo-num">${i + 1}</div>
-                    <div class="sesgo-info">
-                      <div class="sesgo-name">${done ? s.name : 'Módulo ' + (i + 1)}</div>
-                      <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">Completa el módulo para revelar</span>'}</div>
-                    </div>
-                  </div>`;
-                }).join('')}
-              </div>
-            </div>`;
+            <button class="journey-tab ${activeTab === stage.key ? 'active' : ''} ${stageState}"
+              data-tab="${stage.key}" ${locked ? 'disabled' : ''} role="tab">
+              <span class="journey-tab-num">${stageState === 'done' ? '✓' : stage.num}</span>
+              <span class="journey-tab-label">${stage.label}</span>
+            </button>
+          `;
         }).join('')}
       </div>
 
-      ${allDone ? `
-      <div class="dash-section">
-        <div class="dash-report-cta">
-          <div class="dash-report-title">¡Completaste todos los módulos!</div>
-          <p class="dash-report-sub">Tu perfil BIT contrastado con los resultados sesgo a sesgo. Mecanismos, puntos ciegos y recomendaciones personalizadas.</p>
-          <button class="btn-cta" id="btn-report">Ver mi Informe Final →</button>
-        </div>
-      </div>` : ''}
+      <div class="journey-panel">
+        ${renderJourneyPanel(activeTab, { bitDone, bitProfile, sesgos, completedSesgos, totalSesgos, allDone, nextUnlocked })}
+      </div>
     </div>
   `;
   app.appendChild(c);
 
   document.getElementById('btn-logout').addEventListener('click', handleLogout);
-  document.getElementById('btn-dev-fill').addEventListener('click', devFillAll);
-  document.getElementById('btn-dev-clear').addEventListener('click', devClearAll);
+  document.getElementById('btn-dev-fill')?.addEventListener('click', devFillAll);
+  document.getElementById('btn-dev-clear')?.addEventListener('click', devClearAll);
   document.getElementById('btn-dark-mode').addEventListener('click', () => { toggleDarkMode(); render(); });
   document.getElementById('btn-resend-dash')?.addEventListener('click', async (e) => {
     e.target.disabled = true; e.target.textContent = 'Enviando…';
@@ -588,26 +589,213 @@ function renderDashboard() {
       e.target.textContent = 'Error'; e.target.disabled = false;
     }
   });
-  document.getElementById('btn-bit').addEventListener('click', () => {
-    if (bitDone) {
-      state.screen = 'bit-result';
-    } else {
-      state.bitIndex = 0;
-      state.bitAnswers = new Array(questions.length).fill(null);
-      state.bitRatings = new Array(questions.length).fill(null);
-      state.screen = 'bit';
-    }
-    render();
+
+  document.querySelectorAll('.journey-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      state.journeyTab = btn.dataset.tab;
+      render();
+    });
   });
 
-  document.querySelectorAll('.sesgo-card.active, .sesgo-card.done').forEach(card => {
-    card.addEventListener('click', () => startSesgo(card.dataset.sesgoId));
-  });
+  bindJourneyPanel(activeTab, { bitDone });
+}
 
-  document.getElementById('btn-report')?.addEventListener('click', () => {
-    state.screen = 'report';
-    render();
-  });
+function journeyPercent(bitDone, completedSesgos, totalSesgos) {
+  const bitWeight = bitDone ? 20 : 0;
+  const sesgosWeight = (completedSesgos / totalSesgos) * 60;
+  const informeWeight = (bitDone && completedSesgos === totalSesgos && state.progress?.report_seen_at) ? 15 : 0;
+  const nextWeight = state.progress?.next_steps_done ? 5 : 0;
+  return Math.min(100, Math.round(bitWeight + sesgosWeight + informeWeight + nextWeight));
+}
+
+function stageStatus(key, bitDone, completedSesgos, totalSesgos, nextUnlocked) {
+  if (key === 'bit') return bitDone ? 'done' : 'active';
+  if (key === 'sesgos') {
+    if (!bitDone) return 'locked';
+    return completedSesgos === totalSesgos ? 'done' : 'active';
+  }
+  if (key === 'informe') {
+    if (!(bitDone && completedSesgos === totalSesgos)) return 'locked';
+    return state.progress?.report_seen_at ? 'done' : 'active';
+  }
+  if (key === 'next') {
+    if (!nextUnlocked) return 'locked';
+    return state.progress?.next_steps_done ? 'done' : 'active';
+  }
+  return 'locked';
+}
+
+function renderJourneyPanel(tab, ctx) {
+  if (tab === 'bit')     return renderPanelBit(ctx);
+  if (tab === 'sesgos')  return renderPanelSesgos(ctx);
+  if (tab === 'informe') return renderPanelInforme(ctx);
+  if (tab === 'next')    return renderPanelNext(ctx);
+  return '';
+}
+
+function renderPanelBit({ bitDone, bitProfile }) {
+  return `
+    <div class="panel-header">
+      <div class="panel-title">Etapa 1 · Test BIT</div>
+      <div class="panel-time">⏱ ~10 min</div>
+    </div>
+    <p class="panel-sub">Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.</p>
+    <div class="bit-card ${bitDone ? 'done' : ''}" id="bit-card">
+      <div class="bit-card-banner" style="${bitProfile ? 'background:linear-gradient(90deg,' + bitProfile.color + '22,' + bitProfile.color + '44)' : ''}"></div>
+      <div class="bit-card-body">
+        <div class="bit-card-icon">🧠</div>
+        <div class="bit-card-info">
+          <div class="bit-card-title">Behavioral Investor Type (BIT)</div>
+          <div class="bit-card-desc">${bitDone && bitProfile
+            ? bitProfile.name + ' · ' + bitProfile.tagline
+            : 'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.'}</div>
+          <div class="bit-card-meta"><span>📋 20 preguntas</span><span>⏱ ~10 min</span></div>
+        </div>
+        <button class="btn-cta" id="btn-bit">${bitDone ? 'Ver resultado →' : 'Comenzar →'}</button>
+      </div>
+    </div>
+    <div class="panel-tip">💡 Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.</div>
+  `;
+}
+
+function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
+  const remaining = totalSesgos - completedSesgos;
+  const remMin = remaining * 5;
+  return `
+    <div class="panel-header">
+      <div class="panel-title">Etapa 2 · Sesgos <span class="panel-count">${completedSesgos}/${totalSesgos}</span></div>
+      <div class="panel-time">⏱ ~5 min por módulo</div>
+    </div>
+    <p class="panel-sub">${bitDone
+      ? (remaining === 0
+          ? '¡Los 15 módulos completados!'
+          : `Te quedan ${remaining} ${remaining === 1 ? 'módulo' : 'módulos'} — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.`)
+      : 'Desbloquea esta etapa completando el Test BIT.'}</p>
+    ${[
+      { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB' },
+      { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626' },
+      { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED' },
+    ].map(grupo => {
+      const items = SESGOS.filter(s => s.tipo === grupo.key);
+      if (!items.length) return '';
+      const doneInGroup = items.filter(s => sesgos[s.id]?.done).length;
+      return `
+        <div class="sesgo-group">
+          <div class="sesgo-group-header">
+            <span class="sesgo-group-dot" style="background:${grupo.color}"></span>
+            <span class="sesgo-group-label">${grupo.label}</span>
+            <span class="sesgo-group-count ${doneInGroup === items.length ? 'done' : ''}">${doneInGroup}/${items.length}</span>
+          </div>
+          <div class="sesgos-grid">
+            ${items.map(s => {
+              const i = SESGOS.indexOf(s);
+              const done = sesgos[s.id]?.done;
+              const locked = !bitDone;
+              const cls = done ? 'done' : locked ? 'locked' : 'active';
+              const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
+              return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
+                <div class="sesgo-num">${i + 1}</div>
+                <div class="sesgo-info">
+                  <div class="sesgo-name">${done ? s.name : 'Módulo ' + (i + 1)}</div>
+                  <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">~5 min · se revela al completar</span>'}</div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }).join('')}
+    ${bitDone && remaining > 0 ? `<div class="panel-tip">💡 Te faltan ~${remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.</div>` : ''}
+  `;
+}
+
+function renderPanelInforme({ allDone }) {
+  if (!allDone) {
+    return `
+      <div class="panel-header">
+        <div class="panel-title">Etapa 3 · Informe Final</div>
+        <div class="panel-time">⏱ ~10 min</div>
+      </div>
+      <p class="panel-sub">Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.</p>
+      <div class="panel-locked">🔒 Bloqueado hasta completar las dos etapas anteriores.</div>
+    `;
+  }
+  return `
+    <div class="panel-header">
+      <div class="panel-title">Etapa 3 · Informe Final</div>
+      <div class="panel-time">⏱ ~10 min</div>
+    </div>
+    <p class="panel-sub">Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.</p>
+    <div class="dash-report-cta">
+      <div class="dash-report-title">¡Completaste todos los módulos!</div>
+      <p class="dash-report-sub">Recomendaciones personalizadas y acciones que puedes empezar mañana.</p>
+      <button class="btn-cta" id="btn-report">Ver mi Informe Final →</button>
+    </div>
+    <div class="panel-tip">💡 Puedes volver al informe cuando quieras — está siempre disponible aquí.</div>
+  `;
+}
+
+function renderPanelNext({ nextUnlocked }) {
+  if (!nextUnlocked) {
+    return `
+      <div class="panel-header">
+        <div class="panel-title">Etapa 4 · Próximos pasos</div>
+        <div class="panel-time">⏱ ~3 min</div>
+      </div>
+      <p class="panel-sub">La última etapa: contarnos qué te gustaría hacer a partir de aquí.</p>
+      <div class="panel-locked">🔒 Disponible después de ver tu informe final.</div>
+    `;
+  }
+  const done = state.progress?.next_steps_done;
+  return `
+    <div class="panel-header">
+      <div class="panel-title">Etapa 4 · Próximos pasos</div>
+      <div class="panel-time">⏱ ~3 min</div>
+    </div>
+    <p class="panel-sub">${done
+      ? 'Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.'
+      : 'Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.'}</p>
+    <div class="dash-report-cta">
+      <div class="dash-report-title">${done ? 'Revisar mis respuestas' : '¿Qué sigue para ti?'}</div>
+      <p class="dash-report-sub">${done
+        ? 'Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.'
+        : 'Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.'}</p>
+      <button class="btn-cta" id="btn-next-steps">${done ? 'Ver mis respuestas →' : 'Continuar →'}</button>
+    </div>
+  `;
+}
+
+function bindJourneyPanel(tab, { bitDone }) {
+  if (tab === 'bit') {
+    document.getElementById('btn-bit')?.addEventListener('click', () => {
+      if (bitDone) {
+        state.screen = 'bit-result';
+      } else {
+        state.bitIndex = 0;
+        state.bitAnswers = new Array(questions.length).fill(null);
+        state.bitRatings = new Array(questions.length).fill(null);
+        state.screen = 'bit';
+      }
+      render();
+    });
+  }
+  if (tab === 'sesgos') {
+    document.querySelectorAll('.sesgo-card.active, .sesgo-card.done').forEach(card => {
+      card.addEventListener('click', () => startSesgo(card.dataset.sesgoId));
+    });
+  }
+  if (tab === 'informe') {
+    document.getElementById('btn-report')?.addEventListener('click', () => {
+      state.screen = 'report';
+      render();
+    });
+  }
+  if (tab === 'next') {
+    document.getElementById('btn-next-steps')?.addEventListener('click', () => {
+      state.screen = 'next-steps';
+      render();
+    });
+  }
 }
 
 // ── BIT QUIZ ─────────────────────────────────────
@@ -647,7 +835,7 @@ function renderBit() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">Test BIT · Perfil de Inversionista</div>
+        <div class="quiz-label">Test BIT · Perfil de Inversionista <span class="quiz-time-hint">⏱ ~${Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))} min restantes · puedes pausar cuando quieras</span></div>
         <div class="quiz-counter">${state.bitIndex + 1} / ${questions.length}</div>
         <button class="btn-exit" id="btn-exit-bit">✕ Salir</button>
       </div>
@@ -1002,7 +1190,7 @@ function renderSesgoQuiz() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">¿Cómo decides tú? · ${state.sesgoIndex + 1} de ${total}</div>
+        <div class="quiz-label">¿Cómo decides tú? · ${state.sesgoIndex + 1} de ${total} <span class="quiz-time-hint">⏱ módulo de ~5 min · tu progreso se guarda</span></div>
         <div class="quiz-counter"></div>
         <button class="btn-exit" id="btn-exit-sesgo">✕</button>
       </div>
@@ -1607,32 +1795,90 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
 }
 
 function renderReportStep3_Severidad(profile, sesgos) {
-  const rows = SESGOS.map(s => {
-    const d = sesgos[s.id] || {};
-    const has = !!d.done || Array.isArray(d.answers);
-    return { s, intensidad: getIntensidad(d, s), has };
-  }).filter(r => r.has).sort((a, b) => b.intensidad - a.intensidad);
+  // Build groups: one per mechanism, containing its sesgos with intensidad
+  const groups = MECANISMOS.map((m, mi) => {
+    const items = SESGOS
+      .filter(s => SESGO_MECANISMO[s.id] === mi)
+      .map(s => {
+        const d = sesgos[s.id] || {};
+        const has = !!d.done || Array.isArray(d.answers);
+        return { s, intensidad: getIntensidad(d, s), has };
+      })
+      .filter(r => r.has)
+      .sort((a, b) => b.intensidad - a.intensidad);
+    const avg = items.length ? items.reduce((sum, r) => sum + r.intensidad, 0) / items.length : 0;
+    return { m, mi, items, avg };
+  }).filter(g => g.items.length > 0)
+    .sort((a, b) => b.avg - a.avg);
+
+  const dominant = groups[0];
+  const second   = groups[1];
+
+  const colorFor = pct => pct < 30 ? '#059669' : pct < 60 ? '#D97706' : '#DC2626';
+  const severityLabel = pct => pct < 30 ? 'bajo' : pct < 60 ? 'moderado' : 'alto';
+
+  const conclusion = dominant ? (() => {
+    const pct = Math.round(dominant.avg * 100);
+    const gap = second ? Math.round((dominant.avg - second.avg) * 100) : 0;
+    if (!second || gap >= 15) {
+      return `Tu sistema cognitivo está <strong>claramente dominado por ${dominant.m.name}</strong> (${pct}%). Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.`;
+    }
+    if (gap >= 6) {
+      return `<strong>${dominant.m.name}</strong> (${pct}%) es tu mecanismo más fuerte, seguido de cerca por <strong>${second.m.name}</strong> (${Math.round(second.avg * 100)}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.`;
+    }
+    return `Tienes varios mecanismos en tensión parecida (${dominant.m.name} ${pct}% · ${second.m.name} ${Math.round(second.avg * 100)}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.`;
+  })() : 'Aún no hay suficientes módulos completados para concluir.';
 
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 3 · Severidad continua</div>
-      <div class="report-section-title">Tus 15 sesgos ordenados por intensidad</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Cada barra muestra <strong>qué porcentaje de tus respuestas fueron sesgadas</strong> en ese módulo. No existe "leve" o "dominante" — es un continuo 0–100%.</p>
-      <div class="severidad-bars">
-        ${rows.map((r, i) => {
-          const pct = Math.round(r.intensidad * 100);
-          const color = pct < 30 ? '#059669' : pct < 60 ? '#D97706' : '#DC2626';
+      <div class="report-section-label">Paso 3 · Severidad por mecanismo</div>
+      <div class="report-section-title">Qué mecanismos te tuercen las decisiones</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.25rem">Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.</p>
+
+      ${dominant ? `
+      <div class="mec-conclusion" style="border-left-color:${dominant.m.color};background:${dominant.m.color}0D">
+        <div class="mec-conclusion-label">Conclusión</div>
+        <div class="mec-conclusion-body">${conclusion}</div>
+      </div>` : ''}
+
+      <div class="sev-groups">
+        ${groups.map((g, gi) => {
+          const mecPct = Math.round(g.avg * 100);
+          const mecColor = g.m.color;
+          const isDominant = gi === 0;
           return `
-            <div class="sev-row">
-              <div class="sev-row-head">
-                <span class="sev-rank">#${i + 1}</span>
-                <span class="sev-name">${r.s.name}</span>
-                <span class="sev-pct" style="color:${color}">${pct}%</span>
+            <div class="sev-group ${isDominant ? 'dominant' : ''}" style="border-color:${mecColor}40">
+              <div class="sev-group-head" style="background:${mecColor}0D">
+                <div class="sev-group-head-top">
+                  <span class="sev-group-rank">#${gi + 1}</span>
+                  <span class="sev-group-icon">${g.m.icon}</span>
+                  <span class="sev-group-name" style="color:${mecColor}">${g.m.name}</span>
+                  <span class="sev-group-pct" style="background:${mecColor};color:#fff">${mecPct}%</span>
+                </div>
+                <div class="sev-group-phrase">"${g.m.phrase}"</div>
+                <div class="sev-group-meta">
+                  <span>${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}</span>
+                </div>
               </div>
-              <div class="sev-track"><div class="sev-fill" style="width:${pct}%;background:${color}"></div></div>
+              <div class="sev-group-bars">
+                ${g.items.map(r => {
+                  const pct = Math.round(r.intensidad * 100);
+                  const c = colorFor(pct);
+                  return `
+                    <div class="sev-row">
+                      <div class="sev-row-head">
+                        <span class="sev-name">${r.s.name}</span>
+                        <span class="sev-pct" style="color:${c}">${pct}%</span>
+                      </div>
+                      <div class="sev-track"><div class="sev-fill" style="width:${pct}%;background:${c}"></div></div>
+                    </div>`;
+                }).join('')}
+              </div>
             </div>`;
         }).join('')}
       </div>
+
+      <p style="font-size:.82rem;color:var(--ink-4);line-height:1.5;margin-top:1.25rem">Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.</p>
     </div>`;
 }
 
@@ -1781,6 +2027,10 @@ function renderReport() {
   const step = state.reportStep ?? 1;
   const TOTAL = 6;
 
+  if (!state.progress?.report_seen_at) {
+    markReportSeen();
+  }
+
   let body = '';
   switch (step) {
     case 1: body = renderReportStep1_Profile(profile, bitResult); break;
@@ -1828,9 +2078,10 @@ function renderReport() {
     </nav>
     <div class="report-body">
       <div class="report-header">
-        <div class="report-logo">Informe Final · Ibero CDMX</div>
+        <div class="report-logo">Informe Final</div>
         <h1 class="report-title">Tu perfil conductual como inversionista</h1>
         <p class="report-name">${state.user.email}</p>
+        <div class="report-time-hint">⏱ 6 pasos · ~${Math.max(2, (TOTAL - step + 1) * 2)} min restantes · puedes volver cuando quieras</div>
         <div class="report-stepper">${stepper}</div>
       </div>
       ${body}
@@ -1977,6 +2228,369 @@ async function devClearAll() {
   }
 }
 
+// ── ONBOARDING ───────────────────────────────────
+
+function renderOnboarding() {
+  const c = document.createElement('div');
+  c.className = 'onboarding-wrap';
+  c.innerHTML = `
+    <div class="onboarding-card">
+      <div class="onboarding-mark">Bienvenido</div>
+      <h1 class="onboarding-title">10 años compilados en una jornada de autoconocimiento</h1>
+      <p class="onboarding-lead">Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.</p>
+
+      <div class="onboarding-time-card">
+        <div class="onboarding-time-title">⏱ Alrededor de 2 horas en total</div>
+        <div class="onboarding-time-body">No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.</div>
+        <div class="onboarding-time-grid">
+          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">Test BIT · perfil inversionista</span></div>
+          <div class="time-pill"><span class="time-pill-num">~5 min</span><span class="time-pill-lbl">Cada módulo de sesgo (×15)</span></div>
+          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">Informe final · 6 pasos</span></div>
+          <div class="time-pill"><span class="time-pill-num">~3 min</span><span class="time-pill-lbl">Próximos pasos</span></div>
+        </div>
+      </div>
+
+      <div class="onboarding-advice">
+        <div class="onboarding-advice-title">Un consejo antes de empezar</div>
+        <p>Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.</p>
+      </div>
+
+      <div class="onboarding-feedback-note">
+        <strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.
+      </div>
+
+      <p class="onboarding-thanks">Gracias por prestar tu atención.</p>
+
+      <button class="btn-cta onboarding-cta" id="btn-start-journey">Comenzar la jornada →</button>
+    </div>
+  `;
+  app.appendChild(c);
+  document.getElementById('btn-start-journey').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-start-journey');
+    btn.disabled = true; btn.textContent = 'Entrando…';
+    try { await markOnboardingSeen(state.user.email); } catch(e) {}
+    state.onboardingSeen = true;
+    state.screen = 'dashboard';
+    render();
+  });
+}
+
+// ── STAMPS on progress ───────────────────────────
+
+async function markReportSeen() {
+  if (state.progress?.report_seen_at) return;
+  const now = new Date().toISOString();
+  const payload = {
+    email: state.user.email,
+    bit_done: state.progress?.bit_done || false,
+    bit_result: state.progress?.bit_result || null,
+    bit_answers: state.progress?.bit_answers || null,
+    sesgos: state.progress?.sesgos || {},
+    report_seen_at: now,
+    updated_at: now,
+  };
+  try {
+    const saved = await saveProgress(payload);
+    state.progress = Array.isArray(saved) ? saved[0] : saved;
+  } catch(e) { /* best effort */ }
+}
+
+async function markNextStepsDone() {
+  const now = new Date().toISOString();
+  const payload = {
+    email: state.user.email,
+    bit_done: state.progress?.bit_done || false,
+    bit_result: state.progress?.bit_result || null,
+    bit_answers: state.progress?.bit_answers || null,
+    sesgos: state.progress?.sesgos || {},
+    report_seen_at: state.progress?.report_seen_at || now,
+    next_steps_done: true,
+    updated_at: now,
+  };
+  try {
+    const saved = await saveProgress(payload);
+    state.progress = Array.isArray(saved) ? saved[0] : saved;
+  } catch(e) {}
+}
+
+// ── NEXT STEPS ───────────────────────────────────
+
+const NEXT_STEPS_OPTIONS = [
+  { id: 'otro-curso',   label: 'Otro curso en este mismo formato',       hint: 'ej. Negociación, Inversiones, Valuación' },
+  { id: 'saber-mas',    label: 'Saber más sobre finanzas conductuales',  hint: 'Lecturas, videos, referencias para profundizar' },
+  { id: 'herramientas', label: 'Herramientas prácticas para mitigar sesgos', hint: 'Plantillas, checklists, rutinas accionables' },
+  { id: 'coaching',     label: 'Coaching 1:1 sobre mi perfil BIT',       hint: 'Sesiones individuales con Rodrigo' },
+  { id: 'comunidad',    label: 'Comunidad de ex-alumnos',                hint: 'Grupo para seguir aprendiendo y compartir casos' },
+  { id: 'corporativa',  label: 'Capacitación corporativa Pandava',       hint: 'Llevar este programa a tu equipo o empresa' },
+  { id: 'informe-pdf',  label: 'Informe PDF exportable',                 hint: 'Descargar tu informe final en PDF' },
+];
+
+const CALENDLY_URL = 'https://calendly.com/rodrigo-pandava/30min';
+
+async function loadNextStepsData() {
+  try {
+    const [mine, counts] = await Promise.all([
+      getMyNextSteps(state.user.email),
+      getNextStepsCounts(),
+    ]);
+    const row = Array.isArray(mine) ? mine[0] : mine;
+    if (row) {
+      state.nextSteps = { interests: row.interests || [], other: row.other || '' };
+      state.nextStepsSaved = true;
+    }
+    state.nextStepsCounts = counts || [];
+  } catch(e) {
+    state.nextStepsCounts = [];
+  }
+}
+
+function renderNextSteps() {
+  if (state.nextStepsCounts === null) {
+    loadNextStepsData().then(render);
+    const c = document.createElement('div');
+    c.className = 'dash-wrap';
+    c.innerHTML = `<div class="dash-body"><p style="text-align:center;padding:3rem 1rem;color:var(--ink-4)">Cargando…</p></div>`;
+    app.appendChild(c);
+    return;
+  }
+
+  const { interests, other } = state.nextSteps;
+  const saved = state.nextStepsSaved;
+  const counts = state.nextStepsCounts || [];
+  const total = counts.reduce((max, row) => Math.max(max, row.n || 0), 1);
+
+  const c = document.createElement('div');
+  c.className = 'dash-wrap';
+  c.innerHTML = `
+    <nav class="dash-nav">
+      <div class="dash-nav-logo">Finanzas Conductuales</div>
+      <div class="dash-nav-right">
+        <button class="btn-link" id="btn-back-dash">← Dashboard</button>
+        <button class="btn-link" id="btn-logout">Salir</button>
+      </div>
+    </nav>
+    <div class="dash-body next-steps-body">
+      <div class="next-header">
+        <div class="panel-time" style="align-self:flex-start">⏱ ~3 min · última etapa</div>
+        <h1 class="next-title">Próximos pasos</h1>
+        <p class="next-sub">Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.</p>
+      </div>
+
+      <div class="next-card">
+        <div class="next-card-title">Lo que me interesa</div>
+        <div class="next-options">
+          ${NEXT_STEPS_OPTIONS.map(opt => `
+            <label class="next-option ${interests.includes(opt.id) ? 'checked' : ''}">
+              <input type="checkbox" data-opt="${opt.id}" ${interests.includes(opt.id) ? 'checked' : ''}>
+              <div class="next-option-body">
+                <div class="next-option-label">${opt.label}</div>
+                <div class="next-option-hint">${opt.hint}</div>
+              </div>
+            </label>
+          `).join('')}
+        </div>
+
+        <label class="next-other-label">Otros · lo que quieras contarme</label>
+        <textarea id="next-other" class="next-other" rows="3" placeholder="Ideas, sugerencias, temas que te interesan…">${escapeHtml(other || '')}</textarea>
+
+        <div class="next-actions">
+          <button class="btn-cta" id="btn-save-next" ${interests.length === 0 && !(other || '').trim() ? 'disabled' : ''}>
+            ${saved ? 'Actualizar respuestas' : 'Guardar y ver resultados →'}
+          </button>
+        </div>
+      </div>
+
+      ${saved ? `
+      <div class="next-card">
+        <div class="next-card-title">Qué eligen los demás participantes</div>
+        <p class="next-sub" style="margin-bottom:1.25rem">Respuestas consolidadas — así ves dónde se concentra el interés del grupo.</p>
+        <div class="next-stats">
+          ${NEXT_STEPS_OPTIONS.map(opt => {
+            const n = counts.find(r => r.interest === opt.id)?.n || 0;
+            const pct = Math.round((n / total) * 100);
+            return `
+              <div class="next-stat-row">
+                <div class="next-stat-label">${opt.label}</div>
+                <div class="next-stat-bar"><div class="next-stat-fill" style="width:${pct}%"></div></div>
+                <div class="next-stat-num">${n}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="next-card calendly-card">
+        <div class="calendly-title">Un pedido sincero</div>
+        <p class="calendly-body"><strong>No hay nada más importante en esta etapa que esos 15 minutos.</strong> Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.</p>
+        <p class="calendly-body">Si puedes regalarme ese rato, estaría muy agradecido.</p>
+        <a href="${CALENDLY_URL}" target="_blank" rel="noopener" class="btn-cta calendly-cta">Agendar 30 min con Rodrigo →</a>
+        <p class="calendly-sub">Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min</p>
+      </div>` : ''}
+    </div>
+  `;
+  app.appendChild(c);
+
+  document.getElementById('btn-back-dash').addEventListener('click', () => {
+    state.journeyTab = 'next';
+    state.screen = 'dashboard';
+    render();
+  });
+  document.getElementById('btn-logout').addEventListener('click', handleLogout);
+
+  document.querySelectorAll('.next-option input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const id = cb.dataset.opt;
+      const idx = state.nextSteps.interests.indexOf(id);
+      if (cb.checked && idx < 0) state.nextSteps.interests.push(id);
+      if (!cb.checked && idx >= 0) state.nextSteps.interests.splice(idx, 1);
+      cb.closest('.next-option').classList.toggle('checked', cb.checked);
+      const btn = document.getElementById('btn-save-next');
+      const empty = state.nextSteps.interests.length === 0 && !(document.getElementById('next-other').value || '').trim();
+      btn.disabled = empty;
+    });
+  });
+
+  document.getElementById('next-other').addEventListener('input', (e) => {
+    state.nextSteps.other = e.target.value;
+    const btn = document.getElementById('btn-save-next');
+    const empty = state.nextSteps.interests.length === 0 && !e.target.value.trim();
+    btn.disabled = empty;
+  });
+
+  document.getElementById('btn-save-next').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save-next');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+    try {
+      await saveNextSteps({
+        email: state.user.email,
+        interests: state.nextSteps.interests,
+        other: (state.nextSteps.other || '').trim() || null,
+      });
+      await markNextStepsDone();
+      state.nextStepsSaved = true;
+      state.nextStepsCounts = null; // force reload with updated numbers
+      render();
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Reintentar';
+      console.error('saveNextSteps', e);
+    }
+  });
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+// ── BUG REPORT (floating widget) ─────────────────
+
+function mountBugReportWidget() {
+  if (document.getElementById('bug-report-fab')) return;
+  const wrap = document.createElement('div');
+  wrap.id = 'bug-report-root';
+  wrap.innerHTML = `
+    <button id="bug-report-fab" class="bug-fab" title="Reportar un problema" aria-label="Reportar un problema">
+      <span class="bug-fab-icon">🛠</span><span class="bug-fab-label">Reportar un problema</span>
+    </button>
+    <div id="bug-report-modal" class="bug-modal" hidden>
+      <div class="bug-modal-backdrop"></div>
+      <div class="bug-modal-card" role="dialog" aria-modal="true" aria-labelledby="bug-modal-title">
+        <div class="bug-modal-head">
+          <div id="bug-modal-title" class="bug-modal-title">Reportar un problema</div>
+          <button class="bug-modal-close" id="bug-modal-close" aria-label="Cerrar">✕</button>
+        </div>
+        <p class="bug-modal-sub">Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.</p>
+        <label class="bug-field-label">Título</label>
+        <input type="text" id="bug-title" class="bug-field" maxlength="120" placeholder="ej. El botón no responde">
+        <label class="bug-field-label">Descripción</label>
+        <textarea id="bug-desc" class="bug-field" rows="4" maxlength="2000" placeholder="¿Qué esperabas? ¿Qué pasó en vez?"></textarea>
+        <div class="bug-modal-actions">
+          <button class="btn-link" id="bug-cancel">Cancelar</button>
+          <button class="btn-cta" id="bug-send" disabled>Enviar</button>
+        </div>
+        <div class="bug-modal-status" id="bug-status"></div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+
+  const fab    = document.getElementById('bug-report-fab');
+  const modal  = document.getElementById('bug-report-modal');
+  const title  = document.getElementById('bug-title');
+  const desc   = document.getElementById('bug-desc');
+  const send   = document.getElementById('bug-send');
+  const status = document.getElementById('bug-status');
+
+  const close = () => { modal.hidden = true; status.textContent = ''; send.disabled = true; title.value = ''; desc.value = ''; };
+  const open  = () => { modal.hidden = false; setTimeout(() => title.focus(), 50); };
+
+  fab.addEventListener('click', open);
+  document.getElementById('bug-modal-close').addEventListener('click', close);
+  document.getElementById('bug-cancel').addEventListener('click', close);
+  modal.querySelector('.bug-modal-backdrop').addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
+
+  const checkValid = () => { send.disabled = !title.value.trim(); };
+  title.addEventListener('input', checkValid);
+  desc.addEventListener('input', checkValid);
+
+  send.addEventListener('click', async () => {
+    send.disabled = true; send.textContent = 'Enviando…'; status.textContent = '';
+    try {
+      await submitBugReport({
+        email: state.user?.email || null,
+        screen: state.screen,
+        title: title.value.trim(),
+        description: desc.value.trim() || null,
+      });
+      status.textContent = '✓ Reporte enviado. Gracias.';
+      status.className = 'bug-modal-status ok';
+      setTimeout(close, 1400);
+    } catch(e) {
+      status.textContent = 'No se pudo enviar. Intenta de nuevo.';
+      status.className = 'bug-modal-status err';
+      send.disabled = false;
+    }
+    send.textContent = 'Enviar';
+  });
+}
+
+async function submitBugReport(row) {
+  return submitBug({ ...row, user_agent: navigator.userAgent });
+}
+
+// ── GLOBAL JS ERROR LOGGING ──────────────────────
+function logJsError(op, message, body) {
+  try {
+    fetch(`${_SBU}/rest/v1/client_errors`, {
+      method: 'POST',
+      headers: {
+        apikey: _SBK,
+        Authorization: `Bearer ${_SBK}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        email: state.user?.email || null,
+        screen: state.screen || null,
+        op, message, body,
+        url: window.location.href,
+        user_agent: navigator.userAgent,
+      }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (_) {}
+}
+window.addEventListener('error', (e) => {
+  logJsError('window.error', String(e.message || e), {
+    filename: e.filename, lineno: e.lineno, colno: e.colno,
+    stack: e.error?.stack || null,
+  });
+});
+window.addEventListener('unhandledrejection', (e) => {
+  const r = e.reason;
+  logJsError('unhandledrejection', String(r?.message || r), { stack: r?.stack || null });
+});
+
 // ── UTILS ────────────────────────────────────────
 
 function handleLogout() {
@@ -2037,7 +2651,8 @@ async function loadSession() {
     state.user = { emailConfirmed: true, ...parsed };
     setSession(state.user.accessToken);
     state.progress = await loadUserProgress(state.user.email);
-    state.screen = 'dashboard';
+    state.onboardingSeen = await checkOnboardingSeen(state.user.email);
+    state.screen = state.onboardingSeen ? 'dashboard' : 'onboarding';
     startSession();
     render();
   } catch(e) {
@@ -2047,3 +2662,4 @@ async function loadSession() {
 
 render();
 loadSession();
+mountBugReportWidget();
