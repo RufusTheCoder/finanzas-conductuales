@@ -83,6 +83,14 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 document.getElementById('btn-refresh').addEventListener('click', loadAll);
 
+let autoRefreshTimer = null;
+document.getElementById('btn-autorefresh').addEventListener('change', (e) => {
+  if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  if (e.target.checked) {
+    autoRefreshTimer = setInterval(() => { if (!document.hidden) loadAll(); }, 30_000);
+  }
+});
+
 // ── DATA ─────────────────────────────────────────
 
 async function get(path) {

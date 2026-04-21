@@ -199,18 +199,60 @@ function renderViewAsBanner() {
   const existing = document.getElementById('view-as-banner');
   if (existing) existing.remove();
   if (!state.viewAs) return;
+  const lastSync = state._viewAsLastSync ? new Date(state._viewAsLastSync).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', second:'2-digit' }) : '—';
   const banner = document.createElement('div');
   banner.id = 'view-as-banner';
-  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#7C3AED;color:white;padding:.5rem 1rem;font-family:var(--ff-body);font-size:.82rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,.2)';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#7C3AED;color:white;padding:.5rem 1rem;font-family:var(--ff-body);font-size:.82rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:1rem;box-shadow:0 2px 12px rgba(0,0,0,.2);flex-wrap:wrap';
   banner.innerHTML = `
-    <div>👁️ VIENDO COMO <strong>${state.viewAs}</strong> · solo lectura · nada se guarda</div>
-    <button id="view-as-exit" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">Salir</button>
+    <div style="flex:1;min-width:200px">👁️ VIENDO COMO <strong>${state.viewAs}</strong> · solo lectura</div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <span id="view-as-sync" style="font-size:.7rem;font-weight:400;opacity:.85">Sync ${lastSync}</span>
+      <button id="view-as-refresh" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .7rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">↻ Actualizar</button>
+      <label style="display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:400;cursor:pointer;user-select:none">
+        <input type="checkbox" id="view-as-auto" ${state._viewAsAuto ? 'checked' : ''} style="cursor:pointer"> Auto 30s
+      </label>
+      <button id="view-as-exit" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">Salir</button>
+    </div>
   `;
   document.body.appendChild(banner);
   document.body.style.paddingTop = banner.offsetHeight + 'px';
   document.getElementById('view-as-exit').onclick = () => {
+    if (state._viewAsTimer) clearInterval(state._viewAsTimer);
     window.location.href = 'admin.html';
   };
+  document.getElementById('view-as-refresh').onclick = () => refreshViewAs();
+  document.getElementById('view-as-auto').onchange = (e) => {
+    state._viewAsAuto = e.target.checked;
+    setupViewAsAutoRefresh();
+  };
+}
+
+async function refreshViewAs() {
+  if (!state.viewAs) return;
+  const btn = document.getElementById('view-as-refresh');
+  if (btn) { btn.textContent = '↻ ...'; btn.disabled = true; }
+  try {
+    state.progress = await loadUserProgress(state.viewAs);
+    state._viewAsLastSync = Date.now();
+    if (state.screen === 'dashboard') render();
+    else {
+      const sync = document.getElementById('view-as-sync');
+      if (sync) sync.textContent = 'Sync ' + new Date(state._viewAsLastSync).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+      if (btn) { btn.textContent = '↻ Actualizar'; btn.disabled = false; }
+    }
+  } catch (e) {
+    if (btn) { btn.textContent = '↻ Actualizar'; btn.disabled = false; }
+  }
+}
+
+function setupViewAsAutoRefresh() {
+  if (state._viewAsTimer) { clearInterval(state._viewAsTimer); state._viewAsTimer = null; }
+  if (!state.viewAs || !state._viewAsAuto) return;
+  state._viewAsTimer = setInterval(() => {
+    if (document.hidden) return;
+    if (state.screen !== 'dashboard') return;
+    refreshViewAs();
+  }, 30_000);
 }
 
 // ── AUTH ─────────────────────────────────────────
@@ -2679,11 +2721,14 @@ async function loadSession() {
   if (viewAsEmail) {
     setReadOnly(true);
     state.viewAs = viewAsEmail;
+    state._viewAsAuto = true;
     state.user = { email: viewAsEmail, emailConfirmed: true, viewAs: true };
     state.progress = await loadUserProgress(viewAsEmail);
+    state._viewAsLastSync = Date.now();
     state.onboardingSeen = true;
     state.screen = 'dashboard';
     render();
+    setupViewAsAutoRefresh();
     return;
   }
 
