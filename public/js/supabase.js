@@ -90,6 +90,10 @@ export async function signIn(email, password) {
   return request('/auth/v1/token?grant_type=password', 'POST', { email, password }, {}, 'signIn');
 }
 
+export async function refreshSession(refreshToken) {
+  return request('/auth/v1/token?grant_type=refresh_token', 'POST', { refresh_token: refreshToken }, {}, 'refreshSession');
+}
+
 export async function signUp(email, password) {
   return request('/auth/v1/signup', 'POST', { email, password }, {}, 'signUp');
 }
@@ -220,9 +224,36 @@ export async function getNextStepsTotal() {
 }
 
 // ── Bug reports ─────────────────────────
+// Uses the anon key directly (not the user JWT) so an expired session
+// doesn't turn a bug report into a 401. RLS policy allows public insert.
 export async function submitBug(row) {
   if (readOnly) return null;
-  return request('/rest/v1/bug_reports', 'POST', row, {
-    Prefer: 'return=minimal',
-  }, 'submitBug');
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/bug_reports`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    },
+    body: JSON.stringify(row),
+  });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => null);
+    const message = payload?.message || payload?.error || `HTTP ${response.status}`;
+    fireAndForgetClientError({
+      email: errorContext.email,
+      screen: errorContext.screen,
+      op: 'submitBug',
+      http_status: response.status,
+      message,
+      body: payload,
+      url: '/rest/v1/bug_reports',
+      user_agent: navigator.userAgent,
+    });
+    const err = new Error(message);
+    err.status = response.status;
+    throw err;
+  }
+  return null;
 }

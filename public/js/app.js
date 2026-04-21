@@ -1,4 +1,4 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly } from './supabase.js';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260421s';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js';
@@ -276,6 +276,8 @@ async function afterAuth(auth) {
   state.user = {
     email: auth.user.email,
     accessToken: auth.access_token,
+    refreshToken: auth.refresh_token || null,
+    expiresAt: auth.expires_at ? auth.expires_at * 1000 : (Date.now() + (auth.expires_in || 3600) * 1000),
     emailConfirmed: !!auth.user.email_confirmed_at,
   };
   setSession(auth.access_token);
@@ -2627,8 +2629,31 @@ function persistSession() {
   localStorage.setItem('fc_session', JSON.stringify({
     email: state.user.email,
     accessToken: state.user.accessToken,
+    refreshToken: state.user.refreshToken || null,
+    expiresAt: state.user.expiresAt || null,
     emailConfirmed: state.user.emailConfirmed,
   }));
+}
+
+async function refreshIfNeeded(parsed) {
+  // Refresh when token is missing, expired, or expires within next 60s
+  const now = Date.now();
+  const exp = parsed.expiresAt || 0;
+  const needs = !parsed.accessToken || !exp || exp - now < 60_000;
+  if (!needs || !parsed.refreshToken) return parsed;
+  try {
+    const fresh = await refreshSession(parsed.refreshToken);
+    if (!fresh?.access_token) return parsed;
+    return {
+      ...parsed,
+      accessToken: fresh.access_token,
+      refreshToken: fresh.refresh_token || parsed.refreshToken,
+      expiresAt: fresh.expires_at ? fresh.expires_at * 1000 : (Date.now() + (fresh.expires_in || 3600) * 1000),
+    };
+  } catch (e) {
+    console.warn('No se pudo refrescar la sesión:', e);
+    return parsed;
+  }
 }
 
 async function loadUserProgress(email) {
@@ -2683,9 +2708,11 @@ async function loadSession() {
   if (!saved) return;
 
   try {
-    const parsed = JSON.parse(saved);
+    let parsed = JSON.parse(saved);
+    parsed = await refreshIfNeeded(parsed);
     state.user = { emailConfirmed: true, ...parsed };
     setSession(state.user.accessToken);
+    if (parsed.refreshToken) persistSession();
     state.progress = await loadUserProgress(state.user.email);
     state.onboardingSeen = await checkOnboardingSeen(state.user.email);
     state.screen = state.onboardingSeen ? 'dashboard' : 'onboarding';
