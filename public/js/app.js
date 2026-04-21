@@ -211,7 +211,7 @@ function renderViewAsBanner() {
       <label style="display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:400;cursor:pointer;user-select:none">
         <input type="checkbox" id="view-as-auto" ${state._viewAsAuto ? 'checked' : ''} style="cursor:pointer"> Auto 30s
       </label>
-      <button id="view-as-exit" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">Salir</button>
+      <button id="view-as-exit" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">← Volver al admin</button>
     </div>
   `;
   document.body.appendChild(banner);
@@ -603,7 +603,7 @@ function renderDashboard() {
         ${isDevUser() ? `
         <button class="btn-link" id="btn-dev-fill" style="font-size:.72rem;color:var(--ink-4);opacity:.5" title="Rellenar todo aleatoriamente">⚡ dev</button>
         <button class="btn-link" id="btn-dev-clear" style="font-size:.72rem;color:#DC2626;opacity:.5" title="Borrar todo el progreso">🗑 clear</button>` : ''}
-        <button class="btn-link" id="btn-logout">Salir</button>
+        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">Salir</button>`}
       </div>
     </nav>
     ${state.user?.emailConfirmed === false ? `
@@ -2437,7 +2437,7 @@ function renderNextSteps() {
       <div class="dash-nav-logo">Finanzas Conductuales</div>
       <div class="dash-nav-right">
         <button class="btn-link" id="btn-back-dash">← Dashboard</button>
-        <button class="btn-link" id="btn-logout">Salir</button>
+        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">Salir</button>`}
       </div>
     </nav>
     <div class="dash-body next-steps-body">
