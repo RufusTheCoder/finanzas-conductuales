@@ -695,39 +695,45 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
           ? '¡Los 15 módulos completados!'
           : `Te quedan ${remaining} ${remaining === 1 ? 'módulo' : 'módulos'} — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.`)
       : 'Desbloquea esta etapa completando el Test BIT.'}</p>
-    ${[
-      { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB' },
-      { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626' },
-      { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED' },
-    ].map(grupo => {
-      const items = SESGOS.filter(s => s.tipo === grupo.key);
-      if (!items.length) return '';
-      const doneInGroup = items.filter(s => sesgos[s.id]?.done).length;
-      return `
-        <div class="sesgo-group">
-          <div class="sesgo-group-header">
-            <span class="sesgo-group-dot" style="background:${grupo.color}"></span>
-            <span class="sesgo-group-label">${grupo.label}</span>
-            <span class="sesgo-group-count ${doneInGroup === items.length ? 'done' : ''}">${doneInGroup}/${items.length}</span>
-          </div>
-          <div class="sesgos-grid">
-            ${items.map(s => {
-              const i = SESGOS.indexOf(s);
-              const done = sesgos[s.id]?.done;
-              const locked = !bitDone;
-              const cls = done ? 'done' : locked ? 'locked' : 'active';
-              const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
-              return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
-                <div class="sesgo-num">${i + 1}</div>
-                <div class="sesgo-info">
-                  <div class="sesgo-name">${done ? s.name : 'Módulo ' + (i + 1)}</div>
-                  <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">~5 min · se revela al completar</span>'}</div>
-                </div>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>`;
-    }).join('')}
+    ${(() => {
+      const grupos = [
+        { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB' },
+        { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626' },
+        { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED' },
+      ];
+      const displayOrder = [];
+      grupos.forEach(g => SESGOS.filter(s => s.tipo === g.key).forEach(s => displayOrder.push(s.id)));
+      const displayNum = id => displayOrder.indexOf(id) + 1;
+      return grupos.map(grupo => {
+        const items = SESGOS.filter(s => s.tipo === grupo.key);
+        if (!items.length) return '';
+        const doneInGroup = items.filter(s => sesgos[s.id]?.done).length;
+        return `
+          <div class="sesgo-group">
+            <div class="sesgo-group-header">
+              <span class="sesgo-group-dot" style="background:${grupo.color}"></span>
+              <span class="sesgo-group-label">${grupo.label}</span>
+              <span class="sesgo-group-count ${doneInGroup === items.length ? 'done' : ''}">${doneInGroup}/${items.length}</span>
+            </div>
+            <div class="sesgos-grid">
+              ${items.map(s => {
+                const num = displayNum(s.id);
+                const done = sesgos[s.id]?.done;
+                const locked = !bitDone;
+                const cls = done ? 'done' : locked ? 'locked' : 'active';
+                const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
+                return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
+                  <div class="sesgo-num">${num}</div>
+                  <div class="sesgo-info">
+                    <div class="sesgo-name">${done ? s.name : 'Módulo ' + num}</div>
+                    <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">~5 min · se revela al completar</span>'}</div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+      }).join('');
+    })()}
     ${bitDone && remaining > 0 ? `<div class="panel-tip">💡 Te faltan ~${remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.</div>` : ''}
   `;
 }
