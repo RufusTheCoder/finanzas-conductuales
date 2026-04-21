@@ -24,13 +24,27 @@ const state = {
   sesgoIndex: 0,
   sesgoRatings: [],
   fixationAnswers: [],
+  fixationRatings: [],
   fixationIndex: 0,
   sesgoPhase: 'quiz',
   learnStep: 0,
   learnRatings: [null, null, null, null],
   // Progress (from DB)
   progress: null,
+  // Result page clarity rating
+  resultRating: null,
+  // BIT result feedback
+  bitProfileRating: null,
+  bitRecoRating: null,
 };
+
+// Dark mode init
+if (localStorage.getItem('fc_dark') === '1') document.body.classList.add('dark');
+
+function toggleDarkMode() {
+  const on = document.body.classList.toggle('dark');
+  localStorage.setItem('fc_dark', on ? '1' : '0');
+}
 
 function render() {
   app.innerHTML = '';
@@ -49,26 +63,24 @@ function render() {
 
 const GOOGLE_SVG = `<svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>`;
 
+const SLIDER_LABELS = ['Nada', 'Muy poco', 'Algo', 'Bastante', 'Mucho', 'Totalmente'];
 const RATING_EMOJIS = ['😵', '😕', '😐', '😊', '🤩'];
-const RATING_LABELS = ['Muy confusa', 'Confusa', 'Regular', 'Clara', 'Muy clara'];
+const RATING_LABELS = ['muy baja', 'baja', 'regular', 'alta', 'muy alta'];
 
 function ratingWidget(current, prompt) {
   return `
     <div class="rating-widget">
-      <div class="rating-row">
-        <div>
-          <div class="rating-prompt">${prompt}</div>
-          <div class="rating-options">
-            ${RATING_EMOJIS.map((e, i) => `
-              <button class="rating-btn ${current === i + 1 ? 'selected' : ''}" data-rating="${i + 1}" title="${RATING_LABELS[i]}">
-                <span class="rating-emoji">${e}</span>
-                <span class="rating-num">${i + 1}</span>
-              </button>
-            `).join('')}
-          </div>
-        </div>
+      <div class="rating-prompt">${prompt}</div>
+      <div class="rating-options">
+        ${RATING_EMOJIS.map((e, i) => `
+          <button class="rating-btn ${current === i + 1 ? 'selected' : ''}"
+            data-rating="${i + 1}" title="${RATING_LABELS[i]}">
+            <span class="rating-emoji">${e}</span>
+            <span class="rating-num">${i + 1}</span>
+          </button>
+        `).join('')}
         <div class="rating-feedback-text ${current ? 'has-rating' : ''}">
-          ${current ? RATING_LABELS[current - 1] : 'Califica para continuar'}
+          ${current ? RATING_LABELS[current - 1] : 'califica para continuar'}
         </div>
       </div>
     </div>
@@ -348,7 +360,9 @@ function renderDashboard() {
       <div class="dash-nav-logo">Finanzas Conductuales</div>
       <div class="dash-nav-right">
         <span class="dash-user">${state.user.email}</span>
+        <button class="btn-icon" id="btn-dark-mode" title="Cambiar modo claro/oscuro">${document.body.classList.contains('dark') ? '☀️' : '🌙'}</button>
         <button class="btn-link" id="btn-dev-fill" style="font-size:.72rem;color:var(--ink-4);opacity:.5" title="Rellenar todo aleatoriamente">⚡ dev</button>
+        <button class="btn-link" id="btn-dev-clear" style="font-size:.72rem;color:#DC2626;opacity:.5" title="Borrar todo el progreso">🗑 clear</button>
         <button class="btn-link" id="btn-logout">Salir</button>
       </div>
     </nav>
@@ -394,21 +408,39 @@ function renderDashboard() {
           <div class="dash-section-label">Paso 2 · Módulos de Sesgos</div>
           <div class="dash-section-badge ${completedSesgos === totalSesgos && bitDone ? 'done' : ''}">${completedSesgos} / ${totalSesgos}</div>
         </div>
-        <div class="sesgos-grid">
-          ${SESGOS.map((s, i) => {
-            const done = sesgos[s.id]?.done;
-            const locked = !bitDone;
-            const cls = done ? 'done' : locked ? 'locked' : 'active';
-            const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
-            return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
-              <div class="sesgo-num">${i + 1}</div>
-              <div class="sesgo-info">
-                <div class="sesgo-name">${done ? s.name : 'Módulo ' + (i + 1)}</div>
-                <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">Completa el módulo para revelar</span>'}</div>
+        ${[
+          { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB', desc: 'Fallas en el procesamiento de información' },
+          { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626', desc: 'Decisiones influidas por emociones' },
+          { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED', desc: 'Combinación de ambos mecanismos' },
+        ].map(grupo => {
+          const items = SESGOS.filter(s => s.tipo === grupo.key);
+          if (!items.length) return '';
+          const doneInGroup = items.filter(s => sesgos[s.id]?.done).length;
+          return `
+            <div class="sesgo-group">
+              <div class="sesgo-group-header">
+                <span class="sesgo-group-dot" style="background:${grupo.color}"></span>
+                <span class="sesgo-group-label">${grupo.label}</span>
+                <span class="sesgo-group-count ${doneInGroup === items.length ? 'done' : ''}">${doneInGroup}/${items.length}</span>
+              </div>
+              <div class="sesgos-grid">
+                ${items.map(s => {
+                  const i = SESGOS.indexOf(s);
+                  const done = sesgos[s.id]?.done;
+                  const locked = !bitDone;
+                  const cls = done ? 'done' : locked ? 'locked' : 'active';
+                  const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
+                  return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
+                    <div class="sesgo-num">${i + 1}</div>
+                    <div class="sesgo-info">
+                      <div class="sesgo-name">${done ? s.name : 'Módulo ' + (i + 1)}</div>
+                      <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">Completa el módulo para revelar</span>'}</div>
+                    </div>
+                  </div>`;
+                }).join('')}
               </div>
             </div>`;
-          }).join('')}
-        </div>
+        }).join('')}
       </div>
 
       ${allDone ? `
@@ -425,6 +457,8 @@ function renderDashboard() {
 
   document.getElementById('btn-logout').addEventListener('click', handleLogout);
   document.getElementById('btn-dev-fill').addEventListener('click', devFillAll);
+  document.getElementById('btn-dev-clear').addEventListener('click', devClearAll);
+  document.getElementById('btn-dark-mode').addEventListener('click', () => { toggleDarkMode(); render(); });
   document.getElementById('btn-resend-dash')?.addEventListener('click', async (e) => {
     e.target.disabled = true; e.target.textContent = 'Enviando…';
     try {
@@ -440,6 +474,7 @@ function renderDashboard() {
     } else {
       state.bitIndex = 0;
       state.bitAnswers = new Array(questions.length).fill(null);
+      state.bitRatings = new Array(questions.length).fill(null);
       state.screen = 'bit';
     }
     render();
@@ -508,7 +543,7 @@ function renderBit() {
             </button>
           `).join('')}
         </div>
-        ${answered ? ratingWidget(state.bitRatings[state.bitIndex], '¿Qué tan representativa te parece esta pregunta?') : ''}
+        ${answered ? ratingWidget(state.bitRatings[state.bitIndex], '¿cómo calificarías esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
@@ -657,6 +692,15 @@ function renderBitResult() {
         </div>
         <div class="profile-desc">${profile.description}</div>
         <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${secondary.name} (${bitLabel(result.secondary)})</strong></div>
+        <div class="profile-id-slider" style="margin-top:1.25rem">
+          <div class="slider-question">¿Qué tanto te identificas con este perfil?</div>
+          <div class="slider-row">
+            <span class="slider-end-label">Nada</span>
+            <input type="range" id="slider-profile-fit" class="fit-slider" min="0" max="5" step="1" value="${state.bitProfileRating ?? 3}" style="accent-color:${profile.color}">
+            <span class="slider-end-label">Totalmente</span>
+          </div>
+          <div class="slider-value-label" id="slider-fit-val">${SLIDER_LABELS[state.bitProfileRating ?? 3]}</div>
+        </div>
       </div>
       <div class="result-card">
         <div class="result-card-title">Sesgos predominantes en tu perfil</div>
@@ -679,6 +723,9 @@ function renderBitResult() {
             </div>
           `).join('')}
         </div>
+        <div style="margin-top:1.25rem" id="reco-rating-wrap">
+          ${ratingWidget(state.bitRecoRating, '¿Qué tan útiles te parecen estas recomendaciones?')}
+        </div>
       </div>
       <div style="text-align:center;padding:1rem 0">
         <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1rem">Tu perfil BIT quedó guardado. Ahora explora cada sesgo en el dashboard.</p>
@@ -687,7 +734,31 @@ function renderBitResult() {
     </div>
   `;
   app.appendChild(c);
+
+  // Slider — profile identification
+  state.bitProfileRating = state.bitProfileRating ?? 3;
+  const slider = document.getElementById('slider-profile-fit');
+  const sliderVal = document.getElementById('slider-fit-val');
+  slider.addEventListener('input', () => {
+    state.bitProfileRating = parseInt(slider.value);
+    sliderVal.textContent = SLIDER_LABELS[state.bitProfileRating];
+  });
+
+  // Rating — recommendation usefulness
+  document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.bitRecoRating = parseInt(btn.dataset.rating);
+      document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.bitRecoRating));
+      const txt = document.querySelector('#reco-rating-wrap .rating-feedback-text');
+      if (txt) { txt.textContent = RATING_LABELS[state.bitRecoRating - 1]; txt.classList.add('has-rating'); }
+    });
+  });
+
   document.getElementById('btn-to-dash').addEventListener('click', () => {
+    const rows = [];
+    if (state.bitProfileRating !== null) rows.push({ email: state.user.email, q_type: 'bit_profile_fit', question_id: 'bit_profile_fit', sesgo_id: null, rating: state.bitProfileRating });
+    if (state.bitRecoRating !== null) rows.push({ email: state.user.email, q_type: 'bit_reco_useful', question_id: 'bit_reco_useful', sesgo_id: null, rating: state.bitRecoRating });
+    if (rows.length) logQuestionFeedback(rows).catch(() => {});
     state.screen = 'dashboard';
     render();
   });
@@ -704,9 +775,11 @@ function startSesgo(id) {
   state.sesgoIndex = 0;
   state.sesgoRatings = new Array(s.questions.length).fill(null);
   state.fixationAnswers = new Array(s.fixationQuestions.length).fill(null);
+  state.fixationRatings = new Array(s.fixationQuestions.length).fill(null);
   state.fixationIndex = 0;
   state.learnStep = 0;
   state.learnRatings = [null, null, null, null];
+  state.resultRating = null;
   state.screen = 'sesgo';
   render();
 }
@@ -750,7 +823,7 @@ function renderSesgoQuiz() {
             </button>
           `).join('')}
         </div>
-        ${answered ? ratingWidget(state.sesgoRatings[state.sesgoIndex], '¿Qué tan representativa te parece esta pregunta?') : ''}
+        ${answered ? ratingWidget(state.sesgoRatings[state.sesgoIndex], '¿cómo calificarías esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
@@ -866,9 +939,9 @@ function renderSesgoLearn() {
       <div style="height:140px"></div>
     </div>
     <div class="learn-cta-bar">
-      ${ratingWidget(rating, '¿Qué tan claro fue este contenido?')}
-      <div class="learn-cta-bar-row">
-        <div class="learn-cta-hint">${step + 1} de ${LEARN_BLOCKS.length} bloques</div>
+      <div class="learn-cta-hint">${step + 1} de ${LEARN_BLOCKS.length} bloques</div>
+      <div class="learn-cta-right">
+        ${ratingWidget(rating, '¿cómo calificarías este bloque?')}
         <button class="btn-cta" id="btn-learn-next" ${rating === null ? 'disabled' : ''}>
           ${isLast ? 'Preguntas de verificación →' : 'Continuar →'}
         </button>
@@ -931,11 +1004,12 @@ function renderSesgoFixation() {
             </button>
           `).join('')}
         </div>
+        ${state.fixationAnswers[state.fixationIndex] !== null ? ratingWidget(state.fixationRatings[state.fixationIndex], '¿qué tan claro te quedó el concepto?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-fx-back" ${state.fixationIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null || state.fixationRatings[state.fixationIndex] === null ? 'disabled' : ''}>
         ${state.fixationIndex === total - 1 ? 'Ver mis resultados →' : 'Siguiente →'}
       </button>
     </div>
@@ -948,12 +1022,25 @@ function renderSesgoFixation() {
       render();
     });
   });
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.fixationRatings[state.fixationIndex] = parseInt(btn.dataset.rating);
+      render();
+    });
+  });
   document.getElementById('btn-fx-back').addEventListener('click', () => { state.fixationIndex--; render(); });
   document.getElementById('btn-fx-next').addEventListener('click', () => {
     if (state.fixationIndex < fq.length - 1) {
       state.fixationIndex++;
       render();
     } else {
+      logQuestionFeedback(fq.map((_, i) => ({
+        email: state.user.email,
+        q_type: 'fixation',
+        question_id: `${s.id}_fix${i}`,
+        sesgo_id: s.id,
+        rating: state.fixationRatings[i],
+      })).filter(r => r.rating !== null)).catch(() => {});
       state.sesgoPhase = 'result';
       render();
     }
@@ -1092,12 +1179,27 @@ async function renderSesgoResult() {
         </div>
       </div>
 
+      <div class="result-card" id="result-clarity-card">
+        <div class="result-card-title">¿Qué tan claro te quedó el concepto?</div>
+        ${ratingWidget(state.resultRating, '')}
+      </div>
+
       <div style="text-align:center;padding:1rem 0">
-        <button class="btn-cta" id="btn-back-dash">Volver al Dashboard →</button>
+        <button class="btn-cta" id="btn-back-dash" ${state.resultRating === null ? 'disabled' : ''}>Volver al Dashboard →</button>
       </div>
     </div>
   `;
   app.appendChild(c);
+  document.querySelectorAll('#result-clarity-card .rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.resultRating = parseInt(btn.dataset.rating);
+      document.querySelectorAll('#result-clarity-card .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.resultRating));
+      const txt = document.querySelector('#result-clarity-card .rating-feedback-text');
+      if (txt) { txt.textContent = RATING_LABELS[state.resultRating - 1]; txt.classList.add('has-rating'); }
+      document.getElementById('btn-back-dash').disabled = false;
+      logQuestionFeedback([{ email: state.user.email, q_type: 'module_clarity', question_id: `${s.id}_clarity`, sesgo_id: s.id, rating: state.resultRating }]).catch(() => {});
+    });
+  });
   document.getElementById('btn-back-dash').addEventListener('click', () => {
     state.screen = 'dashboard';
     render();
@@ -1249,6 +1351,17 @@ async function devFillAll() {
   } catch (e) {
     alert('Erro ao salvar: ' + e.message);
   }
+}
+
+async function devClearAll() {
+  if (!confirm('Borrar TODO el progreso de esta cuenta?')) return;
+  const empty = { email: state.user.email, bit_done: false, bit_result: null, bit_answers: null, sesgos: {}, updated_at: new Date().toISOString() };
+  try {
+    await saveProgress(empty);
+    state.progress = empty;
+    state.screen = 'dashboard';
+    render();
+  } catch (e) { alert('Error: ' + e.message); }
 }
 
 // ── UTILS ────────────────────────────────────────
