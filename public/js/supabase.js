@@ -96,3 +96,15 @@ export async function logResponses(rows) {
     Prefer: 'resolution=ignore-duplicates',
   });
 }
+
+export async function logQuestionFeedback(rows) {
+  return request('/rest/v1/question_feedback', 'POST', rows, {
+    Prefer: 'resolution=ignore-duplicates',
+  });
+}
+
+export async function logContentFeedback(rows) {
+  return request('/rest/v1/content_feedback', 'POST', rows, {
+    Prefer: 'resolution=ignore-duplicates',
+  });
+}

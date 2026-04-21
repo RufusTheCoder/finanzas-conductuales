@@ -1,4 +1,4 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, createSession, updateSession, signInWithGoogle, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation } from './supabase.js';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation } from './supabase.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
@@ -16,14 +16,18 @@ const state = {
   // BIT
   bitIndex: 0,
   bitAnswers: [],
+  bitRatings: [],
   bitResult: null,
   // Sesgo module
   currentSesgoId: null,
   sesgoAnswers: [],
   sesgoIndex: 0,
+  sesgoRatings: [],
   fixationAnswers: [],
   fixationIndex: 0,
   sesgoPhase: 'quiz',
+  learnStep: 0,
+  learnRatings: [null, null, null, null],
   // Progress (from DB)
   progress: null,
 };
@@ -44,6 +48,32 @@ function render() {
 // ── AUTH ─────────────────────────────────────────
 
 const GOOGLE_SVG = `<svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.04a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>`;
+
+const RATING_EMOJIS = ['😵', '😕', '😐', '😊', '🤩'];
+const RATING_LABELS = ['Muy confusa', 'Confusa', 'Regular', 'Clara', 'Muy clara'];
+
+function ratingWidget(current, prompt) {
+  return `
+    <div class="rating-widget">
+      <div class="rating-row">
+        <div>
+          <div class="rating-prompt">${prompt}</div>
+          <div class="rating-options">
+            ${RATING_EMOJIS.map((e, i) => `
+              <button class="rating-btn ${current === i + 1 ? 'selected' : ''}" data-rating="${i + 1}" title="${RATING_LABELS[i]}">
+                <span class="rating-emoji">${e}</span>
+                <span class="rating-num">${i + 1}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="rating-feedback-text ${current ? 'has-rating' : ''}">
+          ${current ? RATING_LABELS[current - 1] : 'Califica para continuar'}
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 function authShell(body) {
   const c = document.createElement('div');
@@ -432,7 +462,6 @@ function renderBit() {
   c.className = 'quiz-shell';
 
   if (state.bitIndex >= questions.length) {
-    // Completion screen
     c.innerHTML = `
       <div class="quiz-topbar">
         <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div>
@@ -456,6 +485,8 @@ function renderBit() {
 
   const q = questions[state.bitIndex];
   const pct = (state.bitIndex / questions.length) * 100;
+  const answered = state.bitAnswers[state.bitIndex] !== null;
+  const rated = state.bitRatings[state.bitIndex] !== null;
 
   c.innerHTML = `
     <div class="quiz-topbar">
@@ -477,11 +508,12 @@ function renderBit() {
             </button>
           `).join('')}
         </div>
+        ${answered ? ratingWidget(state.bitRatings[state.bitIndex], '¿Qué tan representativa te parece esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-bit-back" ${state.bitIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-bit-next" ${state.bitAnswers[state.bitIndex] === null ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-bit-next" ${!answered || !rated ? 'disabled' : ''}>
         ${state.bitIndex === questions.length - 1 ? 'Finalizar →' : 'Siguiente →'}
       </button>
     </div>
@@ -491,6 +523,12 @@ function renderBit() {
   document.querySelectorAll('.q-option').forEach(btn => {
     btn.addEventListener('click', () => {
       state.bitAnswers[state.bitIndex] = parseInt(btn.dataset.idx);
+      render();
+    });
+  });
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.bitRatings[state.bitIndex] = parseInt(btn.dataset.rating);
       render();
     });
   });
@@ -542,6 +580,20 @@ async function handleBitSubmit() {
     await logResponses(rows);
   } catch (e) {
     console.warn('Error logging BIT responses:', e);
+  }
+
+  // Log BIT question ratings
+  try {
+    const feedbackRows = questions.map((q, i) => ({
+      email: state.user.email,
+      q_type: 'bit',
+      question_id: `bit_${q.id}`,
+      sesgo_id: null,
+      rating: state.bitRatings[i],
+    })).filter(r => r.rating !== null && r.rating !== undefined);
+    if (feedbackRows.length) await logQuestionFeedback(feedbackRows);
+  } catch (e) {
+    console.warn('Error logging BIT ratings:', e);
   }
 
   state.screen = 'bit-result';
@@ -650,8 +702,11 @@ function startSesgo(id) {
   state.sesgoPhase = 'quiz';
   state.sesgoAnswers = new Array(s.questions.length).fill(null);
   state.sesgoIndex = 0;
+  state.sesgoRatings = new Array(s.questions.length).fill(null);
   state.fixationAnswers = new Array(s.fixationQuestions.length).fill(null);
   state.fixationIndex = 0;
+  state.learnStep = 0;
+  state.learnRatings = [null, null, null, null];
   state.screen = 'sesgo';
   render();
 }
@@ -670,6 +725,8 @@ function renderSesgoQuiz() {
   const q = s.questions[state.sesgoIndex];
   const total = s.questions.length;
   const pct = (state.sesgoIndex / total) * 100;
+  const answered = state.sesgoAnswers[state.sesgoIndex] !== null;
+  const rated = state.sesgoRatings[state.sesgoIndex] !== null;
 
   const c = document.createElement('div');
   c.className = 'quiz-shell';
@@ -693,11 +750,12 @@ function renderSesgoQuiz() {
             </button>
           `).join('')}
         </div>
+        ${answered ? ratingWidget(state.sesgoRatings[state.sesgoIndex], '¿Qué tan representativa te parece esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-sq-back" ${state.sesgoIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-sq-next" ${state.sesgoAnswers[state.sesgoIndex] === null ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-sq-next" ${!answered || !rated ? 'disabled' : ''}>
         ${state.sesgoIndex === total - 1 ? 'Continuar →' : 'Siguiente →'}
       </button>
     </div>
@@ -710,12 +768,26 @@ function renderSesgoQuiz() {
       render();
     });
   });
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.sesgoRatings[state.sesgoIndex] = parseInt(btn.dataset.rating);
+      render();
+    });
+  });
   document.getElementById('btn-sq-back').addEventListener('click', () => { state.sesgoIndex--; render(); });
-  document.getElementById('btn-sq-next').addEventListener('click', () => {
+  document.getElementById('btn-sq-next').addEventListener('click', async () => {
     if (state.sesgoIndex < s.questions.length - 1) {
       state.sesgoIndex++;
       render();
     } else {
+      // Log sesgo quiz ratings before moving to learn
+      logQuestionFeedback(s.questions.map((_, i) => ({
+        email: state.user.email,
+        q_type: 'sesgo_quiz',
+        question_id: `${s.id}_q${i}`,
+        sesgo_id: s.id,
+        rating: state.sesgoRatings[i],
+      })).filter(r => r.rating !== null)).catch(() => {});
       state.sesgoPhase = 'learn';
       render();
     }
@@ -725,64 +797,107 @@ function renderSesgoQuiz() {
   });
 }
 
+const LEARN_BLOCKS = [
+  { key: 'definicion',  title: 'Definición',        icon: '📖', label: '¿Qué es?' },
+  { key: 'explicacion', title: 'Explicación',        icon: '🧠', label: '¿Cómo funciona?' },
+  { key: 'ejemplos',    title: 'Ejemplos concretos', icon: '💡', label: 'En la práctica' },
+  { key: 'antidotos',   title: 'Antídotos',          icon: '🛡️', label: '¿Cómo mitigarlo?' },
+];
+
+function learnBlockContent(s, step) {
+  switch (step) {
+    case 0: return `
+      <div class="learn-block-hero">${s.definition}</div>
+      <div class="learn-prose"><p>${s.description}</p></div>
+    `;
+    case 1: return `
+      <div class="learn-prose"><p>${s.mechanism}</p></div>
+      <div class="learn-highlight"><strong>La trampa del cuestionario:</strong> ${s.trapQuestion}</div>
+    `;
+    case 2: return `
+      <div class="learn-examples">
+        ${s.examples.map(e => `
+          <div class="learn-example">
+            <div class="learn-example-label">${e.label}</div>
+            <div class="learn-example-text">${e.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    case 3: return `
+      <div class="learn-antidote">
+        <ul class="learn-antidote-list">
+          ${s.antidotes.map(a => `<li>${a}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+}
+
 function renderSesgoLearn() {
   const s = SESGOS.find(x => x.id === state.currentSesgoId);
+  const step = state.learnStep;
+  const block = LEARN_BLOCKS[step];
+  const isLast = step === LEARN_BLOCKS.length - 1;
+  const rating = state.learnRatings[step];
   const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Error Cognitivo + Sesgo Emocional';
 
   const c = document.createElement('div');
   c.className = 'learn-shell';
   c.innerHTML = `
     <div class="learn-topbar">
-      <div class="learn-breadcrumb">Finanzas Conductuales · <strong>${s.name}</strong></div>
+      <div class="learn-topbar-left">
+        <div class="learn-breadcrumb"><strong>${s.name}</strong> · ${block.icon} ${block.title}</div>
+        <div class="learn-step-progress">
+          ${LEARN_BLOCKS.map((_, i) => `<div class="learn-step-dot ${i === step ? 'active' : i < step ? 'done' : ''}"></div>`).join('')}
+        </div>
+      </div>
       <button class="btn-exit" id="btn-exit-learn" style="color:rgba(255,255,255,.5)">✕</button>
     </div>
     <div class="learn-body">
       <div class="learn-hero">
-        <div class="learn-tag ${s.tipo}">${tipoLabel}</div>
+        <div class="learn-block-tag ${s.tipo}">${tipoLabel}</div>
+        <div class="learn-block-step-label">${block.icon} ${block.label}</div>
         <h1 class="learn-title">${s.name}</h1>
-        <p class="learn-subtitle">${s.definition}</p>
       </div>
       <div class="learn-section">
-        <div class="learn-section-title">¿Qué es?</div>
-        <div class="learn-prose"><p>${s.description}</p></div>
+        ${learnBlockContent(s, step)}
       </div>
-      <div class="learn-section">
-        <div class="learn-section-title">¿Cómo funciona?</div>
-        <div class="learn-prose"><p>${s.mechanism}</p></div>
-        <div class="learn-highlight"><strong>La trampa del cuestionario:</strong> ${s.trapQuestion}</div>
-      </div>
-      <div class="learn-section">
-        <div class="learn-section-title">Ejemplos concretos</div>
-        <div class="learn-examples">
-          ${s.examples.map(e => `
-            <div class="learn-example">
-              <div class="learn-example-label">${e.label}</div>
-              <div class="learn-example-text">${e.text}</div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-      <div class="learn-section">
-        <div class="learn-antidote">
-          <div class="learn-antidote-title">Antídotos — ¿Cómo mitigarlo?</div>
-          <ul class="learn-antidote-list">
-            ${s.antidotes.map(a => `<li>${a}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-      <div style="height:80px"></div>
+      <div style="height:140px"></div>
     </div>
     <div class="learn-cta-bar">
-      <div class="learn-cta-hint">Ya respondiste el cuestionario · Pon a prueba lo que aprendiste</div>
-      <button class="btn-cta" id="btn-to-fixation">Preguntas de verificación →</button>
+      ${ratingWidget(rating, '¿Qué tan claro fue este contenido?')}
+      <div class="learn-cta-bar-row">
+        <div class="learn-cta-hint">${step + 1} de ${LEARN_BLOCKS.length} bloques</div>
+        <button class="btn-cta" id="btn-learn-next" ${rating === null ? 'disabled' : ''}>
+          ${isLast ? 'Preguntas de verificación →' : 'Continuar →'}
+        </button>
+      </div>
     </div>
   `;
   app.appendChild(c);
+
   document.getElementById('btn-exit-learn').addEventListener('click', () => {
     if (confirm('¿Salir del módulo?')) { state.screen = 'dashboard'; render(); }
   });
-  document.getElementById('btn-to-fixation').addEventListener('click', () => {
-    state.sesgoPhase = 'fixation';
+  document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.learnRatings[step] = parseInt(btn.dataset.rating);
+      render();
+    });
+  });
+  document.getElementById('btn-learn-next').addEventListener('click', async () => {
+    if (isLast) {
+      logContentFeedback(LEARN_BLOCKS.map((b, i) => ({
+        email: state.user.email,
+        sesgo_id: s.id,
+        block: b.key,
+        rating: state.learnRatings[i],
+      })).filter(r => r.rating !== null)).catch(() => {});
+      state.sesgoPhase = 'fixation';
+    } else {
+      state.learnStep = step + 1;
+    }
     render();
   });
 }
