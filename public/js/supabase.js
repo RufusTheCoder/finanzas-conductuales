@@ -19,8 +19,8 @@ async function request(path, method = 'GET', body = null, extraHeaders = {}) {
 
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
-    const message = payload?.error_description || payload?.error || response.statusText;
-    const error = new Error(message || 'Supabase request failed');
+    const message = payload?.error_description || payload?.message || payload?.error || response.statusText || `HTTP ${response.status}`;
+    const error = new Error(message);
     error.status = response.status;
     error.body = payload;
     throw error;
@@ -99,12 +99,12 @@ export async function logResponses(rows) {
 
 export async function logQuestionFeedback(rows) {
   return request('/rest/v1/question_feedback', 'POST', rows, {
-    Prefer: 'resolution=ignore-duplicates',
+    Prefer: 'resolution=merge-duplicates',
   });
 }
 
 export async function logContentFeedback(rows) {
   return request('/rest/v1/content_feedback', 'POST', rows, {
-    Prefer: 'resolution=ignore-duplicates',
+    Prefer: 'resolution=merge-duplicates',
   });
 }

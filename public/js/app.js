@@ -46,6 +46,18 @@ function toggleDarkMode() {
   localStorage.setItem('fc_dark', on ? '1' : '0');
 }
 
+function handleApiError(e, context = '') {
+  if (e.status === 401 || /jwt|expired|token/i.test(e.message)) {
+    localStorage.removeItem('fc_session');
+    state.user = null; state.progress = null; state.screen = 'auth';
+    state.authError = 'Tu sesión expiró. Por favor vuelve a entrar.';
+    render();
+    return true;
+  }
+  console.error(context, e);
+  return false;
+}
+
 function render() {
   app.innerHTML = '';
   if (state.screen !== 'auth') trackScreen(state.screen);
@@ -1098,6 +1110,7 @@ async function renderSesgoResult() {
     const saved = await saveProgress(payload);
     state.progress = Array.isArray(saved) ? saved[0] : saved;
   } catch (e) {
+    if (handleApiError(e, 'saveProgress')) return;
     console.error('Error saving sesgo result:', e);
   }
 
@@ -1349,7 +1362,7 @@ async function devFillAll() {
     state.screen = 'report';
     render();
   } catch (e) {
-    alert('Erro ao salvar: ' + e.message);
+    if (!handleApiError(e, 'devFillAll')) alert('Erro ao salvar: ' + e.message);
   }
 }
 
@@ -1361,7 +1374,9 @@ async function devClearAll() {
     state.progress = empty;
     state.screen = 'dashboard';
     render();
-  } catch (e) { alert('Error: ' + e.message); }
+  } catch (e) {
+    if (!handleApiError(e, 'devClearAll')) alert('Error: ' + e.message);
+  }
 }
 
 // ── UTILS ────────────────────────────────────────
