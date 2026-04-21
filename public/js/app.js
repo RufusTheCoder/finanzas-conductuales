@@ -1315,9 +1315,13 @@ function trackScreen(screen) {
 }
 
 // Heartbeat every 60s so last_seen_at stays fresh
-setInterval(() => {
+setInterval(async () => {
   if (state.sessionId && state.screen !== 'auth') {
-    updateSession(state.sessionId, { last_seen_at: new Date().toISOString() }).catch(() => {});
+    try {
+      await updateSession(state.sessionId, { last_seen_at: new Date().toISOString() });
+    } catch (e) {
+      if (e.status === 401) handleApiError(e, 'heartbeat');
+    }
   }
 }, 60_000);
 
