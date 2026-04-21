@@ -4,3 +4,6 @@
 node_modules/
 desktop.ini
 .claude/
+
+# Local Netlify folder
+.netlify

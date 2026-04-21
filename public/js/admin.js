@@ -85,12 +85,14 @@ async function get(path) {
 
 async function loadAll() {
   try {
-    const [users, progress, responses, flags, sessions] = await Promise.all([
+    const [users, progress, responses, flags, sessions, qFeedback, cFeedback] = await Promise.all([
       get('/rest/v1/users?select=email,name,created_at&order=created_at.desc'),
       get('/rest/v1/progress?select=*&order=updated_at.desc'),
       get('/rest/v1/question_responses?select=question_id,q_type,sesgo_id,answer_idx,answer_type'),
       get('/rest/v1/question_flags?select=*'),
       get('/rest/v1/app_sessions?select=*&order=started_at.desc&limit=200'),
+      get('/rest/v1/question_feedback?select=*&order=created_at.desc'),
+      get('/rest/v1/content_feedback?select=*&order=created_at.desc'),
     ]);
     const flagMap = {};
     flags.forEach(f => { flagMap[f.question_id] = f; });
@@ -99,6 +101,7 @@ async function loadAll() {
     renderAlumnos(users, progress);
     renderPreguntas(responses, flagMap);
     renderBanco(responses, flagMap);
+    renderValoraciones(qFeedback, cFeedback);
   } catch (e) {
     document.getElementById('tab-overview').innerHTML = `<p style="color:var(--red)">Error al cargar datos: ${e.message}</p>`;
   }
@@ -976,4 +979,211 @@ function renderBanco(responses, flagMap) {
   });
 
   paint('all');
+}
+
+// ── VALORACIONES ─────────────────────────────────
+
+const EMOJI_MAP = { 1:'😵', 2:'😕', 3:'😐', 4:'😊', 5:'🤩' };
+const BLOCK_LABELS = { definicion:'Definición', explicacion:'Explicación', ejemplos:'Ejemplos', antidotos:'Antídotos', fixation:'Verificación' };
+const QTYPE_LABELS = { bit:'BIT', sesgo_quiz:'Detección', fixation:'Verificación' };
+
+function avgRating(rows) {
+  if (!rows.length) return null;
+  return rows.reduce((s, r) => s + r.rating, 0) / rows.length;
+}
+
+function ratingBar(avg, n, showN = true) {
+  if (avg === null) return `<span style="color:var(--ink-4);font-size:.8rem">Sin datos</span>`;
+  const pct = Math.round((avg - 1) / 4 * 100);
+  const color = avg >= 4 ? 'var(--success)' : avg >= 3 ? 'var(--warning)' : 'var(--red)';
+  return `
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div style="flex:1;height:7px;background:var(--paper-2);border-radius:100px;overflow:hidden;min-width:80px">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:100px"></div>
+      </div>
+      <span style="font-size:.9rem;font-weight:700;color:${color};min-width:28px">${avg.toFixed(1)}</span>
+      <span style="font-size:.75rem">${EMOJI_MAP[Math.round(avg)] || ''}</span>
+      ${showN ? `<span style="font-size:.72rem;color:var(--ink-4)">(${n})</span>` : ''}
+    </div>`;
+}
+
+function renderValoraciones(qFeedback, cFeedback) {
+  const el = document.getElementById('tab-valoraciones');
+  const totalQ = qFeedback.length;
+  const totalC = cFeedback.length;
+
+  if (!totalQ && !totalC) {
+    el.innerHTML = `<div style="padding:3rem;text-align:center;color:var(--ink-4)">
+      Sin valoraciones registradas aún. Aparecerán aquí cuando los alumnos completen preguntas.
+    </div>`;
+    return;
+  }
+
+  // ── KPIs ──
+  const avgQ = avgRating(qFeedback);
+  const avgC = avgRating(cFeedback);
+  const lowQCount = qFeedback.filter(r => r.rating <= 2).length;
+  const lowCCount = cFeedback.filter(r => r.rating <= 2).length;
+
+  // ── Por tipo de pregunta ──
+  const byType = {};
+  qFeedback.forEach(r => {
+    if (!byType[r.q_type]) byType[r.q_type] = [];
+    byType[r.q_type].push(r);
+  });
+
+  const typeRows = Object.entries(byType).map(([type, rows]) => {
+    const avg = avgRating(rows);
+    return `<tr>
+      <td style="font-size:.85rem;font-weight:600;color:var(--ink-2)">${QTYPE_LABELS[type] || type}</td>
+      <td style="font-size:.85rem;text-align:center;color:var(--ink-3)">${rows.length}</td>
+      <td style="min-width:200px">${ratingBar(avg, rows.length, false)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Por bloque de contenido ──
+  const byBlock = {};
+  cFeedback.forEach(r => {
+    if (!byBlock[r.block]) byBlock[r.block] = [];
+    byBlock[r.block].push(r);
+  });
+
+  const blockOrder = ['definicion','explicacion','ejemplos','antidotos'];
+  const blockRows = blockOrder.filter(b => byBlock[b]).map(b => {
+    const rows = byBlock[b];
+    const avg = avgRating(rows);
+    return `<tr>
+      <td style="font-size:.85rem;font-weight:600;color:var(--ink-2)">${BLOCK_LABELS[b]}</td>
+      <td style="font-size:.85rem;text-align:center;color:var(--ink-3)">${rows.length}</td>
+      <td style="min-width:200px">${ratingBar(avg, rows.length, false)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Por sesgo (contenido) ──
+  const bySesgo = {};
+  cFeedback.forEach(r => {
+    if (!bySesgo[r.sesgo_id]) bySesgo[r.sesgo_id] = [];
+    bySesgo[r.sesgo_id].push(r);
+  });
+
+  const sesgoContentRows = Object.entries(bySesgo)
+    .map(([id, rows]) => ({ id, avg: avgRating(rows), n: rows.length, blocks: rows }))
+    .sort((a, b) => (a.avg ?? 99) - (b.avg ?? 99))
+    .map(({ id, avg, n, blocks }) => {
+      const blockCells = blockOrder.map(b => {
+        const bRows = blocks.filter(r => r.block === b);
+        const bAvg = avgRating(bRows);
+        if (bAvg === null) return `<td style="text-align:center;color:var(--ink-4);font-size:.8rem">—</td>`;
+        const color = bAvg >= 4 ? 'var(--success)' : bAvg >= 3 ? 'var(--warning)' : 'var(--red)';
+        return `<td style="text-align:center;font-size:.85rem;font-weight:700;color:${color}">${bAvg.toFixed(1)} ${EMOJI_MAP[Math.round(bAvg)]}</td>`;
+      }).join('');
+      const color = avg >= 4 ? 'var(--success)' : avg >= 3 ? 'var(--warning)' : 'var(--red)';
+      return `<tr>
+        <td style="font-size:.82rem;font-weight:600;color:var(--ink-2);white-space:nowrap">${SESGO_NAMES[id] || id}</td>
+        ${blockCells}
+        <td style="text-align:center;font-weight:700;color:${color}">${avg?.toFixed(1) ?? '—'}</td>
+        <td style="text-align:center;font-size:.78rem;color:var(--ink-4)">${n}</td>
+      </tr>`;
+    }).join('');
+
+  // ── Preguntas peor valoradas ──
+  const byQid = {};
+  qFeedback.forEach(r => {
+    if (!byQid[r.question_id]) byQid[r.question_id] = { q_type: r.q_type, sesgo_id: r.sesgo_id, rows: [] };
+    byQid[r.question_id].rows.push(r);
+  });
+
+  const worstQs = Object.entries(byQid)
+    .map(([qid, d]) => ({ qid, ...d, avg: avgRating(d.rows), n: d.rows.length }))
+    .filter(q => q.n >= 2)
+    .sort((a, b) => a.avg - b.avg)
+    .slice(0, 10);
+
+  const worstRows = worstQs.map(q => {
+    const text = getQuestionText(q.qid, q.q_type, q.sesgo_id);
+    const sesgoLabel = q.sesgo_id ? (SESGO_NAMES[q.sesgo_id] || q.sesgo_id) : 'BIT';
+    const color = q.avg >= 4 ? 'var(--success)' : q.avg >= 3 ? 'var(--warning)' : 'var(--red)';
+    return `<tr>
+      <td style="max-width:320px">
+        <div style="font-size:.8rem;color:var(--ink-2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px"
+             title="${(text||'').replace(/"/g,"'")}">${text || q.qid}</div>
+        <div style="font-size:.72rem;color:var(--ink-4);margin-top:2px">${sesgoLabel} · ${QTYPE_LABELS[q.q_type] || q.q_type}</div>
+      </td>
+      <td style="text-align:center;font-size:.95rem;font-weight:700;color:${color}">${q.avg.toFixed(1)}</td>
+      <td style="text-align:center;font-size:.85rem">${EMOJI_MAP[Math.round(q.avg)]}</td>
+      <td style="text-align:center;font-size:.78rem;color:var(--ink-4)">${q.n}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <!-- KPIs -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:2rem">
+      ${kpi(totalQ, 'Valoraciones de preguntas', '')}
+      ${kpi(avgQ ? avgQ.toFixed(1) + ' / 5' : '—', 'Nota media preguntas', avgQ ? EMOJI_MAP[Math.round(avgQ)] : '')}
+      ${kpi(totalC, 'Valoraciones de contenido', '')}
+      ${kpi(avgC ? avgC.toFixed(1) + ' / 5' : '—', 'Nota media contenido', avgC ? EMOJI_MAP[Math.round(avgC)] : '')}
+    </div>
+
+    ${lowQCount + lowCCount > 0 ? `
+    <div style="padding:1rem 1.25rem;background:rgba(220,38,38,.07);border-radius:var(--r-md);border-left:3px solid var(--red);margin-bottom:2rem">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:.2rem">Atención</div>
+      <div style="font-size:.88rem;color:var(--ink-2)">${lowQCount + lowCCount} valoraciones con nota ≤2 — hay contenido o preguntas que los alumnos perciben como poco claros.</div>
+    </div>` : ''}
+
+    <!-- Por tipo y por bloque -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:2rem">
+      <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3)">
+        <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:1.25rem">Preguntas · por tipo</div>
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr>
+            <th style="text-align:left;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">Tipo</th>
+            <th style="text-align:center;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">n</th>
+            <th style="font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">Nota media</th>
+          </tr></thead>
+          <tbody>${typeRows || '<tr><td colspan="3" style="color:var(--ink-4);font-size:.82rem">Sin datos</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3)">
+        <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:1.25rem">Contenido · por bloque</div>
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr>
+            <th style="text-align:left;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">Bloque</th>
+            <th style="text-align:center;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">n</th>
+            <th style="font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.5rem">Nota media</th>
+          </tr></thead>
+          <tbody>${blockRows || '<tr><td colspan="3" style="color:var(--ink-4);font-size:.82rem">Sin datos</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Contenido por sesgo -->
+    ${Object.keys(bySesgo).length ? `
+    <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3);margin-bottom:2rem">
+      <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:1.25rem">Claridad del contenido · por sesgo y bloque</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+          <thead><tr>
+            <th style="text-align:left;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding:.5rem .75rem .5rem 0">Sesgo</th>
+            ${blockOrder.map(b => `<th style="text-align:center;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding:.5rem .5rem">${BLOCK_LABELS[b]}</th>`).join('')}
+            <th style="text-align:center;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding:.5rem">Promedio</th>
+            <th style="text-align:center;font-size:.7rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.06em;padding:.5rem">n</th>
+          </tr></thead>
+          <tbody>${sesgoContentRows}</tbody>
+        </table>
+      </div>
+    </div>` : ''}
+
+    <!-- Preguntas peor valoradas -->
+    ${worstQs.length ? `
+    <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3)">
+      <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:.4rem">Preguntas peor valoradas</div>
+      <div style="font-size:.8rem;color:var(--ink-4);margin-bottom:1.25rem">Mínimo 2 valoraciones · ordenadas de menor a mayor nota</div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Pregunta</th><th style="text-align:center">Nota</th><th style="text-align:center">Emo</th><th style="text-align:center">n</th></tr></thead>
+          <tbody>${worstRows}</tbody>
+        </table>
+      </div>
+    </div>` : ''}
+  `;
 }

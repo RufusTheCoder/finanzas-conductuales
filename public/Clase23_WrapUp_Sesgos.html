@@ -301,6 +301,227 @@
   .ej-step-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
   .ej-step p { font-size: 0.82rem; line-height: 1.5; opacity: 0.9; margin: 0; }
 
+  /* ── SUB-NAVEGACIÓN PERFIL (screens 5 → 5h) ── */
+  .sub-nav {
+    display: flex; gap: 6px; justify-content: center;
+    padding: 0.8rem 1rem; background: white; border-radius: 50px;
+    box-shadow: var(--shadow); margin: 0 auto 1.5rem;
+    max-width: fit-content; flex-wrap: wrap;
+  }
+  .sub-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; font-weight: 700; cursor: pointer;
+    background: var(--ibero-warm); color: var(--text-light);
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .sub-dot.active { background: var(--ibero-red); color: white; }
+  .sub-dot.done { background: var(--ibero-sand); color: var(--ibero-red); }
+  .sub-dot:hover:not(.active) { border-color: var(--ibero-orange); }
+
+  /* ── FEEDBACK WIDGET ── */
+  .fb-card {
+    background: linear-gradient(145deg, #FFF5E6, #F5E6D0);
+    border-radius: 16px; padding: 1.4rem 1.6rem;
+    box-shadow: var(--shadow); border-left: 5px solid var(--ibero-orange);
+    margin-top: 2rem;
+  }
+  .fb-title {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--ibero-red); margin-bottom: 0.7rem;
+  }
+  .fb-q { font-size: 0.92rem; color: var(--text-dark); margin-bottom: 1rem; line-height: 1.5; }
+  .fb-stars { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .fb-star {
+    width: 40px; height: 40px; border-radius: 10px;
+    border: 2px solid var(--ibero-sand); background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; cursor: pointer; transition: all 0.18s;
+  }
+  .fb-star:hover { border-color: var(--ibero-orange); transform: translateY(-2px); }
+  .fb-star.active { background: var(--ibero-red); border-color: var(--ibero-red); color: white; }
+  .fb-comment {
+    width: 100%; min-height: 62px; padding: 0.7rem 1rem;
+    border: 2px solid var(--ibero-sand); border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    background: white; resize: vertical;
+  }
+  .fb-comment:focus { outline: none; border-color: var(--ibero-orange); }
+  .fb-status {
+    font-size: 0.75rem; color: var(--text-light); margin-top: 0.6rem;
+    min-height: 18px;
+  }
+  .fb-status.saved { color: #1E6B3C; font-weight: 600; }
+  .fb-status.error { color: #922B21; }
+
+  /* ── IDEA 2: PLAN DE ACCIÓN ── */
+  .plan-card {
+    background: white; border-radius: 18px; padding: 1.5rem 1.8rem;
+    box-shadow: var(--shadow); margin-bottom: 1rem;
+    border-left: 5px solid var(--ibero-red);
+    display: grid; grid-template-columns: 60px 1fr auto; gap: 1.2rem; align-items: center;
+  }
+  .plan-rank {
+    font-family: 'Playfair Display', serif; font-size: 2.2rem;
+    font-weight: 900; color: var(--ibero-red); text-align: center;
+  }
+  .plan-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ibero-red); margin-bottom: 0.3rem; }
+  .plan-why { font-size: 0.82rem; color: var(--text-mid); line-height: 1.55; }
+  .plan-score {
+    background: var(--ibero-warm); border-radius: 12px; padding: 0.7rem 1rem;
+    text-align: center; min-width: 110px;
+  }
+  .plan-score-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--ibero-red); }
+  .plan-score-lbl { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-light); }
+
+  /* ── IDEA 3: COMPARACIÓN ── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .compare-col {
+    background: white; border-radius: 16px; padding: 1.5rem;
+    box-shadow: var(--shadow); border-top: 4px solid;
+  }
+  .compare-col-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .compare-col-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
+  .compare-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .compare-bar-label { width: 120px; font-size: 0.72rem; color: var(--text-mid); text-align: right; }
+  .compare-bar-track { flex: 1; height: 16px; background: #F0E8DC; border-radius: 4px; overflow: hidden; }
+  .compare-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
+  .compare-select-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center; }
+  .compare-select-label { font-size: 0.78rem; font-weight: 700; color: var(--text-mid); }
+  .compare-select {
+    padding: 8px 14px; border-radius: 20px; border: 2px solid var(--ibero-sand);
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer;
+  }
+  .compare-diff {
+    background: var(--ibero-warm); border-radius: 12px; padding: 1rem 1.4rem;
+    font-size: 0.88rem; color: var(--text-mid); line-height: 1.65; margin-top: 1rem;
+  }
+
+  /* ── IDEA 4: UNIVERSALES ── */
+  .universal-card {
+    background: white; border-radius: 16px; padding: 1.3rem 1.5rem;
+    box-shadow: var(--shadow); margin-bottom: 0.8rem;
+    display: grid; grid-template-columns: 1fr auto auto auto auto auto; gap: 10px; align-items: center;
+  }
+  .universal-name { font-weight: 600; color: var(--text-dark); font-size: 0.9rem; cursor: pointer; }
+  .universal-name:hover { color: var(--ibero-red); }
+  .universal-pill {
+    padding: 3px 9px; border-radius: 20px; font-size: 0.65rem; font-weight: 700;
+    min-width: 38px; text-align: center;
+  }
+
+  /* ── IDEA 5: CLASS DATA ── */
+  .class-bar-row {
+    display: grid; grid-template-columns: 120px 1fr 60px; gap: 12px;
+    align-items: center; margin-bottom: 12px;
+  }
+  .class-bar-label { font-size: 0.85rem; font-weight: 600; text-align: right; }
+  .class-bar-track { height: 32px; background: var(--ibero-warm); border-radius: 6px; overflow: hidden; }
+  .class-bar-fill {
+    height: 100%; border-radius: 6px; transition: width 0.8s cubic-bezier(.4,0,.2,1);
+    display: flex; align-items: center; padding-left: 10px;
+    color: white; font-size: 0.78rem; font-weight: 700;
+  }
+  .class-total-badge {
+    background: var(--ibero-red); color: white; padding: 0.8rem 1.5rem; border-radius: 12px;
+    display: inline-block; margin-bottom: 1.5rem;
+  }
+  .class-total-badge-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; }
+  .class-total-badge-lbl { font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; }
+
+  /* ── IDEA 6: COVERAGE ── */
+  .coverage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .coverage-card {
+    background: white; border-radius: 16px; padding: 1.3rem 1.5rem;
+    box-shadow: var(--shadow); border-top: 4px solid;
+  }
+  .coverage-icon { font-size: 1.8rem; }
+  .coverage-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; }
+  .coverage-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+  .coverage-count {
+    margin-left: auto; background: var(--ibero-red); color: white;
+    padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+  }
+  .coverage-sesgo-list {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.8rem;
+  }
+  .coverage-sesgo-tag {
+    background: var(--ibero-warm); color: var(--text-mid);
+    padding: 3px 9px; border-radius: 6px; font-size: 0.72rem; font-weight: 500;
+  }
+
+  /* ── IDEA 7: SEVERIDAD ── */
+  .severity-row {
+    display: grid; grid-template-columns: 180px 1fr 80px 60px; gap: 10px;
+    align-items: center; margin-bottom: 9px;
+  }
+  .severity-label { font-size: 0.78rem; font-weight: 500; color: var(--text-mid); text-align: right; cursor: pointer; }
+  .severity-label:hover { color: var(--ibero-red); }
+  .severity-track { height: 24px; background: #F0E8DC; border-radius: 5px; overflow: hidden; position: relative; }
+  .severity-fill { height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+  .severity-pct { font-size: 0.82rem; font-weight: 700; text-align: center; }
+  .severity-mec { font-size: 0.65rem; text-align: center; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+
+  /* ── IDEA 8: TESTIMONIALS ── */
+  .testimonial-card {
+    background: white; border-radius: 20px; padding: 2rem 2.5rem;
+    box-shadow: var(--shadow-lg); border-top: 5px solid;
+    margin-bottom: 1.2rem; position: relative;
+  }
+  .testimonial-card::before {
+    content: '"'; position: absolute; top: 0; left: 1.5rem;
+    font-family: 'Playfair Display', serif; font-size: 7rem;
+    font-weight: 900; line-height: 1; opacity: 0.08;
+  }
+  .testimonial-hdr { display: flex; align-items: center; gap: 14px; margin-bottom: 1rem; }
+  .testimonial-emoji { font-size: 2rem; }
+  .testimonial-profile {
+    font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700;
+  }
+  .testimonial-profile-sub { font-size: 0.72rem; color: var(--text-light); }
+  .testimonial-quote {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.15rem; line-height: 1.5; color: var(--text-dark);
+    margin-bottom: 1.2rem; position: relative; z-index: 1;
+  }
+  .testimonial-response {
+    background: var(--ibero-warm); border-radius: 12px; padding: 1rem 1.3rem;
+    border-left: 3px solid var(--ibero-red);
+  }
+  .testimonial-response-lbl {
+    font-size: 0.67rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ibero-red); margin-bottom: 0.4rem;
+  }
+  .testimonial-response-txt {
+    font-size: 0.87rem; color: var(--text-mid); line-height: 1.65;
+  }
+
+  /* ── IDEA 9: DECISION MATRIX ── */
+  .dec-scenario {
+    background: white; border-radius: 16px; padding: 1.3rem 1.6rem;
+    box-shadow: var(--shadow); margin-bottom: 1rem;
+  }
+  .dec-situation {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ibero-orange); margin-bottom: 0.5rem;
+  }
+  .dec-title {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text-dark);
+    margin-bottom: 1rem; line-height: 1.4;
+  }
+  .dec-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .dec-cell { border-radius: 10px; padding: 1rem 1.2rem; }
+  .dec-tendency { background: #FADBD8; border-left: 3px solid #922B21; }
+  .dec-rational { background: #D5F5E3; border-left: 3px solid #1E6B3C; }
+  .dec-cell-lbl {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .dec-tendency .dec-cell-lbl { color: #922B21; }
+  .dec-rational .dec-cell-lbl { color: #1E6B3C; }
+  .dec-cell-txt { font-size: 0.85rem; line-height: 1.6; color: var(--text-dark); }
+
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; }
     .hero-left::after { display: none; }
@@ -308,6 +529,9 @@
     .antidoto-grid { grid-template-columns: 1fr; }
     .ejercicio-steps { grid-template-columns: 1fr; }
     .def-box { grid-template-columns: 1fr; }
+    .compare-grid, .coverage-grid, .dec-row { grid-template-columns: 1fr; }
+    .plan-card { grid-template-columns: 1fr; }
+    .severity-row { grid-template-columns: 130px 1fr 60px 50px; }
   }
 </style>
 </head>
@@ -554,8 +778,9 @@
 ══════════════════════════════ -->
 <div class="screen" id="screen-5">
   <div class="section-wrap">
+    <div id="sub-nav-5"></div>
     <div class="section-header">
-      <div class="section-num">5</div>
+      <div class="section-num">1</div>
       <div class="section-info">
         <h2>Tu perfil conductual como inversionista</h2>
         <p>¿Cuáles sesgos deberías vigilar más según tu perfil BIT?</p>
@@ -581,7 +806,215 @@
 
     <div class="nav-bottom">
       <button class="btn-nav btn-secondary" onclick="goTo(4)">← Atrás</button>
-      <button class="btn-nav btn-primary" onclick="goTo(6)">Ver matriz →</button>
+      <button class="btn-nav btn-primary" onclick="goTo('5a')">Siguiente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5a — IDEA 2: PLAN DE ACCIÓN
+══════════════════════════════ -->
+<div class="screen" id="screen-5a">
+  <div class="section-wrap">
+    <div id="sub-nav-5a"></div>
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-info">
+        <h2>Tu plan de acción personalizado</h2>
+        <p>Los 3 antídotos que más cubren tus mecanismos de riesgo</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Dado tu perfil <strong id="plan-profile-code"></strong>, estos son los antídotos con mayor retorno esperado — los que cubren los mecanismos donde tu riesgo es más alto.</p>
+    </div>
+    <div id="planList"></div>
+    <div id="fb-5a"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(5)">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5b" onclick="tryAdvance('5a','5b', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5b — IDEA 3: COMPARACIÓN
+══════════════════════════════ -->
+<div class="screen" id="screen-5b">
+  <div class="section-wrap">
+    <div id="sub-nav-5b"></div>
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-info">
+        <h2>Comparación entre perfiles</h2>
+        <p>Ver dos perfiles lado a lado — dónde coinciden y dónde divergen</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;">
+      <div class="compare-select-row">
+        <span class="compare-select-label">Perfil A:</span>
+        <select class="compare-select" id="cmpA"></select>
+        <span class="compare-select-label">vs Perfil B:</span>
+        <select class="compare-select" id="cmpB"></select>
+      </div>
+    </div>
+    <div class="compare-grid" id="compareGrid"></div>
+    <div class="compare-diff" id="compareDiff"></div>
+    <div id="fb-5b"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5a')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5c" onclick="tryAdvance('5b','5c', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5c — IDEA 4: SESGOS UNIVERSALES
+══════════════════════════════ -->
+<div class="screen" id="screen-5c">
+  <div class="section-wrap">
+    <div id="sub-nav-5c"></div>
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-info">
+        <h2>Sesgos universales</h2>
+        <p>Los que afectan a todos los perfiles con riesgo medio o alto — nadie escapa</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-red);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Hay sesgos donde <strong>todos los perfiles</strong> tienen riesgo medio o alto. Son los que vale la pena trabajar colectivamente — porque nadie está exento, independientemente de tu BIT.</p>
+    </div>
+    <div id="universalList"></div>
+    <div id="fb-5c"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5b')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5d" onclick="tryAdvance('5c','5d', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5d — IDEA 5: DATOS REALES DE LA CLASE
+══════════════════════════════ -->
+<div class="screen" id="screen-5d">
+  <div class="section-wrap">
+    <div id="sub-nav-5d"></div>
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-info">
+        <h2>Distribución real de la clase</h2>
+        <p>Qué perfiles predominan en este grupo — datos en vivo desde Supabase</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Estos son los perfiles BIT reales de tus compañeros que completaron el test en la plataforma. Los sesgos dominantes de la clase son los que más aparecerán en las discusiones.</p>
+    </div>
+    <div id="classDataContent"></div>
+    <div id="fb-5d"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5c')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5e" onclick="tryAdvance('5d','5e', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5e — IDEA 6: ANTÍDOTO → COBERTURA
+══════════════════════════════ -->
+<div class="screen" id="screen-5e">
+  <div class="section-wrap">
+    <div id="sub-nav-5e"></div>
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-info">
+        <h2>Cobertura de cada antídoto</h2>
+        <p>Cuántos sesgos cubre cada herramienta para tu perfil</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-red);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Cada antídoto ataca mecanismos específicos — y por lo tanto, cubre un subconjunto de los 18 sesgos. Este mapa te muestra <strong>qué protección efectiva</strong> te da cada herramienta, ponderada por tu perfil <strong id="cov-profile-code"></strong>.</p>
+    </div>
+    <div class="coverage-grid" id="coverageGrid"></div>
+    <div id="fb-5e"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5d')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5f" onclick="tryAdvance('5e','5f', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5f — IDEA 7: SEVERIDAD DINÁMICA
+══════════════════════════════ -->
+<div class="screen" id="screen-5f">
+  <div class="section-wrap">
+    <div id="sub-nav-5f"></div>
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-info">
+        <h2>Severidad dinámica por sesgo</h2>
+        <p>Escala continua 0–100% — tu vulnerabilidad real a cada sesgo</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">En lugar de clasificar "alto / medio / bajo", calculamos un <strong>score continuo</strong> por sesgo, ponderando la intensidad de tu mecanismo raíz con el peso específico de ese sesgo dentro del mecanismo. Permite ver gradaciones finas.</p>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.5rem 2rem;box-shadow:var(--shadow);margin-bottom:1.5rem;">
+      <div id="severityList"></div>
+    </div>
+    <div id="fb-5f"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5e')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5g" onclick="tryAdvance('5f','5g', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5g — IDEA 8: TESTIMONIALES
+══════════════════════════════ -->
+<div class="screen" id="screen-5g">
+  <div class="section-wrap">
+    <div id="sub-nav-5g"></div>
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-info">
+        <h2>¿Cómo habla cada perfil?</h2>
+        <p>Frases típicas en primera persona — para que te reconozcas</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-red);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Los perfiles se manifiestan en el lenguaje. Lee las frases y nota cuáles podrías pronunciar tú mismo — es uno de los mejores detectores de sesgo en vivo.</p>
+    </div>
+    <div id="testimonialList"></div>
+    <div id="fb-5g"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5f')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="5h" onclick="tryAdvance('5g','5h', this)">Seguir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5h — IDEA 9: MATRIZ DE DECISIÓN POR PERFIL
+══════════════════════════════ -->
+<div class="screen" id="screen-5h">
+  <div class="section-wrap">
+    <div id="sub-nav-5h"></div>
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-info">
+        <h2>Matriz de decisión</h2>
+        <p>Situaciones concretas — qué hace tu perfil vs qué haría el REM</p>
+      </div>
+    </div>
+    <div style="background:white;border-radius:16px;padding:1.3rem 1.8rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.65;">Tres situaciones reales para el perfil <strong id="dec-profile-code"></strong>. Compara la tendencia automática con la respuesta racional — y observa cuál antídoto crea el puente.</p>
+    </div>
+    <div id="decisionList"></div>
+    <div id="fb-5h"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo('5g')">← Atrás</button>
+      <button class="btn-nav btn-primary" data-next="6" onclick="tryAdvance('5h',6, this)">Seguir a la matriz →</button>
     </div>
   </div>
 </div>
@@ -651,7 +1084,7 @@
     </div>
 
     <div class="nav-bottom">
-      <button class="btn-nav btn-secondary" onclick="goTo(5)">← Atrás</button>
+      <button class="btn-nav btn-secondary" onclick="goTo('5h')">← Atrás</button>
       <button class="btn-nav btn-primary" onclick="goTo(0)">Inicio →</button>
     </div>
   </div>
@@ -771,27 +1204,84 @@ let mecAtribPool = [...SESGOS.map(s=>s.name)];
 let selectedProfileCode = 'PP';
 let clasifMenu = null;
 
+// Sub-flow (section 5) screen IDs in order
+const PERFIL_SUBFLOW = [5,'5a','5b','5c','5d','5e','5f','5g','5h'];
+const PERFIL_SUB_LABELS = ['Mapa','Plan','Comparar','Universales','Clase','Cobertura','Severidad','Lenguaje','Matriz'];
+const SECTION_OF = id => (id===0||id===1||id===2||id===3||id===4) ? id
+  : (id===6) ? 6 : 5;
+
+// Track feedback state for gating (which slides have a rating)
+const slideRatings = {};
+
 // ── NAVEGACIÓN ───────────────────────────────────────────────────────────
 function goTo(idx) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+idx).classList.add('active');
+  const target = document.getElementById('screen-'+idx);
+  if(!target) return;
+  target.classList.add('active');
+  const sec = SECTION_OF(idx);
   document.querySelectorAll('.step-dot').forEach((d,i) => {
     d.classList.remove('active','done');
-    if(i===idx) d.classList.add('active');
-    else if(i<idx) d.classList.add('done');
+    if(i===sec) d.classList.add('active');
+    else if(i<sec) d.classList.add('done');
   });
-  document.getElementById('progressFill').style.width = (idx/6*100)+'%';
+  const progressPct = sec===5
+    ? (5 + (PERFIL_SUBFLOW.indexOf(idx) / PERFIL_SUBFLOW.length)) / 6 * 100
+    : sec/6*100;
+  document.getElementById('progressFill').style.width = progressPct+'%';
   currentScreen = idx;
   window.scrollTo(0,0);
   updateNavBack();
+  // Hooks for perfil sub-flow
+  if(idx==='5a') renderPlanDeAccion();
+  else if(idx==='5b') renderCompareInit();
+  else if(idx==='5c') renderUniversales();
+  else if(idx==='5d') renderClassData();
+  else if(idx==='5e') renderCoverage();
+  else if(idx==='5f') renderSeveridad();
+  else if(idx==='5g') renderTestimonials();
+  else if(idx==='5h') renderDecisionMatrix();
+  // Render sub-nav for perfil slides
+  if(sec===5) renderSubNav(idx);
 }
-function goBack() { if(currentScreen>0) goTo(currentScreen-1); }
+function goBack() {
+  if(currentScreen===0) return;
+  const idx = PERFIL_SUBFLOW.indexOf(currentScreen);
+  if(idx>0) { goTo(PERFIL_SUBFLOW[idx-1]); return; }
+  if(currentScreen==='5a') { goTo(5); return; }
+  if(currentScreen===6) { goTo('5h'); return; }
+  if(typeof currentScreen === 'number' && currentScreen>0) goTo(currentScreen-1);
+}
 function updateNavBack() {
   const btn = document.getElementById('navBack');
   if(!btn) return;
-  const labels = ['Apertura','Los Sesgos','Clasificación','Mecanismos','Antídotos','Tu Perfil'];
-  if(currentScreen===0) btn.classList.add('hidden');
-  else { btn.classList.remove('hidden'); btn.textContent = '← '+(labels[currentScreen-1]||'Atrás'); }
+  if(currentScreen===0) { btn.classList.add('hidden'); return; }
+  btn.classList.remove('hidden');
+  btn.textContent = '← Atrás';
+}
+
+function renderSubNav(activeId) {
+  const container = document.getElementById('sub-nav-'+activeId);
+  if(!container) return;
+  const activeIdx = PERFIL_SUBFLOW.indexOf(activeId);
+  const html = PERFIL_SUBFLOW.map((id,i) => {
+    const cls = i===activeIdx ? 'sub-dot active' : (i<activeIdx ? 'sub-dot done' : 'sub-dot');
+    return `<button class="${cls}" title="${PERFIL_SUB_LABELS[i]}" onclick="goTo(${typeof id==='string'?`'${id}'`:id})">${i+1}</button>`;
+  }).join('');
+  container.outerHTML = `<div class="sub-nav" id="sub-nav-${activeId}">${html}</div>`;
+}
+
+// ── FEEDBACK GATING ──────────────────────────────────────────────────────
+function tryAdvance(fromSlide, toSlide, btn) {
+  if(!slideRatings[fromSlide]) {
+    alert('Por favor danos una valoración antes de seguir 🙏');
+    const fb = document.getElementById('fb-'+fromSlide);
+    if(fb) fb.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  saveFeedback(fromSlide).finally(() => {
+    goTo(toSlide);
+  });
 }
 
 // ── PANTALLA 1: SESGOS ────────────────────────────────────────────────────
@@ -1165,7 +1655,499 @@ function buildBitCards() {
   });
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+// SUPABASE — FEEDBACK CLIENT
+// ══════════════════════════════════════════════════════════════════════════
+const SB_URL = 'https://ncausitrddvtoyivolkj.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYXVzaXRyZGR2dG95aXZvbGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1MDQ0NDAsImV4cCI6MjA2MDA4MDQ0MH0.FqUNSkwcMVnC3DfyMV4eTOVDqS67dcTbK3TydZinnq4';
+
+function getStudentId() {
+  let id = localStorage.getItem('clase23_student_id');
+  if(!id) {
+    id = 'anon_' + (crypto.randomUUID?.() || (Date.now()+'_'+Math.random().toString(36).slice(2)));
+    localStorage.setItem('clase23_student_id', id);
+  }
+  return id;
+}
+
+async function sbRequest(path, method, body, prefer) {
+  const headers = {
+    apikey: SB_ANON,
+    Authorization: 'Bearer ' + SB_ANON,
+    'Content-Type': 'application/json',
+  };
+  if(prefer) headers.Prefer = prefer;
+  const r = await fetch(SB_URL + path, { method, headers, body: body ? JSON.stringify(body) : null });
+  if(!r.ok) {
+    const text = await r.text().catch(()=>'');
+    throw new Error('Supabase ' + r.status + ': ' + text);
+  }
+  return r.status === 204 ? null : r.json().catch(()=>null);
+}
+
+// In-memory staging for current ratings/comments per slide
+const fbBuffer = {};  // slideId -> { rating, comment }
+
+async function saveFeedback(slideId) {
+  const entry = fbBuffer[slideId];
+  if(!entry || !entry.rating) return;
+  const row = [{
+    student_id: getStudentId(),
+    lecture_id: 'clase23_wrapup',
+    slide_id: slideId,
+    rating: entry.rating,
+    comment: entry.comment || null,
+    profile_code: selectedProfileCode,
+  }];
+  try {
+    await sbRequest('/rest/v1/lecture_feedback', 'POST', row, 'resolution=merge-duplicates');
+    const status = document.getElementById('fb-status-'+slideId);
+    if(status) { status.textContent = '✓ Gracias, feedback guardado.'; status.className = 'fb-status saved'; }
+  } catch(e) {
+    console.error(e);
+    const status = document.getElementById('fb-status-'+slideId);
+    if(status) { status.textContent = '⚠ No se pudo guardar — se reintentará.'; status.className = 'fb-status error'; }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// FEEDBACK WIDGET — render per slide
+// ══════════════════════════════════════════════════════════════════════════
+const FB_QUESTIONS = {
+  '5a': '¿Qué tan útil te parece este plan de acción personalizado?',
+  '5b': '¿Qué tan clara fue la comparación entre perfiles?',
+  '5c': '¿Qué tan relevante es saber cuáles sesgos son universales?',
+  '5d': '¿Qué tan interesante es ver los datos reales de tu clase?',
+  '5e': '¿Qué tan útil es ver la cobertura de cada antídoto?',
+  '5f': '¿Qué tan clara es la escala de severidad dinámica?',
+  '5g': '¿Qué tanto te reconoces en las frases del testimonial?',
+  '5h': '¿Qué tan accionable te parece esta matriz de decisión?',
+};
+
+function buildFeedback(slideId) {
+  const target = document.getElementById('fb-'+slideId);
+  if(!target) return;
+  if(target.dataset.built) return;
+  target.dataset.built = '1';
+  const question = FB_QUESTIONS[slideId] || '¿Qué tan útil te pareció esto?';
+  target.innerHTML = `
+    <div class="fb-card">
+      <div class="fb-title">⭐ Feedback rápido (obligatorio para seguir)</div>
+      <div class="fb-q">${question}</div>
+      <div class="fb-stars" id="fb-stars-${slideId}">
+        ${[1,2,3,4,5].map(n => `<button class="fb-star" data-val="${n}" onclick="setRating('${slideId}',${n})">${n}</button>`).join('')}
+      </div>
+      <textarea class="fb-comment" id="fb-comment-${slideId}" placeholder="Comentario opcional…" oninput="setComment('${slideId}', this.value)"></textarea>
+      <div class="fb-status" id="fb-status-${slideId}"></div>
+    </div>`;
+}
+
+function setRating(slideId, val) {
+  fbBuffer[slideId] = fbBuffer[slideId] || {};
+  fbBuffer[slideId].rating = val;
+  slideRatings[slideId] = val;
+  const wrap = document.getElementById('fb-stars-'+slideId);
+  if(wrap) [...wrap.children].forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) <= val);
+  });
+  const status = document.getElementById('fb-status-'+slideId);
+  if(status) { status.textContent = 'Valoración registrada — puedes seguir.'; status.className = 'fb-status saved'; }
+}
+
+function setComment(slideId, txt) {
+  fbBuffer[slideId] = fbBuffer[slideId] || {};
+  fbBuffer[slideId].comment = txt.trim();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// DATOS PARA IDEAS 2–9
+// ══════════════════════════════════════════════════════════════════════════
+
+// ANTÍDOTOS — para cada uno, peso de cobertura sobre cada mecanismo (0/1/2 = ninguno/secundario/primario)
+// Orden mec: [Aversión Dolor, Protección Ego, Econ Cog, Pertenencia, Presente/Futuro]
+const ANTIDOTOS = [
+  { id:'precom',  icon:'📌', name:'Pre-compromiso',            coverage:[2,0,1,1,2] },
+  { id:'diario',  icon:'📓', name:'Diario de Decisiones',       coverage:[1,2,1,0,0] },
+  { id:'s2',      icon:'🧘', name:'Activar Sistema 2',          coverage:[1,1,2,1,1] },
+  { id:'votcie',  icon:'🗳️', name:'Votación Ciega',              coverage:[0,1,0,2,0] },
+  { id:'testnd',  icon:'💰', name:'Test del Dinero Nuevo',      coverage:[1,0,0,0,2] },
+  { id:'premortem',icon:'🔍', name:'Pre-mortem',                  coverage:[0,2,1,0,0] },
+  { id:'steelman',icon:'⚔️', name:'Steel-manning',                coverage:[0,2,0,1,0] },
+  { id:'chklist', icon:'✅', name:'Checklist de Sistema 2',      coverage:[0,0,2,0,0] },
+];
+
+// TESTIMONIALES por perfil — frase en primera persona + respuesta racional
+const TESTIMONIALS = {
+  PP: {
+    quote: 'Prefiero dejar mi dinero en la cuenta de ahorros — por lo menos ahí no lo pierdo.',
+    response: 'La inflación es una pérdida silenciosa. El dinero "seguro" pierde poder adquisitivo cada año. El pre-compromiso a contribuir automáticamente a un portafolio diversificado elimina el miedo al momento de invertir.'
+  },
+  FK: {
+    quote: 'Todos mis amigos están entrando en esta acción — si tantos lo hacen, algo deben saber.',
+    response: 'El consenso no contiene información privilegiada, solo refleja la misma información procesada por personas con los mismos sesgos. Antes de seguir al grupo, haz un pre-mortem independiente o consulta fuentes diversas.'
+  },
+  AA: {
+    quote: 'Yo sé leer el mercado — por algo mi negocio ha funcionado todos estos años.',
+    response: 'El éxito en un dominio no transfiere a otro. Tu empresa funciona por sistemas que tú controlas; el mercado no. El diario de decisiones permite distinguir cuándo hubo habilidad real y cuándo hubo simplemente un mercado alcista.'
+  },
+  II: {
+    quote: 'No necesito consultar a nadie — mi análisis es sólido y estoy viendo algo que el mercado no ve.',
+    response: 'Pensar por cuenta propia es una fortaleza — hasta que se vuelve exceso de confianza. El steel-manning del argumento contrario es el filtro: si no puedes derribar tu propia tesis, probablemente estás en confirmation bias.'
+  },
+};
+
+// DECISION MATRIX — 3 situaciones por perfil
+const DECISION_MATRIX = {
+  PP: [
+    { sit:'Mercado cae 15% en una semana', tendency:'Paralizarte o vender en pánico al peor precio para "detener el dolor".', rational:'Rebalancear según tu asignación objetivo. Si la tesis no cambió, las caídas son oportunidades — no razones para salir.' },
+    { sit:'Te ofrecen una inversión nueva', tendency:'Rechazar por defecto — "mejor lo conocido que lo seguro desconocido".', rational:'Evaluar contra tu marco de decisión escrito. Si cumple los criterios, invertir una fracción pequeña de prueba.' },
+    { sit:'Sobra dinero a fin de mes', tendency:'Dejarlo acumulándose en la cuenta de ahorros.', rational:'Contribución automática (pre-compromiso) a tu portafolio diversificado — decidida en frío, ejecutada en automático.' },
+  ],
+  FK: [
+    { sit:'Un amigo te habla de una "oportunidad única"', tendency:'Entrar rápido por FOMO, sin investigar los fundamentos.', rational:'Escribir tu tesis independiente antes de consultarlo con nadie más. Si después de 48 horas sigue atractiva, entonces valorar posición pequeña.' },
+    { sit:'Mercado sube fuertemente durante meses', tendency:'Entrar tarde al rally cuando todos ya hablan de eso.', rational:'Ceñirte al plan previo. La multitud que entra tarde suele ser la que vende primero cuando cae.' },
+    { sit:'Comité de inversión con mayoría que opina X', tendency:'Alinearte al consenso grupal para no discrepar.', rational:'Votación ciega escrita antes de la discusión. Expresar la opinión contraria aunque incomode.' },
+  ],
+  AA: [
+    { sit:'Un trade te da un retorno extraordinario', tendency:'Atribuirlo a tu habilidad y aumentar exposición en el siguiente.', rational:'Diario de decisiones — documentar si la tesis original se cumplió o si fue suerte. Mantener el tamaño de posición pre-definido.' },
+    { sit:'Tienes una idea "obvia" y muy convencida', tendency:'Concentrar una fracción grande del portafolio en esa tesis.', rational:'Pre-mortem: asumir que dentro de 12 meses la idea resultó errada — ¿por qué? Diversificación forzada con topes de concentración.' },
+    { sit:'Un stop-loss se dispara', tendency:'Ignorarlo y promediar a la baja — "el mercado está equivocado".', rational:'Ejecutar el stop exactamente como se definió en frío. La tesis se revisa después, con cabeza fría, no durante la caída.' },
+  ],
+  II: [
+    { sit:'Tu análisis contradice al consenso del mercado', tendency:'Ignorar el consenso — "ellos no ven lo que yo veo".', rational:'Steel-manning: escribe el mejor argumento que justifica la posición contraria. Si no puedes, probablemente tienes confirmation bias.' },
+    { sit:'Investigas un sector nuevo y te sientes experto rápido', tendency:'Tomar posiciones sofisticadas basadas en tu análisis propio.', rational:'Activación deliberada del Sistema 2: checklist de preguntas — ¿qué no sé? ¿qué asumo? ¿qué evidencia contraria hay? Posición pequeña mientras calibras.' },
+    { sit:'Un asesor te sugiere reducir concentración', tendency:'Desestimar el consejo — "no entiende mi tesis".', rational:'Diario de decisiones: ¿cuántas veces en el pasado el exceso de confianza costó más que la prudencia? Evaluar la concentración con criterios objetivos.' },
+  ],
+};
+
+// SESGO-level weight dentro de su mecanismo (para severidad dinámica)
+const SESGO_WEIGHT = {
+  1:0.85, 2:0.80, 3:0.90, 4:0.75, 5:0.70, 6:0.72, 7:0.95, 8:1.0, 9:1.05,
+  10:0.92, 11:0.88, 12:0.95, 13:0.90, 14:0.82, 15:1.0, 16:0.78, 17:0.85, 18:0.95,
+};
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 2 — PLAN DE ACCIÓN
+// ══════════════════════════════════════════════════════════════════════════
+function renderPlanDeAccion() {
+  buildFeedback('5a');
+  const profile = BIT_PROFILES.find(p => p.code === selectedProfileCode);
+  if(!profile) return;
+  document.getElementById('plan-profile-code').textContent = profile.code + ' — ' + profile.name;
+
+  const scored = ANTIDOTOS.map(a => {
+    const score = a.coverage.reduce((sum, cov, i) => sum + cov * profile.scores[i], 0);
+    const mecsCovered = a.coverage
+      .map((c,i)=>({c,i,mec:MECANISMOS[i]}))
+      .filter(x => x.c > 0 && profile.scores[x.i] >= 2);
+    return { a, score, mecsCovered };
+  }).sort((x,y) => y.score - x.score);
+
+  const top3 = scored.slice(0, 3);
+  const maxScore = top3[0].score;
+  const container = document.getElementById('planList');
+  container.innerHTML = top3.map((x, i) => {
+    const pct = maxScore ? Math.round(x.score / maxScore * 100) : 0;
+    const mecPills = x.mecsCovered.map(mc =>
+      `<span class="ant-mec-tag" style="background:${mc.mec.bg};color:${mc.mec.color}">${mc.mec.icon} ${mc.mec.name}${mc.c===2?' ★★':' ★'}</span>`
+    ).join('');
+    return `
+      <div class="plan-card">
+        <div class="plan-rank">#${i+1}</div>
+        <div>
+          <div class="plan-name">${x.a.icon} ${x.a.name}</div>
+          <div class="plan-why">Cubre tus mecanismos de mayor riesgo. ${x.mecsCovered.length} mecanismo${x.mecsCovered.length!==1?'s':''} relevante${x.mecsCovered.length!==1?'s':''} para tu perfil.</div>
+          <div class="antidoto-mecanismos" style="margin-top:0.7rem;">${mecPills}</div>
+        </div>
+        <div class="plan-score">
+          <div class="plan-score-val">${pct}%</div>
+          <div class="plan-score-lbl">Cobertura</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 3 — COMPARACIÓN
+// ══════════════════════════════════════════════════════════════════════════
+let cmpA = 'PP', cmpB = 'FF';
+function renderCompareInit() {
+  buildFeedback('5b');
+  const selA = document.getElementById('cmpA');
+  const selB = document.getElementById('cmpB');
+  if(!selA.dataset.built) {
+    BIT_PROFILES.forEach(p => {
+      selA.insertAdjacentHTML('beforeend', `<option value="${p.code}">${p.emoji} ${p.code} — ${p.name}</option>`);
+      selB.insertAdjacentHTML('beforeend', `<option value="${p.code}">${p.emoji} ${p.code} — ${p.name}</option>`);
+    });
+    selA.dataset.built = '1';
+    selA.addEventListener('change', e => { cmpA = e.target.value; renderCompare(); });
+    selB.addEventListener('change', e => { cmpB = e.target.value; renderCompare(); });
+  }
+  cmpA = selectedProfileCode;
+  cmpB = BIT_PROFILES.find(p => p.code !== cmpA).code;
+  selA.value = cmpA; selB.value = cmpB;
+  renderCompare();
+}
+
+function renderCompare() {
+  const pA = BIT_PROFILES.find(p => p.code === cmpA);
+  const pB = BIT_PROFILES.find(p => p.code === cmpB);
+  const grid = document.getElementById('compareGrid');
+  const renderCol = (p) => {
+    const bars = MECANISMOS.map((m,i) => {
+      const pct = p.scores[i] === 1 ? 30 : p.scores[i] === 2 ? 62 : 100;
+      return `<div class="compare-bar-row">
+        <div class="compare-bar-label">${m.icon} ${m.name.split(' ')[0]}</div>
+        <div class="compare-bar-track"><div class="compare-bar-fill" style="width:${pct}%;background:${m.color}"></div></div>
+      </div>`;
+    }).join('');
+    return `<div class="compare-col" style="border-color:${p.color}">
+      <div class="compare-col-hdr">
+        <span style="font-size:1.8rem">${p.emoji}</span>
+        <div><div class="compare-col-name" style="color:${p.color}">${p.code}</div><div style="font-size:0.72rem;color:var(--text-light)">${p.name}</div></div>
+      </div>
+      ${bars}
+    </div>`;
+  };
+  grid.innerHTML = renderCol(pA) + renderCol(pB);
+
+  const diff = MECANISMOS.map((m,i) => {
+    const delta = pA.scores[i] - pB.scores[i];
+    if(delta === 0) return null;
+    const higher = delta > 0 ? pA.code : pB.code;
+    return `<li><strong>${m.icon} ${m.name}:</strong> <span style="color:${m.color};font-weight:600">${higher}</span> tiene mayor riesgo (diferencia de ${Math.abs(delta)} nivel${Math.abs(delta)!==1?'es':''}).</li>`;
+  }).filter(Boolean).join('');
+
+  document.getElementById('compareDiff').innerHTML = diff
+    ? `<strong>Diferencias clave:</strong><ul style="margin:0.6rem 0 0 1.2rem;line-height:1.8;">${diff}</ul>`
+    : '<strong>Sin diferencias relevantes</strong> — estos perfiles tienen el mismo patrón de mecanismos.';
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 4 — SESGOS UNIVERSALES
+// ══════════════════════════════════════════════════════════════════════════
+function renderUniversales() {
+  buildFeedback('5c');
+  // Un sesgo es universal si en TODOS los perfiles su mecanismo tiene score >= 2
+  const universales = SESGOS.filter(s =>
+    BIT_PROFILES.every(p => p.scores[s.mec] >= 2)
+  );
+
+  const container = document.getElementById('universalList');
+  if(universales.length === 0) {
+    container.innerHTML = `<div style="background:white;border-radius:16px;padding:2rem;text-align:center;box-shadow:var(--shadow);"><p style="color:var(--text-mid);font-size:0.9rem;">No hay sesgos con riesgo ≥ medio en los 4 perfiles simultáneamente. Cada perfil tiene su combinación única de vulnerabilidades.</p></div>`;
+    return;
+  }
+
+  const header = `<div class="universal-card" style="background:var(--ibero-red);color:white;font-weight:700;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;">
+    <div>Sesgo</div>${BIT_PROFILES.map(p=>`<div style="text-align:center">${p.code}</div>`).join('')}<div>Mec</div>
+  </div>`;
+
+  const rows = universales.map(s => {
+    const m = MECANISMOS[s.mec];
+    const cells = BIT_PROFILES.map(p => {
+      const score = p.scores[s.mec];
+      const cfg = RISK_CFG[score];
+      return `<div class="universal-pill" style="background:${cfg.color};color:white;">${score===3?'★★★':score===2?'★★':'★'}</div>`;
+    }).join('');
+    return `<div class="universal-card">
+      <div class="universal-name" onclick="openSesgoModal(${s.id})">${s.name}</div>
+      ${cells}
+      <div class="universal-pill" style="background:${m.bg};color:${m.color}">${m.icon}</div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = header + rows + `<div style="background:var(--ibero-warm);border-radius:12px;padding:1rem 1.4rem;margin-top:1rem;font-size:0.85rem;color:var(--text-mid);line-height:1.6;"><strong>Lectura:</strong> estos ${universales.length} sesgos son universales para esta tipología — no importa qué perfil seas, deberías trabajarlos. Son candidatos ideales para ejercicios colectivos de la clase.</div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 5 — DATOS REALES DE LA CLASE
+// ══════════════════════════════════════════════════════════════════════════
+async function renderClassData() {
+  buildFeedback('5d');
+  const container = document.getElementById('classDataContent');
+  container.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-light);">Cargando datos de la clase…</div>`;
+  try {
+    const data = await sbRequest('/rest/v1/bit_profile_counts?select=*', 'GET');
+    const total = data.reduce((sum, r) => sum + (r.total || 0), 0);
+    const codeMap = { PP:'PP', FK:'FF', FF:'FF', AA:'AA', II:'II' };
+    const normalized = {};
+    data.forEach(r => {
+      const code = codeMap[r.profile_code] || r.profile_code;
+      normalized[code] = (normalized[code] || 0) + (r.total || 0);
+    });
+
+    const rows = BIT_PROFILES.map(p => {
+      const count = normalized[p.code] || 0;
+      const pct = total ? Math.round(count / total * 100) : 0;
+      return `<div class="class-bar-row">
+        <div class="class-bar-label" style="color:${p.color}">${p.emoji} ${p.code}</div>
+        <div class="class-bar-track">
+          <div class="class-bar-fill" style="width:${pct}%;background:${p.color}">${pct>8?`${count} · ${pct}%`:''}</div>
+        </div>
+        <div style="font-weight:700;color:${p.color}">${count}</div>
+      </div>`;
+    }).join('');
+
+    // Compute dominant mechanisms weighted by class distribution
+    const weighted = MECANISMOS.map((m,i) => {
+      let sum = 0;
+      BIT_PROFILES.forEach(p => { sum += (normalized[p.code] || 0) * p.scores[i]; });
+      return { m, i, score: total ? sum/total : 0 };
+    }).sort((a,b) => b.score - a.score);
+
+    const topMecs = weighted.slice(0,2).map(w =>
+      `<span class="ant-mec-tag" style="background:${w.m.bg};color:${w.m.color}">${w.m.icon} ${w.m.name} (${w.score.toFixed(2)})</span>`
+    ).join(' ');
+
+    container.innerHTML = `
+      <div class="class-total-badge">
+        <div class="class-total-badge-num">${total}</div>
+        <div class="class-total-badge-lbl">Estudiantes han completado el BIT</div>
+      </div>
+      <div style="background:white;border-radius:16px;padding:1.5rem 2rem;box-shadow:var(--shadow);margin-bottom:1.5rem;">
+        ${rows || '<p style="color:var(--text-light);text-align:center;">Sin datos todavía.</p>'}
+      </div>
+      <div style="background:var(--ibero-warm);border-radius:14px;padding:1.3rem 1.5rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ibero-red);margin-bottom:0.6rem;">Mecanismos dominantes de la clase</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">${topMecs}</div>
+        <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-mid);line-height:1.65;">Los sesgos asociados a estos mecanismos son los que más probablemente aparecerán en las discusiones de clase.</p>
+      </div>`;
+  } catch(e) {
+    container.innerHTML = `<div style="background:#FADBD8;border-radius:12px;padding:1.2rem 1.5rem;color:#922B21;font-size:0.85rem;">No pudimos cargar los datos de la clase. ${e.message}</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 6 — COBERTURA DE ANTÍDOTOS
+// ══════════════════════════════════════════════════════════════════════════
+function renderCoverage() {
+  buildFeedback('5e');
+  const profile = BIT_PROFILES.find(p => p.code === selectedProfileCode);
+  if(!profile) return;
+  document.getElementById('cov-profile-code').textContent = profile.code;
+
+  const scored = ANTIDOTOS.map(a => {
+    const coveredSesgos = [];
+    a.coverage.forEach((cov, mecIdx) => {
+      if(cov === 0) return;
+      SESGOS.forEach(s => {
+        if(s.mec === mecIdx) coveredSesgos.push({ sesgo: s, cov, profileWeight: profile.scores[mecIdx] });
+      });
+    });
+    const effectiveScore = coveredSesgos.reduce((sum, x) => sum + x.cov * x.profileWeight, 0);
+    return { a, coveredSesgos, effectiveScore };
+  }).sort((x,y) => y.effectiveScore - x.effectiveScore);
+
+  const maxScore = scored[0].effectiveScore;
+  const container = document.getElementById('coverageGrid');
+  container.innerHTML = scored.map(x => {
+    const pct = maxScore ? Math.round(x.effectiveScore / maxScore * 100) : 0;
+    // Only show sesgos where profile has score >= 2 (relevant ones)
+    const relevantSesgos = x.coveredSesgos.filter(s => s.profileWeight >= 2);
+    const tags = relevantSesgos.slice(0,6).map(s => `<span class="coverage-sesgo-tag">${s.sesgo.name}</span>`).join('');
+    const color = pct >= 75 ? '#1E6B3C' : pct >= 50 ? '#9A7D0A' : '#922B21';
+    return `<div class="coverage-card" style="border-color:${color}">
+      <div class="coverage-hdr">
+        <span class="coverage-icon">${x.a.icon}</span>
+        <span class="coverage-name" style="color:${color}">${x.a.name}</span>
+        <span class="coverage-count">${pct}%</span>
+      </div>
+      <div style="background:#F0E8DC;border-radius:5px;height:8px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:5px;"></div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.6rem;">Cubre ${relevantSesgos.length} sesgo${relevantSesgos.length!==1?'s':''} relevante${relevantSesgos.length!==1?'s':''} para ${profile.code}</div>
+      <div class="coverage-sesgo-list">${tags}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 7 — SEVERIDAD DINÁMICA
+// ══════════════════════════════════════════════════════════════════════════
+function renderSeveridad() {
+  buildFeedback('5f');
+  const profile = BIT_PROFILES.find(p => p.code === selectedProfileCode);
+  if(!profile) return;
+
+  const scored = SESGOS.map(s => {
+    const m = MECANISMOS[s.mec];
+    const mecPct = (profile.scores[s.mec] - 1) / 2;  // 0 / 0.5 / 1
+    const weight = SESGO_WEIGHT[s.id] || 1;
+    const pct = Math.round(Math.min(100, Math.max(5, mecPct * 80 * weight + 20 * weight)));
+    return { s, m, pct };
+  }).sort((a,b) => b.pct - a.pct);
+
+  const list = document.getElementById('severityList');
+  list.innerHTML = scored.map(x => {
+    const color = x.pct >= 75 ? '#922B21' : x.pct >= 50 ? '#9A7D0A' : x.pct >= 30 ? '#1A5276' : '#1E6B3C';
+    return `<div class="severity-row">
+      <div class="severity-label" onclick="openSesgoModal(${x.s.id})">${x.s.name}</div>
+      <div class="severity-track"><div class="severity-fill" style="width:${x.pct}%;background:${color}"></div></div>
+      <div class="severity-pct" style="color:${color}">${x.pct}%</div>
+      <div class="severity-mec" style="background:${x.m.bg};color:${x.m.color}">${x.m.icon}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 8 — TESTIMONIALES
+// ══════════════════════════════════════════════════════════════════════════
+function renderTestimonials() {
+  buildFeedback('5g');
+  const container = document.getElementById('testimonialList');
+  container.innerHTML = BIT_PROFILES.map(p => {
+    const t = TESTIMONIALS[p.code];
+    if(!t) return '';
+    return `<div class="testimonial-card" style="border-color:${p.color}">
+      <div class="testimonial-hdr">
+        <span class="testimonial-emoji">${p.emoji}</span>
+        <div>
+          <div class="testimonial-profile" style="color:${p.color}">${p.code} — ${p.name}</div>
+          <div class="testimonial-profile-sub">${p.tipo}</div>
+        </div>
+      </div>
+      <div class="testimonial-quote">${t.quote}</div>
+      <div class="testimonial-response">
+        <div class="testimonial-response-lbl">Respuesta racional</div>
+        <div class="testimonial-response-txt">${t.response}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IDEA 9 — MATRIZ DE DECISIÓN
+// ══════════════════════════════════════════════════════════════════════════
+function renderDecisionMatrix() {
+  buildFeedback('5h');
+  const profile = BIT_PROFILES.find(p => p.code === selectedProfileCode);
+  if(!profile) return;
+  document.getElementById('dec-profile-code').textContent = profile.code + ' — ' + profile.name;
+  const scenarios = DECISION_MATRIX[profile.code] || [];
+  const container = document.getElementById('decisionList');
+  container.innerHTML = scenarios.map((sc, i) => `
+    <div class="dec-scenario">
+      <div class="dec-situation">Situación ${i+1}</div>
+      <div class="dec-title">${sc.sit}</div>
+      <div class="dec-row">
+        <div class="dec-cell dec-tendency">
+          <div class="dec-cell-lbl">😵 Tendencia ${profile.code}</div>
+          <div class="dec-cell-txt">${sc.tendency}</div>
+        </div>
+        <div class="dec-cell dec-rational">
+          <div class="dec-cell-lbl">🎯 Respuesta racional</div>
+          <div class="dec-cell-txt">${sc.rational}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════
 buildSesgosGrid();
 buildClasifPool();
 buildAtribPool();

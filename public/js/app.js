@@ -36,6 +36,8 @@ const state = {
   // BIT result feedback
   bitProfileRating: null,
   bitRecoRating: null,
+  bitProfileRatingTouched: false,
+  bitResultStep: 1,
 };
 
 // Dark mode init
@@ -667,16 +669,31 @@ function renderBitResult() {
   const profile = BIT_PROFILES[result.primary];
   const secondary = BIT_PROFILES[result.secondary];
   const total = questions.length;
+  const step = state.bitResultStep || 1;
 
-  const c = document.createElement('div');
-  c.className = 'result-shell';
-  c.innerHTML = `
+  const disclaimer = `
+    <div class="bit-disclaimer">
+      <div class="bit-disclaimer-title">⚠ ¿Qué es — y qué no es — un perfil BIT?</div>
+      <p>Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.</p>
+      <p><strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.</p>
+    </div>`;
+
+  const hero = `
     <div class="result-hero">
-      <div class="result-hero-tag">Tu resultado BIT</div>
+      <div class="result-hero-tag">Tu perfil conductual como inversionista</div>
       <div class="result-hero-name" style="color:${profile.color}">${profile.name}</div>
       <div class="result-hero-sub">${profile.tagline}</div>
-    </div>
-    <div class="result-body">
+      <div class="bit-step-indicator">
+        <span class="bit-step${step===1?' active':' done'}">1 · Tu perfil</span>
+        <span class="bit-step-sep">→</span>
+        <span class="bit-step${step===2?' active':''}">2 · Sesgos y plan</span>
+      </div>
+    </div>`;
+
+  let bodyHtml = '';
+  if (step === 1) {
+    bodyHtml = `
+      ${disclaimer}
       <div class="result-card">
         <div class="result-card-title">Puntuaciones por tipo</div>
         <div class="score-bars">
@@ -703,17 +720,24 @@ function renderBitResult() {
           </div>
         </div>
         <div class="profile-desc">${profile.description}</div>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${secondary.name} (${bitLabel(result.secondary)})</strong></div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${secondary.name} (${bitLabel(secondary ? result.secondary : '')})</strong></div>
         <div class="profile-id-slider" style="margin-top:1.25rem">
-          <div class="slider-question">¿Qué tanto te identificas con este perfil?</div>
+          <div class="slider-question">¿Qué tanto te identificas con este perfil? <span style="color:var(--danger,#B91C1C)">*</span></div>
           <div class="slider-row">
             <span class="slider-end-label">Nada</span>
             <input type="range" id="slider-profile-fit" class="fit-slider" min="0" max="5" step="1" value="${state.bitProfileRating ?? 3}" style="accent-color:${profile.color}">
             <span class="slider-end-label">Totalmente</span>
           </div>
           <div class="slider-value-label" id="slider-fit-val">${SLIDER_LABELS[state.bitProfileRating ?? 3]}</div>
+          <div class="bit-gate-hint" id="bit-gate-hint-1">Mueve el deslizador para continuar</div>
         </div>
       </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;gap:1rem">
+        <p style="font-size:.82rem;color:var(--ink-4);margin:0">Paso 1 de 2</p>
+        <button class="btn-cta" id="btn-bit-next" disabled>Siguiente →</button>
+      </div>`;
+  } else {
+    bodyHtml = `
       <div class="result-card">
         <div class="result-card-title">Sesgos predominantes en tu perfil</div>
         <div class="bias-list">
@@ -736,44 +760,70 @@ function renderBitResult() {
           `).join('')}
         </div>
         <div style="margin-top:1.25rem" id="reco-rating-wrap">
-          ${ratingWidget(state.bitRecoRating, '¿Qué tan útiles te parecen estas recomendaciones?')}
+          ${ratingWidget(state.bitRecoRating, '¿Qué tan útiles te parecen estas recomendaciones? *')}
         </div>
+        <div class="bit-gate-hint" id="bit-gate-hint-2">Selecciona una valoración para continuar</div>
       </div>
-      <div style="text-align:center;padding:1rem 0">
-        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1rem">Tu perfil BIT quedó guardado. Ahora explora cada sesgo en el dashboard.</p>
-        <button class="btn-cta" id="btn-to-dash">Ir al Dashboard →</button>
-      </div>
-    </div>
-  `;
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;gap:1rem">
+        <button class="btn-ghost" id="btn-bit-back">← Atrás</button>
+        <button class="btn-cta" id="btn-to-dash" disabled>Ir al Dashboard →</button>
+      </div>`;
+  }
+
+  const c = document.createElement('div');
+  c.className = 'result-shell';
+  c.innerHTML = hero + `<div class="result-body">${bodyHtml}</div>`;
   app.appendChild(c);
 
-  // Slider — profile identification
-  state.bitProfileRating = state.bitProfileRating ?? 3;
-  const slider = document.getElementById('slider-profile-fit');
-  const sliderVal = document.getElementById('slider-fit-val');
-  slider.addEventListener('input', () => {
-    state.bitProfileRating = parseInt(slider.value);
-    sliderVal.textContent = SLIDER_LABELS[state.bitProfileRating];
-  });
-
-  // Rating — recommendation usefulness
-  document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.bitRecoRating = parseInt(btn.dataset.rating);
-      document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.bitRecoRating));
-      const txt = document.querySelector('#reco-rating-wrap .rating-feedback-text');
-      if (txt) { txt.textContent = RATING_LABELS[state.bitRecoRating - 1]; txt.classList.add('has-rating'); }
+  if (step === 1) {
+    state.bitProfileRating = state.bitProfileRating ?? 3;
+    const slider = document.getElementById('slider-profile-fit');
+    const sliderVal = document.getElementById('slider-fit-val');
+    const nextBtn = document.getElementById('btn-bit-next');
+    const hint = document.getElementById('bit-gate-hint-1');
+    const unlock = () => {
+      state.bitProfileRatingTouched = true;
+      nextBtn.disabled = false;
+      if (hint) hint.style.visibility = 'hidden';
+    };
+    if (state.bitProfileRatingTouched) unlock();
+    slider.addEventListener('input', () => {
+      state.bitProfileRating = parseInt(slider.value);
+      sliderVal.textContent = SLIDER_LABELS[state.bitProfileRating];
+      unlock();
     });
-  });
-
-  document.getElementById('btn-to-dash').addEventListener('click', () => {
-    const rows = [];
-    if (state.bitProfileRating !== null) rows.push({ email: state.user.email, q_type: 'bit_profile_fit', question_id: 'bit_profile_fit', sesgo_id: null, rating: state.bitProfileRating });
-    if (state.bitRecoRating !== null) rows.push({ email: state.user.email, q_type: 'bit_reco_useful', question_id: 'bit_reco_useful', sesgo_id: null, rating: state.bitRecoRating });
-    if (rows.length) logQuestionFeedback(rows).catch(() => {});
-    state.screen = 'dashboard';
-    render();
-  });
+    nextBtn.addEventListener('click', () => {
+      state.bitResultStep = 2;
+      render();
+    });
+  } else {
+    document.getElementById('btn-bit-back').addEventListener('click', () => {
+      state.bitResultStep = 1;
+      render();
+    });
+    const dashBtn = document.getElementById('btn-to-dash');
+    const hint = document.getElementById('bit-gate-hint-2');
+    const unlockDash = () => { dashBtn.disabled = false; if (hint) hint.style.visibility = 'hidden'; };
+    if (state.bitRecoRating !== null) unlockDash();
+    document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.bitRecoRating = parseInt(btn.dataset.rating);
+        document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.bitRecoRating));
+        const txt = document.querySelector('#reco-rating-wrap .rating-feedback-text');
+        if (txt) { txt.textContent = RATING_LABELS[state.bitRecoRating - 1]; txt.classList.add('has-rating'); }
+        unlockDash();
+      });
+    });
+    dashBtn.addEventListener('click', () => {
+      const rows = [];
+      if (state.bitProfileRating !== null) rows.push({ email: state.user.email, q_type: 'bit_profile_fit', question_id: 'bit_profile_fit', sesgo_id: null, rating: state.bitProfileRating });
+      if (state.bitRecoRating !== null) rows.push({ email: state.user.email, q_type: 'bit_reco_useful', question_id: 'bit_reco_useful', sesgo_id: null, rating: state.bitRecoRating });
+      if (rows.length) logQuestionFeedback(rows).catch(() => {});
+      state.bitResultStep = 1;
+      state.screen = 'dashboard';
+      render();
+    });
+  }
 }
 
 // ── SESGO MODULE ─────────────────────────────────

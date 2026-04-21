@@ -1610,6 +1610,57 @@ button { font: inherit; }
   min-height: 1.2em;
 }
 
+.bit-disclaimer {
+  background: linear-gradient(135deg, rgba(184,134,11,0.08), rgba(184,134,11,0.14));
+  border-left: 4px solid #B8860B;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.25rem;
+}
+.bit-disclaimer-title {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #B8860B;
+  margin-bottom: .6rem;
+}
+.bit-disclaimer p {
+  font-size: .82rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin: 0 0 .5rem;
+}
+.bit-disclaimer p:last-child { margin-bottom: 0; }
+
+.bit-step-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 1rem;
+  padding: .4rem .9rem;
+  background: var(--paper-2);
+  border-radius: 50px;
+  font-size: .75rem;
+  font-weight: 600;
+}
+.bit-step {
+  color: var(--ink-4);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.bit-step.active { background: var(--red); color: white; }
+.bit-step.done { color: var(--ink-2); }
+.bit-step-sep { color: var(--ink-4); }
+
+.bit-gate-hint {
+  font-size: .72rem;
+  color: var(--ink-4);
+  font-style: italic;
+  margin-top: .6rem;
+  text-align: center;
+}
+
 .report-sesgo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
