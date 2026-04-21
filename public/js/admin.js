@@ -1125,6 +1125,9 @@ function openUserDetail(email) {
           Registrado ${user ? fmtDateTime(user.created_at) : '—'}
           ${user?.onboarding_seen_at ? ` · Onboarding visto ${fmtDate(user.onboarding_seen_at)}` : ''}
         </div>
+        <a href="index.html?view_as=${encodeURIComponent(email)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:.7rem;padding:.4rem .8rem;background:#7C3AED;color:white;text-decoration:none;border-radius:6px;font-size:.78rem;font-weight:600">
+          👁️ Ver como este usuario
+        </a>
       </div>
       <button id="ud-close" style="background:none;border:none;font-size:1.5rem;color:var(--ink-3);cursor:pointer;padding:.25rem .5rem">×</button>
     </div>

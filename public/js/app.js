@@ -1,4 +1,4 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext } from './supabase.js';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly } from './supabase.js';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js';
@@ -152,6 +152,8 @@ const state = {
   // Próximos pasos
   nextSteps: { interests: [], other: '' },
   nextStepsSaved: false,
+  // Admin "ver como usuario" mode (read-only impersonation)
+  viewAs: null,
   nextStepsCounts: null,
   nextStepsSaving: false,
 };
@@ -181,15 +183,34 @@ function render() {
   setErrorContext({ email: state.user?.email || null, screen: state.screen });
   if (state.screen !== 'auth') trackScreen(state.screen);
   switch (state.screen) {
-    case 'onboarding':   return renderOnboarding();
-    case 'dashboard':    return renderDashboard();
-    case 'bit':          return renderBit();
-    case 'bit-result':   return renderBitResult();
-    case 'sesgo':        return renderSesgoPhase();
-    case 'report':       return renderReport();
-    case 'next-steps':   return renderNextSteps();
-    default:             return renderAuth();
+    case 'onboarding':   renderOnboarding(); break;
+    case 'dashboard':    renderDashboard(); break;
+    case 'bit':          renderBit(); break;
+    case 'bit-result':   renderBitResult(); break;
+    case 'sesgo':        renderSesgoPhase(); break;
+    case 'report':       renderReport(); break;
+    case 'next-steps':   renderNextSteps(); break;
+    default:             renderAuth(); break;
   }
+  renderViewAsBanner();
+}
+
+function renderViewAsBanner() {
+  const existing = document.getElementById('view-as-banner');
+  if (existing) existing.remove();
+  if (!state.viewAs) return;
+  const banner = document.createElement('div');
+  banner.id = 'view-as-banner';
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#7C3AED;color:white;padding:.5rem 1rem;font-family:var(--ff-body);font-size:.82rem;font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,.2)';
+  banner.innerHTML = `
+    <div>👁️ VIENDO COMO <strong>${state.viewAs}</strong> · solo lectura · nada se guarda</div>
+    <button id="view-as-exit" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;padding:.3rem .8rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:inherit">Salir</button>
+  `;
+  document.body.appendChild(banner);
+  document.body.style.paddingTop = banner.offsetHeight + 'px';
+  document.getElementById('view-as-exit').onclick = () => {
+    window.location.href = 'admin.html';
+  };
 }
 
 // ── AUTH ─────────────────────────────────────────
@@ -2484,6 +2505,7 @@ function escapeHtml(s) {
 // ── BUG REPORT (floating widget) ─────────────────
 
 function mountBugReportWidget() {
+  if (state.viewAs) return;
   if (document.getElementById('bug-report-fab')) return;
   const wrap = document.createElement('div');
   wrap.id = 'bug-report-root';
@@ -2620,6 +2642,20 @@ async function loadUserProgress(email) {
 }
 
 async function loadSession() {
+  // ── Admin "ver como usuario" mode ─────────────
+  const queryParams = new URLSearchParams(window.location.search);
+  const viewAsEmail = queryParams.get('view_as');
+  if (viewAsEmail) {
+    setReadOnly(true);
+    state.viewAs = viewAsEmail;
+    state.user = { email: viewAsEmail, emailConfirmed: true, viewAs: true };
+    state.progress = await loadUserProgress(viewAsEmail);
+    state.onboardingSeen = true;
+    state.screen = 'dashboard';
+    render();
+    return;
+  }
+
   const urlParams = new URLSearchParams(window.location.hash.substring(1));
   const accessToken = urlParams.get('access_token');
   const tokenType = urlParams.get('type');

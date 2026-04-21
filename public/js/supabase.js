@@ -8,6 +8,7 @@ const defaultHeaders = {
 
 const NO_LOG_PATHS = ['/rest/v1/client_errors', '/auth/v1/'];
 let errorContext = { email: null, screen: null };
+let readOnly = false;
 
 export function setSession(accessToken) {
   defaultHeaders.Authorization = `Bearer ${accessToken || SUPABASE_ANON_KEY}`;
@@ -17,7 +18,11 @@ export function setErrorContext(ctx) {
   errorContext = { ...errorContext, ...ctx };
 }
 
+export function setReadOnly(v) { readOnly = !!v; }
+export function isReadOnly() { return readOnly; }
+
 function fireAndForgetClientError(row) {
+  if (readOnly) return;
   try {
     fetch(`${SUPABASE_URL}/rest/v1/client_errors`, {
       method: 'POST',
@@ -114,6 +119,7 @@ export async function signInWithOAuth(provider) {
 }
 
 export async function createUserProfile(email, name = '') {
+  if (readOnly) return null;
   return request('/rest/v1/users', 'POST', { email, name, created_at: new Date().toISOString() }, {
     Prefer: 'resolution=ignore-duplicates',
   }, 'createUserProfile');
@@ -124,12 +130,14 @@ export async function loadProgress(email) {
 }
 
 export async function saveProgress(progress) {
+  if (readOnly) return null;
   return request('/rest/v1/progress', 'POST', progress, {
     Prefer: 'resolution=merge-duplicates,return=representation',
   }, 'saveProgress');
 }
 
 export async function createSession(email) {
+  if (readOnly) return null;
   return request('/rest/v1/app_sessions', 'POST',
     { email, started_at: new Date().toISOString(), last_seen_at: new Date().toISOString(), screens: [] },
     { Prefer: 'return=representation' },
@@ -138,6 +146,7 @@ export async function createSession(email) {
 }
 
 export async function updateSession(id, patch) {
+  if (readOnly) return null;
   return request(`/rest/v1/app_sessions?id=eq.${id}`, 'PATCH', patch, {}, 'updateSession');
 }
 
@@ -157,18 +166,21 @@ export async function resendConfirmation(email) {
 }
 
 export async function logResponses(rows) {
+  if (readOnly) return null;
   return request('/rest/v1/question_responses', 'POST', rows, {
     Prefer: 'resolution=ignore-duplicates',
   }, 'logResponses');
 }
 
 export async function logQuestionFeedback(rows) {
+  if (readOnly) return null;
   return request('/rest/v1/question_feedback?on_conflict=email,q_type,question_id', 'POST', rows, {
     Prefer: 'resolution=merge-duplicates,return=minimal',
   }, 'logQuestionFeedback');
 }
 
 export async function logContentFeedback(rows) {
+  if (readOnly) return null;
   return request('/rest/v1/content_feedback', 'POST', rows, {
     Prefer: 'resolution=merge-duplicates',
   }, 'logContentFeedback');
@@ -176,6 +188,7 @@ export async function logContentFeedback(rows) {
 
 // ── Onboarding ──────────────────────────
 export async function markOnboardingSeen(email) {
+  if (readOnly) return null;
   return request(`/rest/v1/users?email=eq.${encodeURIComponent(email)}`, 'PATCH',
     { onboarding_seen_at: new Date().toISOString() }, {}, 'markOnboardingSeen');
 }
@@ -186,6 +199,7 @@ export async function getUserProfile(email) {
 
 // ── Next Steps ──────────────────────────
 export async function saveNextSteps(row) {
+  if (readOnly) return null;
   return request('/rest/v1/next_steps_responses?on_conflict=email', 'POST',
     { ...row, updated_at: new Date().toISOString() },
     { Prefer: 'resolution=merge-duplicates,return=representation' },
@@ -207,6 +221,7 @@ export async function getNextStepsTotal() {
 
 // ── Bug reports ─────────────────────────
 export async function submitBug(row) {
+  if (readOnly) return null;
   return request('/rest/v1/bug_reports', 'POST', row, {
     Prefer: 'return=minimal',
   }, 'submitBug');
