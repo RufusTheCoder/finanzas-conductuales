@@ -5,6 +5,76 @@ import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
 
+// ── MECANISMOS + DATOS CLASE 23 ──────────────────
+const MECANISMOS = [
+  { id: 'dolor',  icon: '🔴', name: 'Aversión al Dolor',        color: '#922B21', phrase: 'El cerebro evita registrar pérdidas' },
+  { id: 'ego',    icon: '🛡️', name: 'Protección del Ego',        color: '#6C3483', phrase: 'El cerebro distorsiona hechos para preservar la autoimagen' },
+  { id: 'econ',   icon: '⚡', name: 'Economía Cognitiva',         color: '#1A5276', phrase: 'El cerebro sustituye preguntas difíciles por atajos' },
+  { id: 'grupo',  icon: '🔥', name: 'Necesidad de Pertenencia',   color: '#1E8449', phrase: 'El cerebro terceriza decisiones al grupo' },
+  { id: 'tiempo', icon: '⏳', name: 'Presente vs. Futuro',        color: '#9A7D0A', phrase: 'El cerebro sobrevalora el ahora' },
+];
+
+// sesgo id → índice de mecanismo primario (0..4)
+const SESGO_MECANISMO = {
+  'contabilidad-mental': 2,
+  'confirmation-bias': 1,
+  'disponibilidad-representatividad': 2,
+  'overconfidence': 1,
+  'self-attribution': 1,
+  'status-quo': 4,
+  'autocontrol': 4,
+  'endowment-effect': 0,
+  'halo-effect': 3,
+  'herding': 3,
+  'optimism-bias': 1,
+  'authority-bias': 3,
+  'regret-aversion': 0,
+  'escalation-commitment': 0,
+  'anclaje': 2,
+};
+
+// Peso del perfil en cada mecanismo (1=bajo, 3=alto). Orden: [dolor, ego, econ, grupo, tiempo]
+const MECH_WEIGHTS_BY_PROFILE = {
+  PP: [3, 1, 2, 1, 3],
+  FK: [2, 1, 2, 3, 2],
+  AA: [2, 3, 1, 1, 2],
+  II: [1, 3, 3, 1, 1],
+};
+
+const ANTIDOTOS = [
+  { id: 'precom',    icon: '📌', name: 'Pre-compromiso',       coverage: [2, 0, 1, 1, 2] },
+  { id: 'diario',    icon: '📓', name: 'Diario de Decisiones', coverage: [1, 2, 1, 0, 0] },
+  { id: 's2',        icon: '🧘', name: 'Activar Sistema 2',    coverage: [1, 1, 2, 1, 1] },
+  { id: 'votcie',    icon: '🗳️', name: 'Votación Ciega',        coverage: [0, 1, 0, 2, 0] },
+  { id: 'testnd',    icon: '💰', name: 'Test del Dinero Nuevo', coverage: [1, 0, 0, 0, 2] },
+  { id: 'premortem', icon: '🔍', name: 'Pre-mortem',            coverage: [0, 2, 1, 0, 0] },
+  { id: 'steelman',  icon: '⚔️', name: 'Steel-manning',          coverage: [0, 2, 0, 1, 0] },
+  { id: 'chklist',   icon: '✅', name: 'Checklist de Sistema 2', coverage: [0, 0, 2, 0, 0] },
+];
+
+const DECISION_MATRIX = {
+  PP: [
+    { sit: 'Mercado cae 15% en una semana', tendency: 'Paralizarte o vender en pánico al peor precio para "detener el dolor".', rational: 'Rebalancear según tu asignación objetivo. Si la tesis no cambió, las caídas son oportunidades — no razones para salir.' },
+    { sit: 'Te ofrecen una inversión nueva', tendency: 'Rechazar por defecto — "mejor lo conocido que lo seguro desconocido".', rational: 'Evaluar contra tu marco de decisión escrito. Si cumple los criterios, invertir una fracción pequeña de prueba.' },
+    { sit: 'Sobra dinero a fin de mes', tendency: 'Dejarlo acumulándose en la cuenta de ahorros.', rational: 'Contribución automática (pre-compromiso) a tu portafolio diversificado — decidida en frío, ejecutada en automático.' },
+  ],
+  FK: [
+    { sit: 'Un amigo te habla de una "oportunidad única"', tendency: 'Entrar rápido por FOMO, sin investigar los fundamentos.', rational: 'Escribir tu tesis independiente antes de consultarlo con nadie más. Si después de 48 horas sigue atractiva, entonces valorar posición pequeña.' },
+    { sit: 'Mercado sube fuertemente durante meses', tendency: 'Entrar tarde al rally cuando todos ya hablan de eso.', rational: 'Ceñirte al plan previo. La multitud que entra tarde suele ser la que vende primero cuando cae.' },
+    { sit: 'Comité de inversión con mayoría que opina X', tendency: 'Alinearte al consenso grupal para no discrepar.', rational: 'Votación ciega escrita antes de la discusión. Expresar la opinión contraria aunque incomode.' },
+  ],
+  AA: [
+    { sit: 'Un trade te da un retorno extraordinario', tendency: 'Atribuirlo a tu habilidad y aumentar exposición en el siguiente.', rational: 'Diario de decisiones — documentar si la tesis original se cumplió o si fue suerte. Mantener el tamaño de posición pre-definido.' },
+    { sit: 'Tienes una idea "obvia" y muy convencida', tendency: 'Concentrar una fracción grande del portafolio en esa tesis.', rational: 'Pre-mortem: asumir que dentro de 12 meses la idea resultó errada — ¿por qué? Diversificación forzada con topes de concentración.' },
+    { sit: 'Un stop-loss se dispara', tendency: 'Ignorarlo y promediar a la baja — "el mercado está equivocado".', rational: 'Ejecutar el stop exactamente como se definió en frío. La tesis se revisa después, con cabeza fría, no durante la caída.' },
+  ],
+  II: [
+    { sit: 'Tu análisis contradice al consenso del mercado', tendency: 'Ignorar el consenso — "ellos no ven lo que yo veo".', rational: 'Steel-manning: escribe el mejor argumento que justifica la posición contraria. Si no puedes, probablemente tienes confirmation bias.' },
+    { sit: 'Investigas un sector nuevo y te sientes experto rápido', tendency: 'Tomar posiciones sofisticadas basadas en tu análisis propio.', rational: 'Activación deliberada del Sistema 2: checklist de preguntas — ¿qué no sé? ¿qué asumo? ¿qué evidencia contraria hay? Posición pequeña mientras calibras.' },
+    { sit: 'Un asesor te sugiere reducir concentración', tendency: 'Desestimar el consejo — "no entiende mi tesis".', rational: 'Diario de decisiones: ¿cuántas veces en el pasado el exceso de confianza costó más que la prudencia? Evaluar la concentración con criterios objetivos.' },
+  ],
+};
+
 const state = {
   user: null,
   screen: 'auth',
@@ -29,6 +99,8 @@ const state = {
   sesgoPhase: 'quiz',
   learnStep: 0,
   learnRatings: [null, null, null, null],
+  selfAssessment: null,
+  selfAssessmentTouched: false,
   // Progress (from DB)
   progress: null,
   // Result page clarity rating
@@ -40,6 +112,12 @@ const state = {
   bitRecoTouched: {},
   bitProfileRatingTouched: false,
   bitResultStep: 1,
+  // Final report step-through
+  reportStep: 1,
+  reportStepRatings: {},
+  reportStepTouched: {},
+  reportRecoRatings: {},
+  reportRecoTouched: {},
 };
 
 // Dark mode init
@@ -867,6 +945,8 @@ function startSesgo(id) {
   state.fixationIndex = 0;
   state.learnStep = 0;
   state.learnRatings = [null, null, null, null];
+  state.selfAssessment = null;
+  state.selfAssessmentTouched = false;
   state.resultRating = null;
   state.screen = 'sesgo';
   render();
@@ -874,10 +954,11 @@ function startSesgo(id) {
 
 function renderSesgoPhase() {
   switch (state.sesgoPhase) {
-    case 'quiz':      return renderSesgoQuiz();
-    case 'learn':     return renderSesgoLearn();
-    case 'fixation':  return renderSesgoFixation();
-    case 'result':    return renderSesgoResult();
+    case 'quiz':           return renderSesgoQuiz();
+    case 'learn':          return renderSesgoLearn();
+    case 'fixation':       return renderSesgoFixation();
+    case 'selfAssessment': return renderSesgoSelfAssessment();
+    case 'result':         return renderSesgoResult();
   }
 }
 
@@ -1129,11 +1210,78 @@ function renderSesgoFixation() {
         sesgo_id: s.id,
         rating: state.fixationRatings[i],
       })).filter(r => r.rating !== null)).catch(() => {});
-      state.sesgoPhase = 'result';
+      state.sesgoPhase = 'selfAssessment';
       render();
     }
   });
   document.getElementById('btn-exit-fix').addEventListener('click', () => {
+    if (confirm('¿Salir del módulo?')) { state.screen = 'dashboard'; render(); }
+  });
+}
+
+function renderSesgoSelfAssessment() {
+  const s = SESGOS.find(x => x.id === state.currentSesgoId);
+  const val = state.selfAssessment ?? 50;
+  const touched = state.selfAssessmentTouched;
+
+  const c = document.createElement('div');
+  c.className = 'quiz-shell';
+  c.innerHTML = `
+    <div class="quiz-topbar">
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div>
+      <div class="quiz-topbar-inner">
+        <div class="quiz-label">Autoevaluación</div>
+        <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${s.name}</div>
+        <button class="btn-exit" id="btn-exit-self">✕</button>
+      </div>
+    </div>
+    <div class="quiz-main">
+      <div class="quiz-question-card">
+        <div class="q-situation" style="font-size:1.1rem;margin-bottom:1.25rem">Antes de ver tus resultados: <strong>¿qué tanto crees que <span style="color:var(--ibero-orange,#DC6B19)">${s.name}</span> te afecta?</strong></div>
+        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.5rem">Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.</p>
+        <div class="self-assess-slider">
+          <div class="slider-row">
+            <span class="slider-end-label">0% — nada</span>
+            <input type="range" id="slider-self" class="fit-slider" min="0" max="100" step="1" value="${val}">
+            <span class="slider-end-label">100% — mucho</span>
+          </div>
+          <div class="self-assess-value" id="self-val-display">${touched ? val + '%' : 'Mueve el deslizador'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn-nav-back" id="btn-self-back">← Anterior</button>
+      <button class="btn-nav-next" id="btn-self-next" ${!touched ? 'disabled' : ''}>Ver mis resultados →</button>
+    </div>
+  `;
+  app.appendChild(c);
+
+  const slider = document.getElementById('slider-self');
+  const display = document.getElementById('self-val-display');
+  const nextBtn = document.getElementById('btn-self-next');
+  slider.addEventListener('input', () => {
+    state.selfAssessment = parseInt(slider.value);
+    state.selfAssessmentTouched = true;
+    display.textContent = state.selfAssessment + '%';
+    nextBtn.disabled = false;
+  });
+  document.getElementById('btn-self-back').addEventListener('click', () => {
+    state.sesgoPhase = 'fixation';
+    state.fixationIndex = state.fixationAnswers.length - 1;
+    render();
+  });
+  nextBtn.addEventListener('click', () => {
+    logQuestionFeedback([{
+      email: state.user.email,
+      q_type: 'sesgo_self_assessment',
+      question_id: `${s.id}_self`,
+      sesgo_id: s.id,
+      rating: Math.round(state.selfAssessment / 20),
+    }]).catch(() => {});
+    state.sesgoPhase = 'result';
+    render();
+  });
+  document.getElementById('btn-exit-self').addEventListener('click', () => {
     if (confirm('¿Salir del módulo?')) { state.screen = 'dashboard'; render(); }
   });
 }
@@ -1172,7 +1320,7 @@ async function renderSesgoResult() {
 
   // Save progress
   const sesgos = { ...(state.progress?.sesgos || {}) };
-  sesgos[s.id] = { done: true, answers: state.sesgoAnswers, fixationAnswers: state.fixationAnswers, fixationScore: fixScore, intensidad, completedAt: new Date().toISOString() };
+  sesgos[s.id] = { done: true, answers: state.sesgoAnswers, fixationAnswers: state.fixationAnswers, fixationScore: fixScore, intensidad, selfAssessment: state.selfAssessment, completedAt: new Date().toISOString() };
 
   const payload = {
     email: state.user.email,
@@ -1295,7 +1443,263 @@ async function renderSesgoResult() {
   });
 }
 
-// ── FINAL REPORT ──────────────────────────────────
+// ── FINAL REPORT — HELPERS ────────────────────────
+
+function computeMechanismSeverity(sesgos) {
+  const buckets = [[], [], [], [], []];
+  SESGOS.forEach(s => {
+    const mecIdx = SESGO_MECANISMO[s.id];
+    if (mecIdx === undefined) return;
+    const data = sesgos[s.id];
+    if (!data) return;
+    buckets[mecIdx].push(data.intensidad ?? 0);
+  });
+  return buckets.map(arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+}
+
+function rankAntidotes(profileCode, sesgos) {
+  const mechSev = computeMechanismSeverity(sesgos);
+  const profWeights = MECH_WEIGHTS_BY_PROFILE[profileCode] || [1, 1, 1, 1, 1];
+  const combined = profWeights.map((w, i) => (w / 3) + mechSev[i]);
+  const totalCombined = combined.reduce((a, b) => a + b, 0) || 1;
+  const scored = ANTIDOTOS.map(a => {
+    const score = a.coverage.reduce((sum, c, i) => sum + c * combined[i], 0);
+    const maxPossible = a.coverage.reduce((sum, c, i) => sum + 2 * combined[i], 0) || 1;
+    const coveragePct = Math.min(100, Math.round((score / maxPossible) * 100));
+    const mecsCovered = a.coverage
+      .map((c, i) => ({ c, i, mec: MECANISMOS[i] }))
+      .filter(x => x.c > 0 && combined[x.i] >= 0.8);
+    return { ...a, score, coveragePct, mecsCovered };
+  }).sort((x, y) => y.score - x.score);
+  return { scored, mechSev, combined, totalCombined };
+}
+
+function computeAwarenessGap(sesgos) {
+  const items = [];
+  SESGOS.forEach(s => {
+    const d = sesgos[s.id];
+    if (!d) return;
+    if (d.selfAssessment === undefined || d.selfAssessment === null) return;
+    const observed = Math.round((d.intensidad ?? 0) * 100);
+    const self = d.selfAssessment;
+    const gap = observed - self;
+    let category;
+    if (Math.abs(gap) <= 15) category = 'calibrated';
+    else if (gap > 15) category = 'blind';
+    else category = 'over';
+    items.push({ sesgo: s, observed, self, gap, category });
+  });
+  return items;
+}
+
+// ── FINAL REPORT — STEP RENDERS ───────────────────
+
+function renderReportStep1_Profile(profile, bitResult) {
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 1 · Tu perfil BIT</div>
+      <div class="report-section-title">Así es como tomas decisiones financieras</div>
+      <div class="report-profile-card">
+        <div class="profile-header">
+          <div class="profile-badge" style="background:${profile.color}">${bitLabel(bitResult.primary)}</div>
+          <div>
+            <div class="profile-name">${profile.name}</div>
+            <div class="profile-tagline">${profile.tagline}</div>
+          </div>
+        </div>
+        <div class="profile-desc">${profile.description}</div>
+      </div>
+      <div class="bit-disclaimer" style="margin-top:1rem">
+        <p style="font-size:.85rem;color:var(--ink-4);line-height:1.55"><strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.</p>
+      </div>
+    </div>`;
+}
+
+function renderReportStep2_Plan(profile, bitResult, sesgos) {
+  const { scored } = rankAntidotes(bitResult.primary, sesgos);
+  const top3 = scored.slice(0, 3);
+  const top1 = top3[0];
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 2 · Plan de acción</div>
+      <div class="report-section-title">Si solo haces UNA cosa, haz esta</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil ${bitLabel(bitResult.primary)} con los sesgos que observamos en tus respuestas.</p>
+      <div class="plan-top1" style="border-color:${profile.color}">
+        <div class="plan-top1-badge" style="background:${profile.color}">Tu antídoto #1</div>
+        <div class="plan-top1-icon">${top1.icon}</div>
+        <div class="plan-top1-name">${top1.name}</div>
+        <div class="plan-top1-cov" style="color:${profile.color}">Cubre ${top1.coveragePct}% de tu peso sesgado</div>
+        <div class="plan-top1-mecs">
+          ${top1.mecsCovered.map(m => `<span class="mec-pill" style="background:${m.mec.color}15;color:${m.mec.color};border-color:${m.mec.color}40">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+        </div>
+      </div>
+      <div class="plan-others-title">Tus otros 2 antídotos de mayor retorno:</div>
+      <div class="plan-others">
+        ${top3.slice(1).map((a, i) => `
+          <div class="plan-other">
+            <div class="plan-other-rank">#${i + 2}</div>
+            <div style="flex:1">
+              <div class="plan-other-name">${a.icon} ${a.name}</div>
+              <div class="plan-other-cov">Cubre ${a.coveragePct}% de tu peso sesgado</div>
+              <div class="plan-other-mecs">
+                ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderReportStep3_Severidad(profile, sesgos) {
+  const rows = SESGOS.map(s => {
+    const d = sesgos[s.id] || {};
+    return { s, intensidad: d.intensidad ?? 0, has: !!d.done };
+  }).filter(r => r.has).sort((a, b) => b.intensidad - a.intensidad);
+
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 3 · Severidad continua</div>
+      <div class="report-section-title">Tus 15 sesgos ordenados por intensidad</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Cada barra muestra <strong>qué porcentaje de tus respuestas fueron sesgadas</strong> en ese módulo. No existe "leve" o "dominante" — es un continuo 0–100%.</p>
+      <div class="severidad-bars">
+        ${rows.map((r, i) => {
+          const pct = Math.round(r.intensidad * 100);
+          const color = pct < 30 ? '#059669' : pct < 60 ? '#D97706' : '#DC2626';
+          return `
+            <div class="sev-row">
+              <div class="sev-row-head">
+                <span class="sev-rank">#${i + 1}</span>
+                <span class="sev-name">${r.s.name}</span>
+                <span class="sev-pct" style="color:${color}">${pct}%</span>
+              </div>
+              <div class="sev-track"><div class="sev-fill" style="width:${pct}%;background:${color}"></div></div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function renderReportStep4_Mecanismos(profile, sesgos) {
+  const mechSev = computeMechanismSeverity(sesgos);
+  const ranked = MECANISMOS.map((m, i) => ({ m, i, sev: mechSev[i] })).sort((a, b) => b.sev - a.sev);
+  const dominant = ranked[0];
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 4 · Mecanismos</div>
+      <div class="report-section-title">Los 5 sistemas detrás de tus sesgos</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.</p>
+      <div class="mec-dominant" style="background:${dominant.m.color}12;border-color:${dominant.m.color}40">
+        <div class="mec-dominant-label">Tu mecanismo dominante</div>
+        <div class="mec-dominant-name" style="color:${dominant.m.color}">${dominant.m.icon} ${dominant.m.name}</div>
+        <div class="mec-dominant-phrase">"${dominant.m.phrase}"</div>
+      </div>
+      <div class="mec-bars">
+        ${ranked.map(({ m, i, sev }) => {
+          const pct = Math.round(sev * 100);
+          const belongs = SESGOS.filter(s => SESGO_MECANISMO[s.id] === i).map(s => s.name);
+          return `
+            <div class="mec-row">
+              <div class="mec-row-head">
+                <span class="mec-icon">${m.icon}</span>
+                <span class="mec-name" style="color:${m.color}">${m.name}</span>
+                <span class="mec-pct">${pct}%</span>
+              </div>
+              <div class="mec-track"><div class="mec-fill" style="width:${pct}%;background:${m.color}"></div></div>
+              <div class="mec-biases">${belongs.join(' · ')}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function renderReportStep5_Autoconciencia(sesgos) {
+  const items = computeAwarenessGap(sesgos);
+  if (!items.length) {
+    return `
+      <div class="report-section">
+        <div class="report-section-label">Paso 5 · Autoconciencia</div>
+        <div class="report-section-title">Comparación entre tu autoevaluación y tus respuestas</div>
+        <p style="font-size:.95rem;color:var(--ink-3);line-height:1.6">Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.</p>
+      </div>`;
+  }
+  const calibrated = items.filter(x => x.category === 'calibrated');
+  const blind = items.filter(x => x.category === 'blind').sort((a, b) => b.gap - a.gap);
+  const over = items.filter(x => x.category === 'over').sort((a, b) => a.gap - b.gap);
+
+  const W = 320, H = 320, PAD = 36;
+  const sx = v => PAD + (v / 100) * (W - PAD * 2);
+  const sy = v => H - PAD - (v / 100) * (H - PAD * 2);
+
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 5 · Autoconciencia</div>
+      <div class="report-section-title">¿Qué tan bien te conoces?</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.</p>
+      <div class="scatter-wrap">
+        <svg viewBox="0 0 ${W} ${H}" class="scatter-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="${PAD}" y="${PAD}" width="${W-PAD*2}" height="${H-PAD*2}" fill="rgba(0,0,0,.02)" stroke="rgba(0,0,0,.1)" />
+          <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${PAD}" stroke="rgba(0,0,0,.2)" stroke-dasharray="4 3" />
+          <polygon points="${sx(0)},${sy(15)} ${sx(85)},${sy(100)} ${sx(100)},${sy(100)} ${sx(100)},${sy(85)} ${sx(15)},${sy(0)} ${sx(0)},${sy(0)}" fill="#05966915" />
+          <text x="${PAD}" y="${H-8}" font-size="10" fill="var(--ink-4)">0%</text>
+          <text x="${W-PAD-20}" y="${H-8}" font-size="10" fill="var(--ink-4)">100%</text>
+          <text x="8" y="${PAD+10}" font-size="10" fill="var(--ink-4)">100%</text>
+          <text x="8" y="${H-PAD}" font-size="10" fill="var(--ink-4)">0%</text>
+          <text x="${W/2}" y="${H-4}" font-size="11" fill="var(--ink-3)" text-anchor="middle">Tu autoevaluación →</text>
+          <text x="12" y="${H/2}" font-size="11" fill="var(--ink-3)" transform="rotate(-90 12 ${H/2})" text-anchor="middle">← Observado</text>
+          ${items.map(it => {
+            const color = it.category === 'calibrated' ? '#059669' : it.category === 'blind' ? '#DC2626' : '#D97706';
+            return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${it.sesgo.name}: auto ${it.self}% / observado ${it.observed}%</title></circle>`;
+          }).join('')}
+        </svg>
+      </div>
+      <div class="awareness-summary">
+        <div class="awareness-card" style="border-color:#DC262640">
+          <div class="aw-card-title" style="color:#DC2626">Puntos ciegos (${blind.length})</div>
+          <div class="aw-card-sub">Te afectan más de lo que crees</div>
+          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${x.sesgo.name} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno — buena calibración por el lado de la subestimación.</p>'}
+        </div>
+        <div class="awareness-card" style="border-color:#D9770640">
+          <div class="aw-card-title" style="color:#D97706">Sobreestimados (${over.length})</div>
+          <div class="aw-card-sub">Crees que te afectan más de lo que realmente aparece</div>
+          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${x.sesgo.name} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno.</p>'}
+        </div>
+        <div class="awareness-card" style="border-color:#05966940">
+          <div class="aw-card-title" style="color:#059669">Bien calibrado (${calibrated.length})</div>
+          <div class="aw-card-sub">Tu autoevaluación coincide con las respuestas (±15 pp)</div>
+          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${x.sesgo.name}</li>`).join('')}</ul>` : '<p class="aw-empty">Aún no tienes sesgos calibrados.</p>'}
+        </div>
+      </div>
+      <div class="aw-score">Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados</div>
+    </div>`;
+}
+
+function renderReportStep6_Matriz(bitResult) {
+  const scenarios = DECISION_MATRIX[bitResult.primary] || DECISION_MATRIX.PP;
+  return `
+    <div class="report-section">
+      <div class="report-section-label">Paso 6 · Matriz de decisión</div>
+      <div class="report-section-title">Situaciones reales: tu tendencia vs. lo racional</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Tres escenarios típicos donde tu perfil <strong>${bitLabel(bitResult.primary)}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.</p>
+      <div class="matriz-list">
+        ${scenarios.map((sc, i) => `
+          <div class="matriz-item">
+            <div class="matriz-sit"><span class="matriz-num">${i + 1}</span>${sc.sit}</div>
+            <div class="matriz-cols">
+              <div class="matriz-col matriz-tend">
+                <div class="matriz-col-label">Tu tendencia</div>
+                <div class="matriz-col-text">${sc.tendency}</div>
+              </div>
+              <div class="matriz-col matriz-rat">
+                <div class="matriz-col-label">Respuesta racional</div>
+                <div class="matriz-col-text">${sc.rational}</div>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── FINAL REPORT — MAIN ───────────────────────────
 
 function renderReport() {
   const bitResult = state.progress?.bit_result;
@@ -1303,6 +1707,46 @@ function renderReport() {
   if (!bitResult) { state.screen = 'dashboard'; return render(); }
 
   const profile = BIT_PROFILES[bitResult.primary];
+  const step = state.reportStep ?? 1;
+  const TOTAL = 6;
+
+  let body = '';
+  switch (step) {
+    case 1: body = renderReportStep1_Profile(profile, bitResult); break;
+    case 2: body = renderReportStep2_Plan(profile, bitResult, sesgos); break;
+    case 3: body = renderReportStep3_Severidad(profile, sesgos); break;
+    case 4: body = renderReportStep4_Mecanismos(profile, sesgos); break;
+    case 5: body = renderReportStep5_Autoconciencia(sesgos); break;
+    case 6: body = renderReportStep6_Matriz(bitResult); break;
+  }
+
+  const touched = !!state.reportStepTouched[step];
+  const val = state.reportStepRatings[step] ?? 3;
+  const isLast = step === TOTAL;
+
+  const stepper = Array.from({ length: TOTAL }, (_, i) => {
+    const n = i + 1;
+    const cls = n < step ? 'done' : n === step ? 'active' : '';
+    return `<span class="report-step ${cls}">${n}</span>`;
+  }).join('<span class="report-step-sep">·</span>');
+
+  const feedbackCard = `
+    <div class="report-feedback-card" style="border-color:${profile.color}30">
+      <div class="report-feedback-title">¿Qué tan útil te pareció esta información? <span style="color:#B91C1C">*</span></div>
+      <div class="slider-row">
+        <span class="slider-end-label">Nada útil</span>
+        <input type="range" id="rep-step-slider" class="fit-slider" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
+        <span class="slider-end-label">Muy útil</span>
+      </div>
+      <div class="slider-value-label" id="rep-step-val">${touched ? SLIDER_LABELS[val] : 'Mueve el deslizador para continuar'}</div>
+    </div>`;
+
+  const navCard = `
+    <div class="report-nav">
+      <button class="btn-ghost" id="btn-rep-prev" ${step === 1 ? 'disabled' : ''}>← Anterior</button>
+      <span style="font-size:.82rem;color:var(--ink-4)">Paso ${step} de ${TOTAL}</span>
+      <button class="btn-cta" id="btn-rep-next" ${!touched ? 'disabled' : ''}>${isLast ? 'Volver al Dashboard →' : 'Siguiente →'}</button>
+    </div>`;
 
   const c = document.createElement('div');
   c.className = 'report-wrap';
@@ -1316,116 +1760,49 @@ function renderReport() {
         <div class="report-logo">Informe Final · Ibero CDMX</div>
         <h1 class="report-title">Tu perfil conductual como inversionista</h1>
         <p class="report-name">${state.user.email}</p>
+        <div class="report-stepper">${stepper}</div>
       </div>
-
-      <div class="report-section">
-        <div class="report-section-label">Tu perfil BIT</div>
-        <div class="report-section-title">Behavioral Investor Type</div>
-        <div class="report-profile-card">
-          <div class="profile-header">
-            <div class="profile-badge" style="background:${profile.color}">${bitLabel(bitResult.primary)}</div>
-            <div>
-              <div class="profile-name">${profile.name}</div>
-              <div class="profile-tagline">${profile.tagline}</div>
-            </div>
-          </div>
-          <div class="profile-desc">${profile.description}</div>
-        </div>
-      </div>
-
-      <div class="report-section">
-        <div class="report-section-label">Plan personalizado</div>
-        <div class="report-section-title">Recomendaciones para tu perfil</div>
-        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.25rem">Valora qué tan útil te parece cada recomendación — tus respuestas nos ayudan a afinar el contenido del curso.</p>
-        <div class="reco-list">
-          ${profile.recommendations.map((r, i) => {
-            const val = state.reportRecoRatings?.[i] ?? 3;
-            const touched = state.reportRecoTouched?.[i];
-            return `
-              <div class="reco-item reco-item-rateable">
-                <div class="reco-icon">${i + 1}</div>
-                <div style="flex:1">
-                  <div class="reco-text">${r}</div>
-                  <div class="reco-rating-slider" data-idx="${i}">
-                    <div class="slider-row">
-                      <span class="slider-end-label">Nada útil</span>
-                      <input type="range" class="fit-slider report-reco-slider" data-idx="${i}" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
-                      <span class="slider-end-label">Muy útil</span>
-                    </div>
-                    <div class="slider-value-label report-reco-slider-val" data-idx="${i}">${touched ? SLIDER_LABELS[val] : 'Mueve el deslizador'}</div>
-                  </div>
-                </div>
-              </div>`;
-          }).join('')}
-        </div>
-        <div id="report-reco-status" class="bit-gate-hint" style="margin-top:1rem"></div>
-      </div>
-
-      <div class="report-section">
-        <div class="report-section-label">Mapa de sesgos</div>
-        <div class="report-section-title">Tus 15 puntos ciegos conductuales</div>
-        <div class="report-sesgo-grid">
-          ${SESGOS.map(s => {
-            const data = sesgos[s.id];
-            if (!data) return '';
-            const intensidad = data.intensidad || 0;
-            const label = intensidad === 0 ? 'No detectado' : intensidad <= 0.34 ? 'Leve' : intensidad <= 0.67 ? 'Moderado' : 'Dominante';
-            const color = intensidad === 0 ? '#059669' : intensidad <= 0.67 ? '#D97706' : '#DC2626';
-            const fixScore = data.fixationScore ?? (Array.isArray(data.fixation) ? data.fixation.filter(x => x === 0).length : 0);
-            const fixTotal = s.fixationQuestions?.length ?? 3;
-            return `
-              <div class="report-sesgo-card">
-                <div class="report-sesgo-title">${s.name}</div>
-                <div class="report-sesgo-type">${s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional'} · Clase ${s.clase}</div>
-                <div class="report-sesgo-finding" style="border-left:3px solid ${color}">
-                  <span style="color:${color};font-weight:700">${label}</span> — ${Math.round(intensidad * 100)}% respuestas sesgadas · Verificación: ${fixScore}/${fixTotal}
-                </div>
-                <div class="report-sesgo-antidote">→ ${s.antidotes[0]}</div>
-              </div>`;
-          }).join('')}
-        </div>
-      </div>
-
-      <div class="report-cta">
-        <div class="report-cta-title">¡Felicidades!</div>
-        <p class="report-cta-sub">Completaste los 15 módulos de sesgos conductuales. Ahora tienes las herramientas para tomar decisiones financieras más racionales.</p>
-        <button class="btn-cta" id="btn-report-dash">Volver al Dashboard</button>
-      </div>
+      ${body}
+      ${feedbackCard}
+      ${navCard}
     </div>
   `;
   app.appendChild(c);
-  document.getElementById('btn-report-back').addEventListener('click', () => { state.screen = 'dashboard'; render(); });
-  document.getElementById('btn-report-dash').addEventListener('click', () => { state.screen = 'dashboard'; render(); });
 
-  state.reportRecoRatings = state.reportRecoRatings || {};
-  state.reportRecoTouched = state.reportRecoTouched || {};
-  const status = document.getElementById('report-reco-status');
-  let saveTimer = null;
-  const flushReportRecos = () => {
-    const rows = Object.entries(state.reportRecoRatings).map(([idx, rating]) => ({
+  const slider = document.getElementById('rep-step-slider');
+  const lbl = document.getElementById('rep-step-val');
+  const nextBtn = document.getElementById('btn-rep-next');
+  slider.addEventListener('input', () => {
+    const v = parseInt(slider.value);
+    state.reportStepRatings[step] = v;
+    state.reportStepTouched[step] = true;
+    lbl.textContent = SLIDER_LABELS[v];
+    nextBtn.disabled = false;
+  });
+
+  document.getElementById('btn-report-back').addEventListener('click', () => {
+    state.screen = 'dashboard'; render();
+  });
+  document.getElementById('btn-rep-prev').addEventListener('click', () => {
+    if (step > 1) { state.reportStep = step - 1; window.scrollTo(0, 0); render(); }
+  });
+  nextBtn.addEventListener('click', () => {
+    logQuestionFeedback([{
       email: state.user.email,
-      q_type: 'report_reco_useful',
-      question_id: `report_reco_${idx}`,
+      q_type: 'report_step_useful',
+      question_id: `report_step_${step}`,
       sesgo_id: null,
-      rating,
-    }));
-    if (!rows.length) return;
-    logQuestionFeedback(rows)
-      .then(() => { if (status) { status.textContent = '✓ Valoraciones guardadas'; status.style.color = '#059669'; } })
-      .catch(() => { if (status) { status.textContent = '⚠ No se pudo guardar'; status.style.color = '#DC2626'; } });
-  };
-  document.querySelectorAll('.report-reco-slider').forEach(slider => {
-    const idx = parseInt(slider.dataset.idx);
-    slider.addEventListener('input', () => {
-      const v = parseInt(slider.value);
-      state.reportRecoRatings[idx] = v;
-      state.reportRecoTouched[idx] = true;
-      const lbl = document.querySelector(`.report-reco-slider-val[data-idx="${idx}"]`);
-      if (lbl) lbl.textContent = SLIDER_LABELS[v];
-      if (status) { status.textContent = 'Guardando…'; status.style.color = 'var(--ink-4)'; }
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(flushReportRecos, 600);
-    });
+      rating: state.reportStepRatings[step],
+    }]).catch(() => {});
+    if (isLast) {
+      state.reportStep = 1;
+      state.screen = 'dashboard';
+      render();
+    } else {
+      state.reportStep = step + 1;
+      window.scrollTo(0, 0);
+      render();
+    }
   });
 }
 
@@ -1480,11 +1857,20 @@ async function devFillAll() {
   // Sesgos: random fixation answers (index 0 = correct, just pick any)
   const sesgosData = {};
   SESGOS.forEach(s => {
+    const answers = s.questions.map(() => Math.floor(Math.random() * 2));
+    const sesgadasCount = answers.filter((ans, i) => {
+      const reveal = s.questions[i]?.options[ans]?.reveal || '';
+      return !reveal.toLowerCase().startsWith('racional') && !reveal.toLowerCase().startsWith('correcto');
+    }).length;
+    const intensidad = answers.length > 0 ? sesgadasCount / answers.length : 0;
     sesgosData[s.id] = {
       done: true,
       score: Math.floor(Math.random() * 4),
-      answers: s.questions.map(() => Math.floor(Math.random() * 2)),
+      answers,
       fixation: s.fixationQuestions.map(() => Math.floor(Math.random() * 3)),
+      fixationAnswers: s.fixationQuestions.map(() => Math.random() < 0.6 ? 0 : Math.floor(Math.random() * 3)),
+      intensidad,
+      selfAssessment: Math.floor(Math.random() * 101),
     };
   });
 
