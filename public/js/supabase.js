@@ -44,7 +44,7 @@ export async function getUser(accessToken) {
 }
 
 export async function signInWithGoogle() {
-  const redirectTo = window.location.origin + window.location.pathname;
+  const redirectTo = window.location.origin;
   const authUrl = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectTo)}`;
   window.location.href = authUrl;
 }
