@@ -692,7 +692,7 @@ function renderUsuarios() {
     const nsRow = nsByEmail[u.email];
     const nsCount = nsRow?.interests?.length || 0;
 
-    return `<tr>
+    return `<tr data-user-email="${escapeAttr(u.email)}" style="cursor:pointer">
       <td>
         <div style="display:flex;align-items:center;gap:.5rem">
           <span style="width:8px;height:8px;border-radius:50%;background:${activityDot};flex-shrink:0"></span>
@@ -769,6 +769,12 @@ function renderUsuarios() {
       </div>
     </div>
   `;
+
+  document.querySelectorAll('#tab-usuarios tr[data-user-email]').forEach(tr => {
+    tr.addEventListener('click', () => openUserDetail(tr.dataset.userEmail));
+    tr.addEventListener('mouseenter', () => { tr.style.background = 'var(--paper)'; });
+    tr.addEventListener('mouseleave', () => { tr.style.background = ''; });
+  });
 }
 
 // ══════════════════════════════════════════════════
@@ -1083,3 +1089,273 @@ function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+
+// ══════════════════════════════════════════════════
+// ── USER DETAIL DRAWER ────────────────────────────
+// ══════════════════════════════════════════════════
+
+function openUserDetail(email) {
+  const drawer = document.getElementById('user-detail');
+  const body   = document.getElementById('user-detail-body');
+  if (!drawer || !body || !DATA) return;
+
+  const user        = DATA.users.find(u => u.email === email);
+  const progress    = DATA.progress.find(p => p.email === email);
+  const sessions    = DATA.sessions.filter(s => s.email === email).sort((a,b) => new Date(b.started_at) - new Date(a.started_at));
+  const responses   = DATA.responses.filter(r => r.email === email).sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+  const qFb         = DATA.qFeedback.filter(r => r.email === email);
+  const cFb         = DATA.cFeedback.filter(r => r.email === email);
+  const userBugs    = DATA.bugs.filter(b => b.email === email);
+  const userErrors  = (DATA.errors || []).filter(e => e.email === email);
+  const ns          = DATA.nextSteps.find(n => n.email === email);
+  const stage       = userStage(progress);
+  const profile     = progress?.bit_result?.primary;
+
+  const close = () => { drawer.hidden = true; document.removeEventListener('keydown', onKey); };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  document.getElementById('user-detail-backdrop').onclick = close;
+
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.5rem">
+      <div>
+        <div style="font-family:var(--ff-display);font-size:1.6rem;line-height:1.2">${escapeHtml(email)}</div>
+        ${user?.name ? `<div style="font-size:.9rem;color:var(--ink-3);margin-top:.2rem">${escapeHtml(user.name)}</div>` : ''}
+        <div style="font-size:.78rem;color:var(--ink-4);margin-top:.4rem">
+          Registrado ${user ? fmtDateTime(user.created_at) : '—'}
+          ${user?.onboarding_seen_at ? ` · Onboarding visto ${fmtDate(user.onboarding_seen_at)}` : ''}
+        </div>
+      </div>
+      <button id="ud-close" style="background:none;border:none;font-size:1.5rem;color:var(--ink-3);cursor:pointer;padding:.25rem .5rem">×</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem">
+      ${kpi(stage.label, 'Etapa actual')}
+      ${kpi(profile || '—', 'Perfil BIT', profile ? PROFILE_NAMES[profile] : '', profile ? PROFILE_COLORS[profile] : '')}
+      ${kpi(sesgosDone(progress) + '/15', 'Sesgos completados')}
+      ${kpi(sessions.length, 'Sesiones totales')}
+    </div>
+
+    ${userErrors.length ? `
+      <div style="background:rgba(220,38,38,.08);border-left:3px solid var(--red);border-radius:var(--r-sm);padding:1rem 1.25rem;margin-bottom:1.5rem">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:.3rem">${userErrors.length} error${userErrors.length>1?'es':''} en cliente</div>
+        ${userErrors.slice(0, 5).map(e => `
+          <div style="font-size:.78rem;color:var(--ink-2);margin-top:.3rem">
+            <span style="color:var(--ink-4)">${fmtDateTime(e.created_at)}</span> ·
+            <strong>${escapeHtml(e.op || '?')}</strong>
+            ${e.http_status ? ` (${e.http_status})` : ''} —
+            ${escapeHtml((e.message || '').substring(0, 140))}
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+
+    ${userBugs.length ? `
+      <div style="background:rgba(217,119,6,.08);border-left:3px solid var(--warning);border-radius:var(--r-sm);padding:1rem 1.25rem;margin-bottom:1.5rem">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--warning);margin-bottom:.3rem">${userBugs.length} bug report${userBugs.length>1?'s':''}</div>
+        ${userBugs.map(b => `
+          <div style="margin-top:.5rem;font-size:.82rem">
+            <div style="font-weight:600;color:var(--ink)">${escapeHtml(b.title || '—')}</div>
+            ${b.description ? `<div style="color:var(--ink-2);white-space:pre-wrap;margin-top:.2rem">${escapeHtml(b.description)}</div>` : ''}
+            <div style="color:var(--ink-4);font-size:.7rem;margin-top:.2rem">${fmtDateTime(b.created_at)} · ${escapeHtml(b.screen || '?')}</div>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+
+    ${renderSessionsTimeline(sessions)}
+    ${renderBitDetail(progress, responses)}
+    ${renderSesgosDetail(progress, responses, cFb)}
+    ${renderFeedbackGiven(qFb, cFb)}
+    ${renderNextStepsDetail(ns)}
+    ${renderRawResponses(responses)}
+  `;
+
+  drawer.hidden = false;
+  document.getElementById('ud-close').onclick = close;
+}
+
+function renderSessionsTimeline(sessions) {
+  if (!sessions.length) return udSection('Sesiones', '<div style="color:var(--ink-4);font-size:.85rem">Sin sesiones registradas</div>');
+  const rows = sessions.map(s => {
+    const dur = Math.round((new Date(s.last_seen_at) - new Date(s.started_at)) / 60000);
+    return `<tr>
+      <td style="font-size:.78rem;color:var(--ink-2);white-space:nowrap">${fmtDateTime(s.started_at)}</td>
+      <td style="font-size:.78rem;color:var(--ink-3);text-align:center">${dur > 0 ? dur + ' min' : '<1 min'}</td>
+      <td style="font-size:.78rem;color:var(--ink-3)">${escapeHtml(s.last_screen || '—')}</td>
+      <td style="font-size:.72rem;color:var(--ink-4)">${(s.screens || []).join(' → ') || '—'}</td>
+      <td style="text-align:center">${s.completed ? '<span style="color:var(--success);font-weight:700">✓</span>' : ''}</td>
+    </tr>`;
+  }).join('');
+  return udSection('Sesiones', `
+    <table class="admin-table" style="width:100%">
+      <thead><tr>
+        <th>Inicio</th><th style="text-align:center">Duración</th><th>Última pantalla</th><th>Recorrido</th><th style="text-align:center">✓</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`);
+}
+
+function renderBitDetail(progress, responses) {
+  if (!progress?.bit_done && !responses.some(r => r.q_type === 'bit')) {
+    return udSection('Test BIT', '<div style="color:var(--ink-4);font-size:.85rem">No completado</div>');
+  }
+  const bitR = responses.filter(r => r.q_type === 'bit');
+  const result = progress?.bit_result || {};
+  const scores = result.scores || {};
+  const scoresHtml = Object.entries(scores).map(([k, v]) => {
+    const max = Math.max(...Object.values(scores), 1);
+    const pct = Math.round(v / max * 100);
+    return `<div style="margin-bottom:.4rem">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:2px">
+        <span style="font-weight:700;color:${PROFILE_COLORS[k]}">${k} · ${PROFILE_NAMES[k]}</span>
+        <span style="font-weight:600">${v}</span>
+      </div>
+      <div style="height:6px;background:var(--paper-2);border-radius:100px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${PROFILE_COLORS[k]};border-radius:100px"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const answersHtml = bitR.map(r => {
+    const num = parseInt(r.question_id.replace('bit_', ''));
+    const q = BIT_QUESTIONS.find(x => x.id === num);
+    if (!q) return '';
+    const opt = q.options[r.answer_idx];
+    return `<div style="padding:.5rem 0;border-bottom:1px solid var(--paper-2);font-size:.78rem">
+      <div style="color:var(--ink-3);margin-bottom:2px"><strong>${num}.</strong> ${escapeHtml(q.prompt)}</div>
+      <div style="color:var(--ink);padding-left:1rem">→ ${LETTERS[r.answer_idx] || '?'} · ${escapeHtml(opt?.text || '?')} <span style="color:var(--ink-4)">(${escapeHtml(opt?.profile || '')})</span></div>
+    </div>`;
+  }).join('');
+
+  return udSection('Test BIT', `
+    ${scoresHtml ? `<div style="margin-bottom:1rem">${scoresHtml}</div>` : ''}
+    <details style="margin-top:.5rem">
+      <summary style="cursor:pointer;font-size:.82rem;color:var(--ink-3);font-weight:600">Ver ${bitR.length} respuestas</summary>
+      <div style="margin-top:.5rem">${answersHtml}</div>
+    </details>
+  `);
+}
+
+function renderSesgosDetail(progress, responses, cFb) {
+  const sesgosObj = progress?.sesgos || {};
+  const sesgoIds  = SESGOS.map(s => s.id);
+  const respBySesgo = {};
+  responses.forEach(r => {
+    if (!r.sesgo_id) return;
+    (respBySesgo[r.sesgo_id] ??= []).push(r);
+  });
+  const cFbBySesgo = {};
+  cFb.forEach(r => { (cFbBySesgo[r.sesgo_id] ??= []).push(r); });
+
+  const allTouched = new Set([...Object.keys(sesgosObj), ...Object.keys(respBySesgo)]);
+  if (!allTouched.size) {
+    return udSection('Sesgos', '<div style="color:var(--ink-4);font-size:.85rem">Aún no inició ningún sesgo</div>');
+  }
+
+  const rows = sesgoIds.filter(id => allTouched.has(id)).map(id => {
+    const sObj = sesgosObj[id] || {};
+    const rs = respBySesgo[id] || [];
+    const sesgoDef = SESGOS.find(s => s.id === id);
+    const quizR = rs.filter(r => r.q_type === 'sesgo_quiz');
+    const fixR  = rs.filter(r => r.q_type === 'sesgo_fixation');
+    const detail = sesgoDef ? `
+      <div style="margin-top:.5rem;font-size:.75rem;color:var(--ink-3)">
+        ${quizR.map(r => {
+          const idx = parseInt(r.question_id.split('_q')[1]);
+          const q = sesgoDef.questions[idx];
+          if (!q) return '';
+          const opt = (q.options || [])[r.answer_idx];
+          const optText = typeof opt === 'string' ? opt : opt?.text;
+          return `<div style="padding:.3rem 0;border-bottom:1px dashed var(--paper-2)">
+            <div style="color:var(--ink-4)">Q${idx+1}: ${escapeHtml((q.situation || '').substring(0, 80))}…</div>
+            <div style="color:var(--ink-2);padding-left:.5rem">→ ${LETTERS[r.answer_idx]} · ${escapeHtml((optText || '').substring(0, 100))}</div>
+          </div>`;
+        }).join('')}
+        ${fixR.length ? `<div style="margin-top:.4rem;font-weight:600;color:var(--ink-3)">Fijación:</div>` : ''}
+        ${fixR.map(r => {
+          const idx = parseInt(r.question_id.split('_f')[1]);
+          const q = sesgoDef.fixationQuestions[idx];
+          if (!q) return '';
+          const opt = (q.options || [])[r.answer_idx];
+          const optText = typeof opt === 'string' ? opt : opt?.text;
+          const correct = r.answer_idx === 0;
+          return `<div style="padding:.3rem 0;border-bottom:1px dashed var(--paper-2);color:${correct?'var(--success)':'var(--red)'}">
+            F${idx+1}: ${LETTERS[r.answer_idx]} · ${escapeHtml((optText || '').substring(0, 100))} ${correct?'✓':'✗'}
+          </div>`;
+        }).join('')}
+      </div>` : '';
+
+    return `<details style="background:var(--paper);border:1px solid var(--paper-3);border-radius:var(--r-sm);padding:.75rem 1rem;margin-bottom:.5rem">
+      <summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem">
+        <div>
+          <span style="font-weight:600;color:var(--ink)">${SESGO_NAMES[id] || id}</span>
+          <span style="font-size:.72rem;color:var(--ink-4);margin-left:.5rem">
+            ${quizR.length} det · ${fixR.length} fij
+          </span>
+        </div>
+        <div style="font-size:.72rem">
+          ${sObj.done ? '<span style="color:var(--success);font-weight:700">✓ completo</span>' : '<span style="color:var(--warning)">en progreso</span>'}
+          ${sObj.intensidad != null ? ` · intensidad ${sObj.intensidad}` : ''}
+        </div>
+      </summary>
+      ${detail}
+    </details>`;
+  }).join('');
+
+  return udSection('Sesgos', rows);
+}
+
+function renderFeedbackGiven(qFb, cFb) {
+  if (!qFb.length && !cFb.length) return '';
+  const qHtml = qFb.length ? `
+    <div style="margin-bottom:.75rem">
+      <div style="font-size:.78rem;font-weight:700;color:var(--ink-3);margin-bottom:.3rem">Preguntas (${qFb.length})</div>
+      ${qFb.slice(0, 10).map(r => `<div style="font-size:.75rem;color:var(--ink-3);padding:.2rem 0">
+        ${EMOJI_MAP[r.rating] || ''} ${r.rating}/5 · ${escapeHtml(r.q_type || '?')} · ${escapeHtml(r.question_id)}
+      </div>`).join('')}
+    </div>` : '';
+  const cHtml = cFb.length ? `
+    <div>
+      <div style="font-size:.78rem;font-weight:700;color:var(--ink-3);margin-bottom:.3rem">Contenido (${cFb.length})</div>
+      ${cFb.slice(0, 10).map(r => `<div style="font-size:.75rem;color:var(--ink-3);padding:.2rem 0">
+        ${EMOJI_MAP[r.rating] || ''} ${r.rating}/5 · ${BLOCK_LABELS[r.block] || r.block} · ${SESGO_NAMES[r.sesgo_id] || r.sesgo_id}
+      </div>`).join('')}
+    </div>` : '';
+  return udSection('Feedback dado', qHtml + cHtml);
+}
+
+function renderNextStepsDetail(ns) {
+  if (!ns) return '';
+  return udSection('Próximos pasos', `
+    ${(ns.interests || []).length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.5rem">
+      ${ns.interests.map(i => `<span style="padding:3px 9px;background:var(--ink);color:white;border-radius:100px;font-size:.72rem">${escapeHtml(i)}</span>`).join('')}
+    </div>` : ''}
+    ${ns.other ? `<div style="padding:.6rem .8rem;background:var(--paper);border-radius:var(--r-sm);font-size:.82rem;color:var(--ink-2);white-space:pre-wrap">"${escapeHtml(ns.other)}"</div>` : ''}
+  `);
+}
+
+function renderRawResponses(responses) {
+  if (!responses.length) return '';
+  return udSection(`Todas las respuestas (${responses.length})`, `
+    <details>
+      <summary style="cursor:pointer;font-size:.82rem;color:var(--ink-3)">Ver tabla cruda</summary>
+      <table class="admin-table" style="width:100%;margin-top:.5rem">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Pregunta</th><th>Resp.</th></tr></thead>
+        <tbody>${responses.map(r => `<tr>
+          <td style="font-size:.7rem;color:var(--ink-4);white-space:nowrap">${fmtDateTime(r.created_at)}</td>
+          <td style="font-size:.72rem">${TYPE_LABEL[r.q_type] || r.q_type}</td>
+          <td style="font-size:.72rem;color:var(--ink-3)">${escapeHtml(r.question_id)}</td>
+          <td style="font-size:.72rem;text-align:center;font-weight:700">${LETTERS[r.answer_idx] ?? r.answer_idx}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </details>
+  `);
+}
+
+function udSection(title, html) {
+  return `<div style="background:white;border-radius:var(--r-md);padding:1.25rem 1.5rem;border:1px solid var(--paper-3);margin-bottom:1rem">
+    <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:.75rem">${title}</div>
+    ${html}
+  </div>`;
+}
