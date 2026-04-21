@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Psicología del Dinero — Profesor</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+  :root {
+    --bg: #16181b; --surface: #1e2126; --surface2: #272b32;
+    --border: #343940; --text: #e8eaed; --muted: #7d8390;
+    --accent: #c9a84c; --accent2: #7eb8a4; --accent3: #9b8ed4;
+    --danger: #e07070; --radius: 14px; --slide-max: 860px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Topbar */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  .topbar-title { font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: 400; }
+  .topbar-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .clase-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 8px; padding: 3px; }
+  .clase-tab { padding: 6px 14px; border-radius: 6px; border: none; background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all .15s; }
+  .clase-tab.active { background: var(--accent); color: var(--bg); font-weight: 500; }
+
+  /* Main */
+  .main { display: flex; flex: 1; overflow: hidden; }
+  .slide-panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 32px 24px 24px; overflow-y: auto; }
+
+  /* Slide */
+  .slide { width: 100%; max-width: var(--slide-max); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 48px; min-height: 400px; display: flex; flex-direction: column; justify-content: center; position: relative; animation: fadeIn .22s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .badge { position: absolute; top: 20px; right: 20px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); }
+  .badge.poll    { border-color: var(--accent);  color: var(--accent); }
+  .badge.concept { border-color: var(--accent2); color: var(--accent2); }
+  .badge.tips    { border-color: var(--accent3); color: var(--accent3); }
+
+  .eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .slide h1 { font-family: 'DM Serif Display', serif; font-size: 38px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+  .slide h2 { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; line-height: 1.3; margin-bottom: 20px; }
+
+  .bullets { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .bullets li { display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+  .bullets li .bm { width: 6px; height: 6px; min-width: 6px; border-radius: 50%; background: var(--accent); margin-top: 9px; }
+  .bullets li.sub { padding-left: 20px; font-size: 14px; color: var(--muted); }
+  .bullets li.sub .bm { background: var(--border); width: 4px; height: 4px; min-width: 4px; margin-top: 10px; }
+
+  /* Poll */
+  .poll-q { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; line-height: 1.5; margin-bottom: 20px; }
+  .poll-opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .poll-opt { display: flex; align-items: flex-start; gap: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 14px; line-height: 1.5; }
+  .opt-l { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); flex-shrink: 0; }
+
+  .poll-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn { padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all .15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+  .btn.primary:hover { opacity: .88; color: var(--bg); }
+  .btn.danger { border-color: var(--danger); color: var(--danger); }
+  .btn.danger:hover { background: rgba(224,112,112,.08); }
+
+  .active-ind { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent2); }
+  .active-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* Results */
+  .results-block { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .results-lbl { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .result-bars { display: flex; flex-direction: column; gap: 10px; }
+  .result-row { display: flex; align-items: center; gap: 12px; }
+  .r-ltr { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); }
+  .r-ltr.win { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .bar-wrap { flex: 1; background: var(--surface2); border-radius: 4px; height: 28px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+  .bar-fill.c0 { background: rgba(201,168,76,.75); }
+  .bar-fill.c1 { background: rgba(126,184,164,.65); }
+  .bar-pct { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 500; }
+  .r-cnt { font-size: 12px; color: var(--muted); min-width: 58px; text-align: right; }
+  .total-v { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  /* Nav */
+  .nav-bar { width: 100%; max-width: var(--slide-max); display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding: 0 4px; }
+  .nav-btn { padding: 10px 22px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all .15s; }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+  .nav-btn:disabled:hover { border-color: var(--border); color: var(--text); }
+  .slide-counter { font-size: 13px; color: var(--muted); text-align: center; }
+  .progress-dots { display: flex; gap: 5px; justify-content: center; margin-top: 6px; flex-wrap: wrap; max-width: 220px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background .2s; }
+  .dot.active { background: var(--accent); }
+  .dot.visited { background: var(--surface2); border: 1px solid var(--border); }
+
+  /* Sidebar */
+  .sidebar { width: 196px; border-left: 1px solid var(--border); background: var(--surface); overflow-y: auto; flex-shrink: 0; padding: 16px 10px; }
+  .sb-sec { margin-bottom: 14px; }
+  .sb-lbl { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; padding-left: 4px; }
+  .sb-item { padding: 7px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--muted); line-height: 1.4; transition: all .15s; margin-bottom: 2px; border: 1px solid transparent; display: flex; align-items: flex-start; gap: 8px; }
+  .sb-item:hover { background: var(--surface2); color: var(--text); }
+  .sb-item.active { background: var(--surface2); border-color: var(--accent); color: var(--text); }
+  .sb-dot { width: 5px; height: 5px; min-width: 5px; border-radius: 50%; margin-top: 6px; }
+  .sb-dot.poll    { background: var(--accent); }
+  .sb-dot.concept { background: var(--accent2); }
+  .sb-dot.tips    { background: var(--accent3); }
+  .sb-dot.title   { background: var(--muted); }
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+  /* Title slide */
+  .title-wrap { text-align: center; padding: 20px 0; }
+  .title-wrap .cls-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .title-wrap .sub { font-size: 16px; color: var(--muted); font-style: italic; }
+  .title-wrap .meta { margin-top: 30px; font-size: 13px; color: var(--muted); display: flex; justify-content: center; gap: 28px; }
+  .meta-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .meta-item strong { color: var(--text); font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Psicología del Dinero</div>
+    <div class="topbar-subtitle">Morgan Housel · Vista Profesor</div>
+  </div>
+  <div class="topbar-right">
+    <div class="clase-tabs">
+      <button class="clase-tab active" onclick="goToClase(1)">Clase 1</button>
+      <button class="clase-tab" onclick="goToClase(2)">Clase 2</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="slide-panel" id="slidePanel"></div>
+  <div class="sidebar" id="sidebar"></div>
+</div>
+
+<script>
+const SUPABASE_URL      = 'https://ncausitrddvtoyivolkj.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYXVzaXRyZGR2dG95aXZvbGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDI0NDAsImV4cCI6MjA5MTYxODQ0MH0.FqUNSkwcMVnC3DfyMV4eTOVDqS67dcTbK3TydZinnq4'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+async function activatePoll(pid) {
+  await sb.from('active_poll').update({ poll_id: pid }).eq('id', 1)
+  renderAll()
+}
+
+async function closePoll() {
+  await sb.from('active_poll').update({ poll_id: null }).eq('id', 1)
+  renderAll()
+}
+
+async function getActivePoll() {
+  const { data } = await sb.from('active_poll').select('poll_id').eq('id', 1).single()
+  return data?.poll_id || null
+}
+
+async function getVotes(pid) {
+  const { data } = await sb.from('votes').select('opt0, opt1').eq('poll_id', pid).single()
+  return data ? [data.opt0, data.opt1] : [0, 0]
+}
+
+const SLIDES = [
+  { id:'c1-title', clase:1, type:'title', label:'Portada',
+    c:{ num:'Clase 1 de 2', title:'La Ilusión del Dinero', sub:'Riqueza, Estatus y el Control del Tiempo',
+        meta:[{l:'Duración',v:'50 min'},{l:'Encuestas',v:'3'},{l:'Conceptos',v:'4'}] } },
+
+  { id:'c1p1', clase:1, type:'poll', label:'Encuesta 1', pid:'c1p1',
+    q:'Si ves a un colega manejando un auto nuevo de $300,000 dólares, ¿qué puedes afirmar con total seguridad sobre sus finanzas personales?',
+    opts:['Tiene mucho dinero guardado y es financieramente libre.','Tiene exactamente $300,000 dólares menos en el banco (o está muy endeudado).'] },
+
+  { id:'c1p2', clase:1, type:'poll', label:'Encuesta 2', pid:'c1p2',
+    q:'Según los psicólogos, ¿cuál es el mayor generador de felicidad humana?',
+    opts:['Ganar el doble del salario actual.','Tener la flexibilidad para elegir qué hacer y cuándo hacerlo.'] },
+
+  { id:'c1p3', clase:1, type:'poll', label:'Encuesta 3', pid:'c1p3',
+    q:'Cuando ves a alguien con un reloj carísimo o una mansión, ¿cuál es tu pensamiento real?',
+    opts:['"Guau, qué persona tan admirable e inteligente."','"Guau, si yo tuviera ese reloj, la gente me admiraría."'] },
+
+  { id:'c1-c1', clase:1, type:'concept', label:'Rico vs. Próspero', eye:'Concepto 1', title:'Ser Rico vs. Ser Próspero',
+    b:[{t:'Ser "rico" es visible: autos, casas, ropa. Es una medida del ingreso actual.'},{t:'Cuando gastas para mostrar riqueza, ese dinero desaparece.',s:1},{t:'La verdadera riqueza (wealth) es invisible: es el dinero que no gastaste.'},{t:'La riqueza te da opciones y flexibilidad futura.',s:1},{t:'No puedes imitar la riqueza ajena — la riqueza real está oculta.',s:1}] },
+
+  { id:'c1-c2', clase:1, type:'concept', label:'El valor del tiempo', eye:'Concepto 2', title:'El Verdadero Valor del Dinero',
+    b:[{t:'El mayor dividendo del dinero no es comprar cosas — es comprar control sobre tu tiempo.'},{t:'Elegir qué hacer y cuándo es la fuente más profunda de bienestar.',s:1},{t:'Cuando perdemos control aparece la "reactancia".'},{t:'La reactancia es la rebeldía psicológica ante la pérdida de libertad.',s:1}] },
+
+  { id:'c1-c3', clase:1, type:'concept', label:'Paradoja del estatus', eye:'Concepto 3', title:'La Paradoja de los Símbolos de Estatus',
+    b:[{t:'Compramos lujos buscando admiración y respeto de los demás.'},{t:'Nadie admira a quien usa el objeto — lo usan como espejo para imaginarse a sí mismos.',s:1},{t:'Los símbolos de estatus no compran respeto real.'},{t:'La bondad y la humildad sí generan admiración genuina.',s:1}] },
+
+  { id:'c1-c4', clase:1, type:'concept', label:'El arte del suficiente', eye:'Concepto 4', title:'El Arte de Saber Cuándo es "Suficiente"',
+    b:[{t:'La avaricia lleva a arriesgar lo que ya tienes por lo que no tienes ni necesitas.'},{t:'"Inflación del estilo de vida": cada vez que sube el ingreso, sube el gasto.',s:1},{t:'Sin un sentido de suficiencia, nunca habrá satisfacción.'},{t:'Y se tomarán riesgos cada vez más peligrosos.',s:1}] },
+
+  { id:'c1-tips', clase:1, type:'tips', label:'Consejos prácticos', eye:'Para llevar', title:'Consejos Prácticos',
+    b:[{t:'Define "Tu Propio Juego": escribe tu misión financiera a largo plazo.'},{t:'Ej: "Quiero retirarme a los 50 años."',s:1},{t:'Esto te blinda contra el Efecto Manada y las burbujas.',s:1},{t:'Ahorra ignorando la opinión de los demás.'},{t:'Cubiertas las necesidades, el gasto extra suele alimentar solo el ego.',s:1},{t:'Más humildad → menos gasto → mayor tasa de ahorro.',s:1}] },
+
+  { id:'c2-title', clase:2, type:'title', label:'Portada',
+    c:{ num:'Clase 2 de 2', title:'El Motor de la Riqueza', sub:'Tiempo, Suerte y Supervivencia',
+        meta:[{l:'Duración',v:'50 min'},{l:'Encuestas',v:'3'},{l:'Conceptos',v:'4'}] } },
+
+  { id:'c2p1', clase:2, type:'poll', label:'Encuesta 1', pid:'c2p1',
+    q:'Simons: +66% anual. Buffett: +22% anual. ¿Por qué Buffett es 75% más rico?',
+    opts:['Porque Buffett elige mejores acciones.','Porque Buffett empezó a invertir a los 10 años y Simons a los 50.'] },
+
+  { id:'c2p2', clase:2, type:'poll', label:'Encuesta 2', pid:'c2p2',
+    q:'¿Cuál es el factor más confiable para construir riqueza a lo largo del tiempo?',
+    opts:['Intentar aumentar el rendimiento de tus inversiones un 2% cada año.','Aumentar tu tasa de ahorro mensual.'] },
+
+  { id:'c2p3', clase:2, type:'poll', label:'Encuesta 3', pid:'c2p3',
+    q:'¿Por qué Bill Gates fundó Microsoft?',
+    opts:['Exclusivamente porque era el adolescente más inteligente y trabajador de 1968.','Porque, además de inteligente, tuvo la suerte de acceder a una computadora en su escuela en 1968.'] },
+
+  { id:'c2-c1', clase:2, type:'concept', label:'Interés compuesto', eye:'Concepto 1', title:'El Poder Oculto del Interés Compuesto',
+    b:[{t:'El factor más importante no es el % de retorno anual — es el tiempo.'},{t:'Por eso Buffett supera a Simons a pesar del menor rendimiento.',s:1},{t:'El cerebro humano es pésimo para calcular el interés compuesto intuitivamente.'},{t:'Esto nos lleva a buscar métodos arriesgados de "dinero rápido".',s:1}] },
+
+  { id:'c2-c2', clase:2, type:'concept', label:'Matemática del ahorro', eye:'Concepto 2', title:'La Matemática del Ahorro',
+    b:[{t:'La riqueza no depende tanto del ingreso ni del rendimiento — depende de la tasa de ahorro.'},{t:'El ahorro es la única variable 100% bajo tu control.',s:1},{t:'Ingresos y rendimientos están llenos de incertidumbre. El ahorro, no.',s:1},{t:'Ahorrar no requiere ganar más — solo requiere gastar menos.'}] },
+
+  { id:'c2-c3', clase:2, type:'concept', label:'Suerte y riesgo', eye:'Concepto 3', title:'El Papel de la Suerte y el Riesgo',
+    b:[{t:'Subestimamos brutalmente el papel del azar en el éxito financiero.'},{t:'Bill Gates: uno en un millón de jóvenes con acceso a computadora en 1968.',s:1},{t:'No intentes copiar a los más excepcionales — no puedes replicar su suerte.'},{t:'Mejor: busca patrones amplios de comportamiento, no imites personas específicas.',s:1}] },
+
+  { id:'c2-c4', clase:2, type:'concept', label:'Supervivencia', eye:'Concepto 4', title:'Mentalidad de Supervivencia',
+    b:[{t:'El mundo financiero es incierto. Siempre ocurren cosas impredecibles.'},{t:'Solución: crea un "margen de error" en tu plan financiero.',s:1},{t:'Nunca pongas en riesgo toda tu fortuna al mismo tiempo.'},{t:'Ser optimista de verdad = creer que mejorará a largo plazo + paranoia protectora hoy.',s:1}] },
+
+  { id:'c2-tips', clase:2, type:'tips', label:'Consejos prácticos', eye:'Para llevar', title:'Consejos Prácticos',
+    b:[{t:'Sé sensato, no estrictamente lógico.'},{t:'Una estrategia que mantienes supera a la "perfecta" que abandonarás.',s:1},{t:'Acepta el "peaje" del mercado: la incertidumbre es el precio de entrada.'},{t:'Market timing = perder dinero. Mantente invertido.',s:1},{t:'Cuidado con la "Ilusión del Fin de la Historia": crees que ya no cambiarás. Cambiarás.'},{t:'Evita planes extremos. Mantén flexibilidad para no interrumpir el interés compuesto.',s:1}] },
+]
+
+let idx = 0, activeClase = 1, revealed = {}
+const L = ['A','B','C','D']
+const cur = () => SLIDES[idx]
+const claseSlides = (n) => SLIDES.filter(s => s.clase === n)
+
+async function renderSlide() {
+  const panel = document.getElementById('slidePanel')
+  const s = cur()
+  let html = ''
+
+  if (s.type === 'title') {
+    html = `<div class="slide">
+      <span class="badge title">Portada</span>
+      <div class="title-wrap">
+        <div class="cls-num">${s.c.num} · The Psychology of Money</div>
+        <h1>${s.c.title}</h1>
+        <div class="sub">${s.c.sub}</div>
+        <div class="meta">${s.c.meta.map(m=>`<div class="meta-item"><span>${m.l}</span><strong>${m.v}</strong></div>`).join('')}</div>
+      </div></div>`
+
+  } else if (s.type === 'poll') {
+    const activePid = await getActivePoll()
+    const isActive = activePid === s.pid
+    const optsHtml = s.opts.map((o,i)=>`
+      <div class="poll-opt"><span class="opt-l">${L[i]}</span><span>${o}</span></div>`).join('')
+
+    let resHtml = ''
+    if (revealed[s.pid]) {
+      const votes = await getVotes(s.pid)
+      const total = votes.reduce((a,b)=>a+b,0)
+      const maxV = Math.max(...votes)
+      resHtml = `<div class="results-block">
+        <div class="results-lbl">Resultados</div>
+        <div class="result-bars">
+          ${votes.map((v,i)=>{
+            const p = total>0 ? Math.round(v/total*100) : 0
+            const w = v===maxV && v>0
+            return `<div class="result-row">
+              <div class="r-ltr ${w?'win':''}">${L[i]}</div>
+              <div class="bar-wrap"><div class="bar-fill c${i}" style="width:${p}%"></div><span class="bar-pct">${p}%</span></div>
+              <div class="r-cnt">${v} voto${v!==1?'s':''}</div>
+            </div>`}).join('')}
+        </div>
+        <div class="total-v">Total: ${total} respuesta${total!==1?'s':''}</div>
+      </div>`
+    }
+
+    html = `<div class="slide">
+      <span class="badge poll">Encuesta</span>
+      <div class="eyebrow">Pregunta para los alumnos</div>
+      <div class="poll-q">${s.q}</div>
+      <div class="poll-opts">${optsHtml}</div>
+      <div class="poll-actions">
+        ${isActive
+          ? `<button class="btn danger" onclick="closePoll()">⏹ Cerrar encuesta</button>
+             <span class="active-ind"><span class="active-dot"></span>Encuesta activa</span>`
+          : `<button class="btn primary" onclick="activatePoll('${s.pid}')">▶ Activar encuesta</button>`}
+        <button class="btn" onclick="toggleReveal('${s.pid}')">${revealed[s.pid]?'▲ Ocultar':'▼ Revelar'} resultados</button>
+        <button class="btn" onclick="renderAll()">↻ Actualizar</button>
+      </div>
+      ${resHtml}
+    </div>`
+
+  } else {
+    const badge = {concept:'Concepto', tips:'Consejos'}[s.type]
+    html = `<div class="slide">
+      <span class="badge ${s.type}">${badge}</span>
+      <div class="eyebrow">${s.eye}</div>
+      <h2>${s.title}</h2>
+      <ul class="bullets">${s.b.map(b=>`<li class="${b.s?'sub':''}"><span class="bm"></span><span>${b.t}</span></li>`).join('')}</ul>
+    </div>`
+  }
+
+  const cs = claseSlides(activeClase)
+  const li = cs.findIndex(s=>s.id===cur().id)
+  const dots = cs.map((_,i)=>`<div class="dot ${i===li?'active':i<li?'visited':''}"></div>`).join('')
+
+  html += `<div class="nav-bar">
+    <button class="nav-btn" onclick="navigate(-1)" ${idx===0?'disabled':''}>← Anterior</button>
+    <div style="text-align:center">
+      <div class="slide-counter">${li+1} / ${cs.length}</div>
+      <div class="progress-dots">${dots}</div>
+    </div>
+    <button class="nav-btn" onclick="navigate(1)" ${idx===SLIDES.length-1?'disabled':''}>Siguiente →</button>
+  </div>`
+
+  panel.innerHTML = html
+}
+
+function renderSidebar() {
+  const sb = document.getElementById('sidebar')
+  const mkItems = (n) => claseSlides(n).map(s => {
+    const gi = SLIDES.indexOf(s)
+    return `<div class="sb-item ${SLIDES[idx].id===s.id?'active':''}" onclick="jumpTo(${gi})">
+      <span class="sb-dot ${s.type}"></span><span>${s.label}</span></div>`
+  }).join('')
+  sb.innerHTML = `
+    <div class="sb-sec"><div class="sb-lbl">Clase 1</div>${mkItems(1)}</div>
+    <hr class="div">
+    <div class="sb-sec"><div class="sb-lbl">Clase 2</div>${mkItems(2)}</div>`
+}
+
+async function renderAll() { renderSidebar(); await renderSlide() }
+
+function navigate(dir) {
+  const ni = idx + dir
+  if (ni < 0 || ni >= SLIDES.length) return
+  idx = ni
+  const nc = SLIDES[ni].clase
+  if (nc !== activeClase) { activeClase = nc; document.querySelectorAll('.clase-tab').forEach((t,i)=>t.classList.toggle('active',i+1===nc)) }
+  renderAll()
+}
+
+function jumpTo(i) {
+  idx = i
+  const nc = SLIDES[i].clase
+  if (nc !== activeClase) { activeClase = nc; document.querySelectorAll('.clase-tab').forEach((t,j)=>t.classList.toggle('active',j+1===nc)) }
+  renderAll()
+}
+
+function goToClase(n) {
+  activeClase = n
+  const i = SLIDES.findIndex(s=>s.clase===n)
+  if (i>=0) idx = i
+  document.querySelectorAll('.clase-tab').forEach((t,j)=>t.classList.toggle('active',j+1===n))
+  renderAll()
+}
+
+async function toggleReveal(pid) {
+  revealed[pid] = !revealed[pid]
+  await renderAll()
+}
+
+renderAll()
+</script>
+</body>
+</html>

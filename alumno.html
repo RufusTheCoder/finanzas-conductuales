@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Psicología del Dinero — Encuesta</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+  :root {
+    --bg: #1a1c1e; --surface: #23262b; --surface2: #2c3038;
+    --border: #383d45; --text: #e8eaed; --muted: #8b9099;
+    --accent: #c9a84c; --accent2: #7eb8a4; --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 48px; }
+
+  .header { text-align: center; margin-bottom: 28px; padding-top: 12px; }
+  .header .eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; width: 100%; max-width: 480px; margin-bottom: 14px; }
+
+  .poll-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .poll-q { font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 400; line-height: 1.5; margin-bottom: 22px; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 13px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.5; text-align: left; cursor: pointer; transition: all .18s; display: flex; align-items: flex-start; gap: 12px; width: 100%; }
+  .opt-btn:hover { border-color: var(--accent); background: #2e3138; }
+  .opt-btn.selected { border-color: var(--accent); background: rgba(201,168,76,.12); }
+  .opt-btn.selected .ol { background: var(--accent); color: var(--bg); }
+  .ol { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); transition: all .18s; flex-shrink: 0; }
+
+  .submit-btn { width: 100%; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; padding: 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 14px; transition: opacity .15s; }
+  .submit-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .submit-btn:not(:disabled):hover { opacity: .88; }
+
+  .voted-msg { text-align: center; padding: 28px 20px; }
+  .voted-msg .check { font-size: 34px; margin-bottom: 10px; }
+  .voted-msg p { color: var(--accent2); font-size: 15px; }
+
+  .waiting-card { text-align: center; padding: 44px 20px; }
+  .waiting-card strong { color: var(--text); display: block; font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 400; margin-bottom: 8px; }
+  .waiting-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+  .dot-pulse { display: inline-flex; gap: 4px; margin-bottom: 14px; }
+  .dot-pulse span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 1.4s ease-in-out infinite; opacity: .3; }
+  .dot-pulse span:nth-child(2) { animation-delay: .2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.2)} }
+
+  .refresh-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 6px; }
+  .clase-badge { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Psicología del Dinero</div>
+  <h1>Morgan Housel</h1>
+</div>
+
+<div id="app" style="width:100%;max-width:480px;"></div>
+
+<script>
+const SUPABASE_URL      = 'https://ncausitrddvtoyivolkj.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYXVzaXRyZGR2dG95aXZvbGtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDI0NDAsImV4cCI6MjA5MTYxODQ0MH0.FqUNSkwcMVnC3DfyMV4eTOVDqS67dcTbK3TydZinnq4'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const POLLS = [
+  { id:'c1p1', clase:1,
+    q:'Si ves a un colega manejando un auto nuevo de $300,000 dólares, ¿qué puedes afirmar con total seguridad sobre sus finanzas personales?',
+    opts:['Tiene mucho dinero guardado y es financieramente libre.','Tiene exactamente $300,000 dólares menos en el banco (o está muy endeudado).'] },
+  { id:'c1p2', clase:1,
+    q:'Según los psicólogos, ¿cuál es el mayor generador de felicidad humana?',
+    opts:['Ganar el doble del salario actual.','Tener la flexibilidad para elegir qué hacer y cuándo hacerlo.'] },
+  { id:'c1p3', clase:1,
+    q:'Cuando ves a alguien con un reloj carísimo o una mansión, ¿cuál es tu pensamiento real?',
+    opts:['"Guau, qué persona tan admirable e inteligente."','"Guau, si yo tuviera ese reloj, la gente me admiraría."'] },
+  { id:'c2p1', clase:2,
+    q:'Simons: +66% anual. Buffett: +22% anual. ¿Por qué Buffett es 75% más rico?',
+    opts:['Porque Buffett elige mejores acciones.','Porque Buffett empezó a invertir a los 10 años y Simons a los 50.'] },
+  { id:'c2p2', clase:2,
+    q:'¿Cuál es el factor más confiable para construir riqueza a lo largo del tiempo?',
+    opts:['Intentar aumentar el rendimiento de tus inversiones un 2% cada año.','Aumentar tu tasa de ahorro mensual.'] },
+  { id:'c2p3', clase:2,
+    q:'¿Por qué Bill Gates fundó Microsoft?',
+    opts:['Exclusivamente porque era el adolescente más inteligente y trabajador de 1968.','Porque, además de inteligente, tuvo la suerte de acceder a una computadora en su escuela en 1968.'] },
+]
+
+let activePollId = null
+let selected = null
+let voted = JSON.parse(localStorage.getItem('al_voted') || '{}')
+const saveVoted = () => localStorage.setItem('al_voted', JSON.stringify(voted))
+
+async function getActivePoll() {
+  const { data } = await sb.from('active_poll').select('poll_id').eq('id', 1).single()
+  return data?.poll_id || null
+}
+
+async function submitVote(pid, optIndex) {
+  const col = `opt${optIndex}`
+  await sb.rpc('increment_vote', { p_poll_id: pid, p_col: col })
+}
+
+const L = ['A','B','C','D']
+
+function render() {
+  const app = document.getElementById('app')
+  const poll = POLLS.find(p => p.id === activePollId)
+
+  if (!activePollId || !poll) {
+    app.innerHTML = `<div class="card waiting-card">
+      <div class="dot-pulse"><span></span><span></span><span></span></div>
+      <strong>Esperando pregunta…</strong>
+      <p>Tu profesor activará la siguiente encuesta en breve. Esta página se actualiza cada 5 segundos.</p>
+    </div>`
+    return
+  }
+
+  const claseLabel = poll.clase === 1 ? 'Clase 1 — La Ilusión del Dinero' : 'Clase 2 — El Motor de la Riqueza'
+
+  if (voted[activePollId]) {
+    app.innerHTML = `
+      <div class="clase-badge">${claseLabel}</div>
+      <div class="card voted-msg">
+        <div class="check">✓</div>
+        <p>¡Respuesta registrada! Espera a que el profesor muestre los resultados.</p>
+      </div>`
+    return
+  }
+
+  const optsHtml = poll.opts.map((o,i) => `
+    <button class="opt-btn ${selected===i?'selected':''}" onclick="selectOpt(${i})">
+      <span class="ol">${L[i]}</span><span>${o}</span>
+    </button>`).join('')
+
+  app.innerHTML = `
+    <div class="clase-badge">${claseLabel}</div>
+    <div class="card">
+      <div class="poll-label">Pregunta</div>
+      <div class="poll-q">${poll.q}</div>
+      <div class="options">${optsHtml}</div>
+      <button class="submit-btn" onclick="doVote()" ${selected===null?'disabled':''}>Enviar respuesta</button>
+    </div>
+    <p class="refresh-note">Se actualiza automáticamente cada 5 segundos</p>`
+}
+
+function selectOpt(i) { selected = i; render() }
+
+async function doVote() {
+  if (selected === null || !activePollId) return
+  const btn = document.querySelector('.submit-btn')
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando…' }
+  try {
+    await submitVote(activePollId, selected)
+    voted[activePollId] = true
+    saveVoted()
+    selected = null
+    render()
+  } catch {
+    if (btn) { btn.disabled = false; btn.textContent = 'Enviar respuesta' }
+    alert('Error al enviar. Intenta de nuevo.')
+  }
+}
+
+async function checkPoll() {
+  const newId = await getActivePoll()
+  if (newId !== activePollId) {
+    activePollId = newId
+    selected = null
+    render()
+  }
+}
+
+checkPoll()
+setInterval(checkPoll, 5000)
+</script>
+</body>
+</html>
