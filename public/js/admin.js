@@ -1053,8 +1053,47 @@ function renderErrores() {
     </tr>`;
   }).join('');
 
+  // ── Bug reports section ──
+  const bugs = (DATA.bugs || []).slice().sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  const bugsHtml = `
+    <div style="background:white;border-radius:var(--r-lg);border:1px solid var(--paper-3);overflow:hidden;margin-bottom:1.5rem">
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--paper-3);display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-family:var(--ff-display);font-size:1.1rem">🐛 Bug reports de usuarios</div>
+          <div style="font-size:.75rem;color:var(--ink-4);margin-top:2px">Reportes manuales enviados desde el botón de bug en la app</div>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-3);font-weight:600">${bugs.length} ${bugs.length === 1 ? 'reporte' : 'reportes'}</div>
+      </div>
+      ${bugs.length === 0 ? `
+        <div style="padding:2rem;text-align:center;color:var(--ink-4);font-size:.85rem">Sin reportes</div>
+      ` : `
+        <div class="admin-table-wrap" style="overflow-x:auto">
+          <table class="admin-table" style="min-width:780px">
+            <thead><tr>
+              <th>Fecha</th>
+              <th>Email</th>
+              <th>Pantalla</th>
+              <th>Título</th>
+              <th>Descripción</th>
+            </tr></thead>
+            <tbody>
+              ${bugs.map(b => `<tr>
+                <td style="font-size:.72rem;color:var(--ink-4);white-space:nowrap">${fmtDateTime(b.created_at)}</td>
+                <td style="font-size:.78rem;color:var(--ink-2)">${escapeHtml(b.email || 'anónimo')}</td>
+                <td style="font-size:.75rem;color:var(--ink-3)">${escapeHtml(b.screen || '—')}</td>
+                <td style="font-size:.82rem;color:var(--ink);font-weight:600;max-width:220px">${escapeHtml(b.title || '—')}</td>
+                <td style="font-size:.78rem;color:var(--ink-2);max-width:420px;white-space:pre-wrap">${escapeHtml(b.description || '—')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      `}
+    </div>`;
+
   document.getElementById('tab-errores').innerHTML = `
     ${kpiRow}
+    ${bugsHtml}
+    <div style="font-family:var(--ff-display);font-size:1.1rem;margin:0 0 .75rem">⚠️ Errores técnicos del cliente</div>
     ${total === 0 ? `
       <div style="background:white;border-radius:var(--r-lg);padding:3rem;border:1px solid var(--paper-3);text-align:center;color:var(--ink-3)">
         <div style="font-family:var(--ff-display);font-size:1.2rem;margin-bottom:.5rem">Sin errores registrados</div>
