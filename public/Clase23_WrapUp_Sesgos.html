@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 23 — La Estructura de los Sesgos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ibero-red: #8B1A1A;
+    --ibero-red-dark: #6B1414;
+    --ibero-red-light: #C4403A;
+    --ibero-orange: #E8734A;
+    --ibero-cream: #FFF5E6;
+    --ibero-warm: #F5E6D0;
+    --ibero-sand: #EDD9B8;
+    --text-dark: #2A1810;
+    --text-mid: #5C3D2E;
+    --text-light: #9A7B6E;
+    --cog-color: #1A5276;
+    --cog-light: #D6EAF8;
+    --cog-mid: #2980B9;
+    --emo-color: #6B1A1A;
+    --emo-light: #FADBD8;
+    --emo-mid: #C0392B;
+    --ambig-color: #7D6608;
+    --ambig-light: #FEF9E7;
+    --white: #FFFFFF;
+    --shadow: 0 4px 24px rgba(139,26,26,0.12);
+    --shadow-lg: 0 8px 40px rgba(139,26,26,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ibero-cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--ibero-red);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.3rem; color: white; letter-spacing: 2px; }
+  .nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.3); }
+  .nav-title { font-size: 0.85rem; color: rgba(255,255,255,0.8); font-weight: 400; letter-spacing: 0.5px; }
+  .nav-steps { display: flex; gap: 6px; align-items: center; }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.6);
+    cursor: pointer; transition: all 0.3s; background: transparent;
+  }
+  .step-dot.active { background: white; color: var(--ibero-red); border-color: white; }
+  .step-dot.done { background: rgba(255,255,255,0.25); color: white; border-color: rgba(255,255,255,0.6); }
+  .nav-back {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: white; border-radius: 20px; padding: 5px 14px;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .nav-back:hover { background: rgba(255,255,255,0.28); }
+  .nav-back.hidden { opacity: 0; pointer-events: none; }
+
+  .screen { display: none; min-height: 100vh; padding-top: 56px; }
+  .screen.active { display: block; }
+
+  /* HERO */
+  .hero {
+    min-height: calc(100vh - 56px);
+    display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+  .hero-left {
+    background: linear-gradient(145deg, #1A0E08 0%, #3D1A10 100%);
+    padding: 5rem 4rem;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .hero-left::after {
+    content: ''; position: absolute;
+    right: -60px; top: 0; bottom: 0; width: 120px;
+    background: #1A0E08;
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+    z-index: 2;
+  }
+  .hero-eyebrow { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--ibero-orange); margin-bottom: 1.5rem; font-weight: 600; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero-title span { color: var(--ibero-orange); }
+  .hero-subtitle { font-size: 1.05rem; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 380px; margin-bottom: 3rem; }
+  .hero-right { background: var(--ibero-cream); padding: 5rem 4rem 5rem 5rem; display: flex; flex-direction: column; justify-content: center; }
+  .question-box { background: white; border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow-lg); border-left: 5px solid var(--ibero-orange); margin-bottom: 2rem; }
+  .question-box h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ibero-red); margin-bottom: 1rem; }
+  .question-box p { color: var(--text-mid); line-height: 1.7; font-size: 0.95rem; }
+  .agenda { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .agenda-item { background: white; border-radius: 12px; padding: 1rem 1.2rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(139,26,26,0.08); transition: transform 0.2s; }
+  .agenda-item:hover { transform: translateY(-2px); }
+  .agenda-num { width: 28px; height: 28px; background: var(--ibero-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+  .agenda-text { font-size: 0.82rem; color: var(--text-mid); font-weight: 500; line-height: 1.3; }
+  .btn-start {
+    margin-top: 2rem; background: var(--ibero-red); color: white; border: none;
+    padding: 1rem 2.5rem; border-radius: 50px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s;
+    box-shadow: 0 4px 16px rgba(139,26,26,0.35); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-start:hover { background: var(--ibero-red-dark); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(139,26,26,0.45); }
+
+  /* SECCIÓN GENÉRICA */
+  .section-wrap { max-width: 1200px; margin: 0 auto; padding: 3rem 2.5rem; }
+  .section-header { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--ibero-sand); }
+  .section-num { width: 52px; height: 52px; background: var(--ibero-red); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; flex-shrink: 0; }
+  .section-info h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--ibero-red); margin-bottom: 0.3rem; }
+  .section-info p { color: var(--text-light); font-size: 0.9rem; }
+
+  /* SESGOS */
+  .sesgos-intro { background: white; border-radius: 16px; padding: 2rem 2.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); border-left: 5px solid var(--ibero-orange); }
+  .sesgos-intro p { color: var(--text-mid); line-height: 1.7; }
+  .sesgos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .sesgo-card { background: white; border-radius: 12px; padding: 1rem 1.3rem; box-shadow: 0 2px 8px rgba(139,26,26,0.08); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; border: 2px solid transparent; }
+  .sesgo-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--ibero-orange); }
+  .sesgo-num { width: 26px; height: 26px; background: var(--ibero-sand); color: var(--ibero-red); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+  .sesgo-name { font-size: 0.88rem; font-weight: 500; color: var(--text-dark); }
+  .sesgo-clase { font-size: 0.72rem; color: var(--text-light); margin-top: 2px; }
+
+  /* CLASIFICACIÓN */
+  .def-box { background: white; border-radius: 14px; padding: 1.5rem 2rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .def-item { border-radius: 10px; padding: 1.2rem 1.5rem; }
+  .def-item h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .def-item p { font-size: 0.83rem; line-height: 1.6; }
+  .def-cog { background: var(--cog-light); } .def-cog h4 { color: var(--cog-color); } .def-cog p { color: #1A4F72; }
+  .def-emo { background: var(--emo-light); } .def-emo h4 { color: var(--emo-color); } .def-emo p { color: #6B1A1A; }
+  .def-prag { background: var(--ibero-warm); } .def-prag h4 { color: var(--ibero-red); } .def-prag p { color: var(--text-mid); }
+
+  .pool-section { background: white; border-radius: 16px; padding: 1.5rem 2rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+  .pool-title { font-size: 0.8rem; font-weight: 700; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+  .pool-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pool-card { background: var(--ibero-warm); border: 2px solid var(--ibero-sand); border-radius: 8px; padding: 0.45rem 0.9rem; font-size: 0.82rem; font-weight: 500; color: var(--text-mid); cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; }
+  .pool-card:hover { background: var(--ibero-red); color: white; border-color: var(--ibero-red); transform: translateY(-2px); }
+  .result-col { background: white; border-radius: 14px; padding: 1.2rem 1.5rem; box-shadow: var(--shadow); min-height: 200px; }
+  .result-col-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 1rem; }
+  .rc-cog .result-col-title { background: var(--cog-light); color: var(--cog-color); }
+  .rc-emo .result-col-title { background: var(--emo-light); color: var(--emo-color); }
+  .classified-item { font-size: 0.82rem; padding: 0.4rem 0.7rem; border-radius: 7px; margin-bottom: 6px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: opacity 0.2s; }
+  .classified-item:hover { opacity: 0.7; }
+  .rc-cog .classified-item { background: var(--cog-light); color: var(--cog-color); }
+  .rc-emo .classified-item { background: var(--emo-light); color: var(--emo-color); }
+
+  /* MECANISMOS */
+  .mecanismos-intro { background: white; border-radius: 16px; padding: 1.8rem 2.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); border-left: 5px solid var(--ibero-orange); }
+  .mec-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 2.5rem; }
+  .mec-card { border-radius: 16px; padding: 1.5rem 1.2rem; cursor: pointer; transition: all 0.3s; }
+  .mec-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .mec-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .mec-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.4rem; }
+  .mec-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+  .mec-phrase { font-size: 0.75rem; line-height: 1.5; opacity: 0.8; }
+  .mec1 { background: #FADBD8; color: #922B21; } .mec2 { background: #E8DAEF; color: #6C3483; }
+  .mec3 { background: #D6EAF8; color: #1A5276; } .mec4 { background: #D5F5E3; color: #1E8449; }
+  .mec5 { background: #FEF9E7; color: #9A7D0A; border: 1px solid #F9E79F; }
+
+  .mec-atrib-section { background: white; border-radius: 16px; padding: 2rem 2.5rem; box-shadow: var(--shadow); }
+  .mec-atrib-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+  .atrib-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; min-height: 48px; padding: 0.8rem; background: var(--ibero-warm); border-radius: 12px; border: 2px dashed var(--ibero-sand); }
+  .atrib-card { background: white; border: 2px solid var(--ibero-sand); border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.8rem; font-weight: 500; color: var(--text-mid); cursor: pointer; transition: all 0.25s; }
+  .atrib-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .mec-rows { display: flex; flex-direction: column; gap: 12px; }
+  .mec-row { display: grid; grid-template-columns: 180px 1fr; gap: 1rem; align-items: start; }
+  .mec-row-label { border-radius: 10px; padding: 0.6rem 1rem; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
+  .mec-row-label:hover { opacity: 0.85; }
+  .mec-row-drop { min-height: 46px; background: var(--ibero-cream); border-radius: 10px; border: 2px dashed var(--ibero-sand); padding: 0.5rem 0.8rem; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .placed-tag { border-radius: 7px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+  .placed-tag:hover { opacity: 0.7; }
+
+  /* ANTÍDOTOS */
+  .antidotos-intro { background: white; border-radius: 16px; padding: 1.8rem 2.5rem; margin-bottom: 2rem; box-shadow: var(--shadow); border-left: 5px solid var(--ibero-orange); }
+  .antidoto-card { background: white; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; border-top: 4px solid var(--ibero-red); position: relative; overflow: hidden; }
+  .antidoto-card::before { content: attr(data-num); position: absolute; top: -10px; right: 20px; font-family: 'Playfair Display', serif; font-size: 8rem; font-weight: 900; color: var(--ibero-red); opacity: 0.04; line-height: 1; }
+  .antidoto-header { display: flex; align-items: flex-start; gap: 1.2rem; margin-bottom: 1.5rem; }
+  .antidoto-icon { width: 52px; height: 52px; background: var(--ibero-red); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+  .antidoto-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ibero-red); margin-bottom: 0.3rem; }
+  .antidoto-tagline { font-size: 0.85rem; color: var(--text-light); font-style: italic; }
+  .antidoto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .antidoto-section { background: var(--ibero-cream); border-radius: 12px; padding: 1.2rem 1.5rem; }
+  .antidoto-section h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ibero-red); margin-bottom: 0.7rem; }
+  .antidoto-section p { font-size: 0.85rem; line-height: 1.7; color: var(--text-mid); }
+  .antidoto-mecanismos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+  .ant-mec-tag { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+  .ant-practica { background: var(--ibero-warm); border-radius: 12px; padding: 1.2rem 1.5rem; border-left: 3px solid var(--ibero-orange); }
+  .ant-practica h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ibero-orange); margin-bottom: 0.7rem; }
+  .ant-practica p { font-size: 0.85rem; line-height: 1.7; color: var(--text-mid); }
+
+  /* LISTA AMPLIA */
+  .lista-amplia { background: white; border-radius: 16px; padding: 2rem 2.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+  .lista-amplia-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--ibero-red); margin-bottom: 0.5rem; }
+  .lista-amplia-sub { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+  .lista-mec-group { margin-bottom: 1.2rem; }
+  .lista-mec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 0.7rem; }
+  .lista-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .lista-item { background: var(--ibero-warm); border: 1px solid var(--ibero-sand); border-radius: 7px; padding: 4px 10px; font-size: 0.8rem; color: var(--text-mid); }
+
+  /* PERFIL BIT — NUEVO */
+  .profile-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .prof-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 50px; border: 2px solid;
+    font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.25s;
+  }
+  .prof-btn-name { font-weight: 400; font-size: 0.75rem; }
+
+  /* BAR CHART */
+  .mec-group-block { margin-bottom: 1.5rem; }
+  .mec-group-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.55rem 1rem; border-radius: 10px; border-left: 4px solid;
+    margin-bottom: 0.75rem;
+  }
+  .mec-group-icon { font-size: 1.1rem; }
+  .mec-group-name { font-size: 0.85rem; font-weight: 700; flex: 1; }
+  .mec-group-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: white; }
+  .mec-group-count { font-size: 0.72rem; opacity: 0.65; }
+
+  .sesgo-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .sesgo-bar-label { width: 170px; font-size: 0.78rem; color: var(--text-mid); font-weight: 500; text-align: right; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: color 0.15s; }
+  .sesgo-bar-label:hover { color: var(--ibero-red); }
+  .sesgo-bar-track { flex: 1; height: 22px; background: #F0E8DC; border-radius: 5px; overflow: hidden; position: relative; }
+  .sesgo-bar-fill { height: 100%; border-radius: 5px; transition: width 0.7s cubic-bezier(.4,0,.2,1); display: flex; align-items: center; padding-left: 8px; }
+  .sesgo-bar-text { font-size: 0.68rem; font-weight: 700; color: white; opacity: 0; transition: opacity 0.3s 0.4s; white-space: nowrap; }
+  .sesgo-bar-fill.visible .sesgo-bar-text { opacity: 1; }
+  .sesgo-bar-risk { width: 70px; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+
+  .profile-callout {
+    display: flex; align-items: center; gap: 14px;
+    padding: 1rem 1.25rem; border-radius: 12px; border: 2px solid;
+    margin-bottom: 1.5rem;
+  }
+  .profile-callout-emoji { font-size: 2rem; }
+  .profile-callout-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; }
+  .profile-callout-sub { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+  .profile-callout-tipo { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.5); margin-top: 4px; display: inline-block; }
+
+  .blindspot-callout {
+    background: var(--ibero-red);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    color: white;
+  }
+  .blindspot-callout-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.6rem; }
+  .blindspot-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .blindspot-tag { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600; }
+
+  /* MATRIZ */
+  .matriz-wrap { overflow-x: auto; border-radius: 16px; box-shadow: var(--shadow); }
+  .matriz-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; }
+  .matriz-table th { padding: 1rem 0.8rem; font-size: 0.75rem; font-weight: 700; text-align: center; letter-spacing: 0.5px; background: var(--ibero-red); color: white; }
+  .matriz-table th:first-child { text-align: left; background: var(--ibero-red-dark); min-width: 180px; }
+  .matriz-table td { padding: 0.9rem 0.8rem; border-bottom: 1px solid var(--ibero-warm); border-right: 1px solid var(--ibero-warm); text-align: center; font-size: 0.85rem; vertical-align: middle; }
+  .matriz-table td:first-child { text-align: left; font-weight: 600; background: var(--ibero-cream); padding-left: 1.2rem; font-size: 0.82rem; }
+  .matriz-table tr:last-child td { border-bottom: none; }
+  .matriz-table tr:nth-child(even) td:first-child { background: var(--ibero-warm); }
+  .dot-primary { width: 28px; height: 28px; background: var(--ibero-red); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 700; margin: auto; }
+  .dot-secondary { width: 20px; height: 20px; background: var(--ibero-sand); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--ibero-red); font-size: 0.6rem; font-weight: 700; margin: auto; }
+
+  /* BOTONES NAV */
+  .btn-nav { display: inline-flex; align-items: center; gap: 8px; padding: 0.75rem 1.8rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s; border: none; }
+  .btn-primary { background: var(--ibero-red); color: white; box-shadow: 0 4px 16px rgba(139,26,26,0.3); }
+  .btn-primary:hover { background: var(--ibero-red-dark); transform: translateY(-2px); }
+  .btn-secondary { background: white; color: var(--ibero-red); border: 2px solid var(--ibero-sand); }
+  .btn-secondary:hover { border-color: var(--ibero-red); }
+  .nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 2rem 2.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .reveal-btn { background: var(--ibero-warm); border: 2px solid var(--ibero-sand); border-radius: 10px; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; color: var(--ibero-red); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; margin-bottom: 1rem; }
+  .reveal-btn:hover { background: var(--ibero-red); color: white; border-color: var(--ibero-red); }
+  .hidden-content { display: none; }
+  .hidden-content.revealed { display: block; }
+
+  .progress-bar { height: 3px; background: var(--ibero-sand); position: fixed; top: 56px; left: 0; right: 0; z-index: 99; }
+  .progress-fill { height: 100%; background: var(--ibero-orange); transition: width 0.5s ease; }
+
+  /* EJERCICIO */
+  .ejercicio-card { background: var(--ibero-red); border-radius: 20px; padding: 2.5rem; color: white; position: relative; overflow: hidden; }
+  .ejercicio-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .ejercicio-card p { font-size: 0.9rem; opacity: 0.85; margin-bottom: 1.5rem; line-height: 1.6; }
+  .ejercicio-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .ej-step { background: rgba(255,255,255,0.12); border-radius: 12px; padding: 1.2rem; border: 1px solid rgba(255,255,255,0.2); }
+  .ej-step-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
+  .ej-step p { font-size: 0.82rem; line-height: 1.5; opacity: 0.9; margin: 0; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left::after { display: none; }
+    .mec-grid { grid-template-columns: repeat(3, 1fr); }
+    .antidoto-grid { grid-template-columns: 1fr; }
+    .ejercicio-steps { grid-template-columns: 1fr; }
+    .def-box { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="nav-logo">IBERO</span>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Clase 23 — La Estructura de los Sesgos</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="nav-back hidden" id="navBack" onclick="goBack()">← Regresar</button>
+    <div class="nav-steps">
+      <div class="step-dot active" onclick="goTo(0)" title="Apertura">A</div>
+      <div class="step-dot" onclick="goTo(1)" title="Los Sesgos">1</div>
+      <div class="step-dot" onclick="goTo(2)" title="Clasificación">2</div>
+      <div class="step-dot" onclick="goTo(3)" title="Mecanismos">3</div>
+      <div class="step-dot" onclick="goTo(4)" title="Antídotos">4</div>
+      <div class="step-dot" onclick="goTo(5)" title="Tu Perfil">5</div>
+      <div class="step-dot" onclick="goTo(6)" title="Matriz">6</div>
+    </div>
+  </div>
+</nav>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<!-- ══════════════════════════════
+     PANTALLA 0 — APERTURA
+══════════════════════════════ -->
+<div class="screen active" id="screen-0">
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Economía Conductual · Clase 23</p>
+      <h1 class="hero-title">La estructura<br>detrás de los<br><span>sesgos</span></h1>
+      <p class="hero-subtitle">Estudiamos cada sesgo por separado. Hoy vemos el patrón. ¿Qué tienen en común? ¿Por qué aparecen juntos? ¿Cómo defendernos?</p>
+    </div>
+    <div class="hero-right">
+      <div class="question-box">
+        <h3>Para empezar…</h3>
+        <p>¿Cuántos sesgos estudiamos este semestre? <strong>Mencionen los que recuerden.</strong> No busquen en sus apuntes — díganme lo que tienen en la cabeza ahora mismo.</p>
+      </div>
+      <div class="agenda">
+        <div class="agenda-item"><div class="agenda-num">1</div><div class="agenda-text">Lista de los sesgos estudiados</div></div>
+        <div class="agenda-item"><div class="agenda-num">2</div><div class="agenda-text">Clasificación cognitivo / emocional</div></div>
+        <div class="agenda-item"><div class="agenda-num">3</div><div class="agenda-text">Los 5 mecanismos fundamentales</div></div>
+        <div class="agenda-item"><div class="agenda-num">4</div><div class="agenda-text">Antídotos y ejercicio final</div></div>
+      </div>
+      <button class="btn-start" onclick="goTo(1)">Comenzar la clase →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 1 — LOS SESGOS
+══════════════════════════════ -->
+<div class="screen" id="screen-1">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-info">
+        <h2>Los 18 sesgos del curso</h2>
+        <p>De los fundamentos a los sesgos estudiados aula por aula</p>
+      </div>
+    </div>
+    <div class="sesgos-intro">
+      <p>A lo largo del semestre estudiamos <strong>18 sesgos y errores conductuales</strong>. Conocerlos individualmente es útil — pero no suficiente. En la vida real, los sesgos no llegan solos. El objetivo de hoy es ver qué estructura hay detrás de esta lista.</p>
+    </div>
+    <div class="sesgos-grid" id="sesgosGrid"></div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(0)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(2)">Clasificar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 2 — CLASIFICACIÓN
+══════════════════════════════ -->
+<div class="screen" id="screen-2">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-info">
+        <h2>Clasificación: Cognitivo vs. Emocional</h2>
+        <p>Primera dimensión — ¿de dónde viene el error?</p>
+      </div>
+    </div>
+    <div class="def-box">
+      <div class="def-item def-cog">
+        <h4>🧠 Cognitivo</h4>
+        <p>El error viene de <strong>cómo procesamos la información</strong> — fallas en el razonamiento, la memoria o los atajos mentales.</p>
+      </div>
+      <div class="def-item def-emo">
+        <h4>❤️ Emocional</h4>
+        <p>El error viene de <strong>cómo nos sentimos</strong> — impulsos, miedo al dolor, necesidad de proteger la autoimagen.</p>
+      </div>
+      <div class="def-item def-prag">
+        <h4>⚙️ Dimensión Pragmática</h4>
+        <p>Cognitivos → se corrigen con <strong>proceso</strong>. Emocionales → se corrigen con <strong>estructura</strong>.</p>
+      </div>
+    </div>
+    <div class="pool-section">
+      <div class="pool-title">Por clasificar — haz clic para asignar</div>
+      <div class="pool-cards" id="poolCards"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="result-col rc-cog">
+        <span class="result-col-title">🧠 Cognitivos</span>
+        <div id="cogList"></div>
+      </div>
+      <div class="result-col rc-emo">
+        <span class="result-col-title">❤️ Emocionales</span>
+        <div id="emoList"></div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <button class="reveal-btn" onclick="revealClasif()">Mostrar clasificación completa</button>
+      <div class="hidden-content" id="revealClasif">
+        <div style="background:var(--ibero-warm);border-radius:12px;padding:1rem 1.5rem;font-size:0.85rem;line-height:1.8;color:var(--text-mid);">
+          <strong style="color:var(--ibero-red)">Caso de discusión — Overconfidence:</strong> Es el único sesgo con argumento real de doble pertenencia. Su calibración errónea de habilidades es cognitiva, pero la necesidad de sentirse competente es emocional. Se clasifica como emocional por mecanismo dominante — vale detenerse aquí en clase.
+        </div>
+      </div>
+    </div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(1)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(3)">Los mecanismos →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 3 — MECANISMOS
+══════════════════════════════ -->
+<div class="screen" id="screen-3">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-info">
+        <h2>Los 5 mecanismos fundamentales</h2>
+        <p>Por qué erramos — las causas raíz detrás de los sesgos</p>
+      </div>
+    </div>
+    <div class="mecanismos-intro">
+      <p>Los sesgos raramente aparecen solos. Llegan en grupos porque comparten una <strong>causa común</strong>. Entender la causa es más poderoso que memorizar el sesgo — porque te protege de varios al mismo tiempo. <strong>Haz clic en cada mecanismo para ver su descripción.</strong></p>
+    </div>
+    <div class="mec-grid">
+      <div class="mec-card mec1" onclick="openMecModal(0)"><div class="mec-icon">🔴</div><div class="mec-num">Mecanismo 1</div><div class="mec-name">Aversión al Dolor</div><div class="mec-phrase">El cerebro evita registrar pérdidas</div></div>
+      <div class="mec-card mec2" onclick="openMecModal(1)"><div class="mec-icon">🛡️</div><div class="mec-num">Mecanismo 2</div><div class="mec-name">Protección del Ego</div><div class="mec-phrase">El cerebro distorsiona hechos para preservar la autoimagen</div></div>
+      <div class="mec-card mec3" onclick="openMecModal(2)"><div class="mec-icon">⚡</div><div class="mec-num">Mecanismo 3</div><div class="mec-name">Economía Cognitiva</div><div class="mec-phrase">El cerebro sustituye preguntas difíciles por atajos</div></div>
+      <div class="mec-card mec4" onclick="openMecModal(3)"><div class="mec-icon">🔥</div><div class="mec-num">Mecanismo 4</div><div class="mec-name">Necesidad de Pertenencia</div><div class="mec-phrase">El cerebro terceriza decisiones al grupo</div></div>
+      <div class="mec-card mec5" onclick="openMecModal(4)"><div class="mec-icon">⏳</div><div class="mec-num">Mecanismo 5</div><div class="mec-name">Presente vs. Futuro</div><div class="mec-phrase">El cerebro sobrevalora el ahora</div></div>
+    </div>
+    <div class="mec-atrib-section">
+      <div class="mec-atrib-title">Ahora atribuyan — ¿qué sesgo corresponde a qué mecanismo?</div>
+      <div class="atrib-pool" id="atribPool"></div>
+      <div class="mec-rows" id="mecRows"></div>
+      <div style="margin-top:1.2rem;"><button class="reveal-btn" onclick="revealAtrib()">Mostrar atribución completa</button></div>
+    </div>
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(2)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(4)">Los antídotos →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 4 — ANTÍDOTOS
+══════════════════════════════ -->
+<div class="screen" id="screen-4">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-info">
+        <h2>Antídotos</h2>
+        <p>Herramientas concretas organizadas por mecanismo</p>
+      </div>
+    </div>
+    <div class="antidotos-intro">
+      <p>No existe un antídoto universal. Pero sí existen herramientas que atacan las <strong>causas raíz</strong> — y cuando atacas la raíz, te proteges de múltiples sesgos al mismo tiempo.</p>
+    </div>
+
+    <div class="antidoto-card" data-num="1">
+      <div class="antidoto-header">
+        <div class="antidoto-icon">📌</div>
+        <div><div class="antidoto-title">Pre-compromiso</div><div class="antidoto-tagline">Decide en frío, ejecuta en automático</div></div>
+      </div>
+      <div class="antidoto-grid">
+        <div class="antidoto-section"><h4>¿Qué es?</h4><p>Definir reglas de decisión antes de estar bajo presión emocional, y hacerlas automáticas o difíciles de revertir. El inversionista del futuro se protege del inversionista del presente.</p></div>
+        <div class="antidoto-section"><h4>¿Por qué funciona?</h4><p>Separa el momento de decisión del momento de ejecución. En frío, el Sistema 2 está activo. En pánico o euforia, la decisión ya fue tomada por una versión más racional de ti.</p></div>
+      </div>
+      <div class="ant-practica"><h4>Cómo aplicarlo</h4><p>Stop-loss definido en el momento de compra. Criterio de salida escrito: "vendo si X ocurre". Aportaciones mensuales automáticas. Rebalanceo en fechas fijas independientemente del humor del mercado.</p></div>
+      <div class="antidoto-mecanismos">
+        <span class="ant-mec-tag" style="background:#FADBD8;color:#922B21">🔴 Aversión al Dolor ★★</span>
+        <span class="ant-mec-tag" style="background:#FEF9E7;color:#9A7D0A">⏳ Presente vs. Futuro ★★</span>
+        <span class="ant-mec-tag" style="background:#D6EAF8;color:#1A5276">⚡ Economía Cognitiva ★</span>
+      </div>
+    </div>
+
+    <div class="antidoto-card" data-num="2">
+      <div class="antidoto-header">
+        <div class="antidoto-icon">📓</div>
+        <div><div class="antidoto-title">Diario de Decisiones</div><div class="antidoto-tagline">Un testigo objetivo contra tu propia memoria selectiva</div></div>
+      </div>
+      <div class="antidoto-grid">
+        <div class="antidoto-section"><h4>¿Qué es?</h4><p>Registrar por escrito la tesis y el razonamiento exacto detrás de cada decisión — antes de conocer el resultado.</p></div>
+        <div class="antidoto-section"><h4>¿Por qué funciona?</h4><p>La memoria humana es reconstructiva, no fotográfica. El diario fija la versión original. Con el tiempo, revela tus patrones de error específicos.</p></div>
+      </div>
+      <div class="ant-practica"><h4>Cómo aplicarlo</h4><p>Antes de cualquier decisión relevante: anota qué compras o vendes, por qué, cuál es la tesis, qué tendría que pasar para cambiar de opinión, y cuál es el criterio de salida.</p></div>
+      <div class="antidoto-mecanismos">
+        <span class="ant-mec-tag" style="background:#E8DAEF;color:#6C3483">🛡️ Protección del Ego ★★</span>
+        <span class="ant-mec-tag" style="background:#D6EAF8;color:#1A5276">⚡ Economía Cognitiva ★</span>
+        <span class="ant-mec-tag" style="background:#FADBD8;color:#922B21">🔴 Aversión al Dolor ★</span>
+      </div>
+    </div>
+
+    <div class="antidoto-card" data-num="3">
+      <div class="antidoto-header">
+        <div class="antidoto-icon">🧘</div>
+        <div><div class="antidoto-title">Activación Deliberada del Sistema 2</div><div class="antidoto-tagline">Interrumpir el piloto automático antes de actuar</div></div>
+      </div>
+      <div class="antidoto-grid">
+        <div class="antidoto-section"><h4>¿Qué es?</h4><p>Crear una interrupción intencional entre el estímulo — la noticia, la caída del mercado — y la decisión.</p></div>
+        <div class="antidoto-section"><h4>¿Por qué funciona?</h4><p>El Sistema 2 no se activa solo — necesita ser invitado. Cualquier pausa, por pequeña que sea, aumenta la probabilidad de reclutar al Sistema 2.</p></div>
+      </div>
+      <div class="ant-practica"><h4>Cómo aplicarlo</h4><p><strong>La regla más simple:</strong> no decidir el mismo día que recibes la información. 24 horas para cualquier decisión relevante. En comités: escribir la opinión individualmente antes de cualquier discusión grupal.</p></div>
+      <div class="antidoto-mecanismos">
+        <span class="ant-mec-tag" style="background:#D6EAF8;color:#1A5276">⚡ Economía Cognitiva ★★</span>
+        <span class="ant-mec-tag" style="background:#FADBD8;color:#922B21">🔴 Aversión al Dolor ★</span>
+        <span class="ant-mec-tag" style="background:#D5F5E3;color:#1E8449">🔥 Pertenencia ★</span>
+        <span class="ant-mec-tag" style="background:#E8DAEF;color:#6C3483">🛡️ Protección del Ego ★</span>
+      </div>
+    </div>
+
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(3)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(5)">Tu perfil →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 5 — TU PERFIL CONDUCTUAL
+══════════════════════════════ -->
+<div class="screen" id="screen-5">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-info">
+        <h2>Tu perfil conductual como inversionista</h2>
+        <p>¿Cuáles sesgos deberías vigilar más según tu perfil BIT?</p>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:16px;padding:1.5rem 2rem;box-shadow:var(--shadow);margin-bottom:2rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.7;">Los 5 mecanismos no afectan a todos por igual. Cada perfil BIT tiene mecanismos dominantes — y por lo tanto, sesgos de mayor riesgo. <strong>Selecciona tu perfil</strong> para ver qué sesgos debes vigilar más y cuáles tienen menor peso en tu caso.</p>
+    </div>
+
+    <!-- SELECTOR DE PERFIL -->
+    <div style="background:white;border-radius:20px;padding:2rem;box-shadow:var(--shadow);margin-bottom:2rem;">
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:1.25rem;">Selecciona un perfil</div>
+      <div class="profile-selector" id="profileSelector"></div>
+
+      <!-- BAR CHART OUTPUT -->
+      <div id="profileBarChart"></div>
+    </div>
+
+    <!-- CARDS PERFIL DETALLADO -->
+    <div style="font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:1rem;">Los 4 perfiles — comparativa rápida</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;" id="bitCards"></div>
+
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(4)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(6)">Ver matriz →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PANTALLA 6 — MATRIZ
+══════════════════════════════ -->
+<div class="screen" id="screen-6">
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-info">
+        <h2>Matriz Mecanismo × Antídoto</h2>
+        <p>Qué funciona para qué — y por qué no es una relación 1:1</p>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:16px;padding:1.5rem 2rem;box-shadow:var(--shadow);margin-bottom:1.5rem;border-left:5px solid var(--ibero-orange);">
+      <p style="font-size:0.9rem;color:var(--text-mid);line-height:1.7;">La relación entre mecanismos y antídotos <strong>no es 1:1</strong>. Algunos antídotos son transversales. <strong>★★ = antídoto primario · ★ = antídoto secundario</strong></p>
+    </div>
+
+    <div class="matriz-wrap">
+      <table class="matriz-table">
+        <thead>
+          <tr>
+            <th>Mecanismo</th>
+            <th>📌<br>Pre-compromiso</th>
+            <th>📓<br>Diario Decisiones</th>
+            <th>🧘<br>Activar S2</th>
+            <th>🗳️<br>Votación Ciega</th>
+            <th>💰<br>Test Dinero Nuevo</th>
+            <th>🔍<br>Pre-mortem</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🔴 Aversión al Dolor</td><td><div class="dot-primary">★★</div></td><td><div class="dot-secondary">★</div></td><td><div class="dot-secondary">★</div></td><td></td><td><div class="dot-secondary">★</div></td><td></td></tr>
+          <tr><td>🛡️ Protección del Ego</td><td></td><td><div class="dot-primary">★★</div></td><td><div class="dot-secondary">★</div></td><td><div class="dot-secondary">★</div></td><td></td><td><div class="dot-primary">★★</div></td></tr>
+          <tr><td>⚡ Economía Cognitiva</td><td><div class="dot-secondary">★</div></td><td><div class="dot-secondary">★</div></td><td><div class="dot-primary">★★</div></td><td></td><td></td><td><div class="dot-secondary">★</div></td></tr>
+          <tr><td>🔥 Necesidad de Pertenencia</td><td><div class="dot-secondary">★</div></td><td></td><td><div class="dot-secondary">★</div></td><td><div class="dot-primary">★★</div></td><td></td><td></td></tr>
+          <tr><td>⏳ Presente vs. Futuro</td><td><div class="dot-primary">★★</div></td><td></td><td><div class="dot-secondary">★</div></td><td></td><td><div class="dot-primary">★★</div></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:var(--ibero-warm);border-radius:14px;padding:1.5rem 2rem;margin-top:1.5rem;">
+      <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.8;"><strong style="color:var(--ibero-red)">Observación clave:</strong> La Activación del Sistema 2 aparece en 4 de los 5 mecanismos — es el antídoto más transversal porque actúa sobre la condición previa a cualquier sesgo: el piloto automático. El Pre-compromiso es el más poderoso para los sesgos emocionales porque elimina la decisión del momento de máxima presión.</p>
+    </div>
+
+    <div class="lista-amplia" style="margin-top:1.5rem;">
+      <div class="lista-amplia-title">Lista amplia de antídotos por mecanismo</div>
+      <div class="lista-amplia-sub">Para explorar — base para el ejercicio final</div>
+      <div class="lista-mec-group"><span class="lista-mec-label" style="background:#FADBD8;color:#922B21">🔴 Aversión al Dolor</span><div class="lista-items"><span class="lista-item">Nombrar la pérdida antes de entrar ("estoy dispuesto a perder X")</span><span class="lista-item">Separar la decisión de mantener de la de comprar</span><span class="lista-item">Test del Dinero Nuevo</span></div></div>
+      <div class="lista-mec-group"><span class="lista-mec-label" style="background:#E8DAEF;color:#6C3483">🛡️ Protección del Ego</span><div class="lista-items"><span class="lista-item">Steel-manning: buscar el mejor argumento contrario</span><span class="lista-item">Pre-mortem: asumir que falló y escribir por qué</span><span class="lista-item">Compartir la tesis con alguien que va a disentir</span></div></div>
+      <div class="lista-mec-group"><span class="lista-mec-label" style="background:#D6EAF8;color:#1A5276">⚡ Economía Cognitiva</span><div class="lista-items"><span class="lista-item">Checklist de preguntas de Sistema 2</span><span class="lista-item">Decidir en horarios de bajo estrés cognitivo</span><span class="lista-item">Separar recopilación de información y análisis en momentos distintos</span></div></div>
+      <div class="lista-mec-group"><span class="lista-mec-label" style="background:#D5F5E3;color:#1E8449">🔥 Necesidad de Pertenencia</span><div class="lista-items"><span class="lista-item">Protocolo de fuentes diversas — buscar análisis contrarios al consenso</span><span class="lista-item">Votación ciega en comités</span><span class="lista-item">Declarar posición por escrito antes de escuchar a otros</span></div></div>
+      <div class="lista-mec-group"><span class="lista-mec-label" style="background:#FEF9E7;color:#9A7D0A">⏳ Presente vs. Futuro</span><div class="lista-items"><span class="lista-item">Carta al yo futuro</span><span class="lista-item">Simulación de escenarios de largo plazo</span><span class="lista-item">Hacer explícito el costo de oportunidad</span></div></div>
+    </div>
+
+    <div class="ejercicio-card" style="margin-top:1.5rem;">
+      <h3>Ejercicio Final — 10 minutos</h3>
+      <p>Elige un antídoto de la lista — o propón uno nuevo que uses en tu vida. Desarróllalo con la misma estructura que los 3 antídotos principales.</p>
+      <div class="ejercicio-steps">
+        <div class="ej-step"><div class="ej-step-num">Paso 1</div><p>¿Qué es? Define el antídoto en una oración</p></div>
+        <div class="ej-step"><div class="ej-step-num">Paso 2</div><p>¿Por qué funciona? Explica el mecanismo que ataca</p></div>
+        <div class="ej-step"><div class="ej-step-num">Paso 3</div><p>¿Cómo lo aplicas? Da 2-3 acciones concretas</p></div>
+      </div>
+    </div>
+
+    <div class="nav-bottom">
+      <button class="btn-nav btn-secondary" onclick="goTo(5)">← Atrás</button>
+      <button class="btn-nav btn-primary" onclick="goTo(0)">Inicio →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     DATOS
+════════════════════════════════════════════════════ -->
+<script>
+const SESGOS = [
+  { id:1,  name:"Framing Bias",             clase:"Clase 2",  tipo:"cognitivo", mec:2 },
+  { id:2,  name:"Anclaje",                  clase:"Clase 5",  tipo:"cognitivo", mec:2 },
+  { id:3,  name:"Ilusión de Control",       clase:"Clase 7",  tipo:"cognitivo", mec:1 },
+  { id:4,  name:"Sesgo de Disponibilidad",  clase:"Clase 8",  tipo:"cognitivo", mec:2 },
+  { id:5,  name:"Representatividad",        clase:"Clase 8",  tipo:"cognitivo", mec:2 },
+  { id:6,  name:"Contabilidad Mental",      clase:"Clase 9",  tipo:"cognitivo", mec:2 },
+  { id:7,  name:"Confirmation Bias",        clase:"Clase 10", tipo:"cognitivo", mec:1 },
+  { id:8,  name:"Regret Aversion",          clase:"Clase 11", tipo:"emocional", mec:0 },
+  { id:9,  name:"Overconfidence",           clase:"Clase 12", tipo:"emocional", mec:1, nota:"Raíz emocional, manifestación cognitiva" },
+  { id:10, name:"Self-attribution Bias",    clase:"Clase 13", tipo:"emocional", mec:1 },
+  { id:11, name:"Status Quo Bias",          clase:"Clase 14", tipo:"emocional", mec:4 },
+  { id:12, name:"Sesgo de Autocontrol",     clase:"Clase 15", tipo:"emocional", mec:4 },
+  { id:13, name:"Endowment Effect",         clase:"Clase 16", tipo:"emocional", mec:0 },
+  { id:14, name:"Halo Effect",              clase:"Clase 17", tipo:"cognitivo", mec:3 },
+  { id:15, name:"Herding Effect",           clase:"Clase 18", tipo:"emocional", mec:3 },
+  { id:16, name:"Optimism Bias",            clase:"Clase 19", tipo:"cognitivo", mec:1 },
+  { id:17, name:"Authority Bias",           clase:"Clase 20", tipo:"emocional", mec:3 },
+  { id:18, name:"Escalation of Commitment", clase:"Clase 21", tipo:"emocional", mec:0 },
+];
+
+const MECANISMOS = [
+  { icon:"🔴", name:"Aversión al Dolor",        color:"#922B21", bg:"#FADBD8", border:"#F1948A",
+    phrase:"El cerebro evita registrar pérdidas",
+    desc:"El cerebro siente el dolor de perder aproximadamente dos veces más intensamente que el placer de ganar. Para evitar ese dolor, distorsiona la realidad — pospone decisiones, crea justificaciones, se aferra al pasado.",
+    sesgos:["Regret Aversion","Endowment Effect","Escalation of Commitment"] },
+  { icon:"🛡️", name:"Protección del Ego",        color:"#6C3483", bg:"#E8DAEF", border:"#C39BD3",
+    phrase:"El cerebro distorsiona hechos para preservar la autoimagen",
+    desc:"El cerebro tiene una necesidad profunda de mantener una autoimagen positiva y consistente. Cuando la realidad amenaza esa imagen, el cerebro distorsiona los hechos en lugar de revisar la creencia.",
+    sesgos:["Ilusión de Control","Confirmation Bias","Overconfidence","Self-attribution Bias","Optimism Bias"] },
+  { icon:"⚡", name:"Economía Cognitiva",         color:"#1A5276", bg:"#D6EAF8", border:"#AED6F1",
+    phrase:"El cerebro sustituye preguntas difíciles por atajos",
+    desc:"El cerebro es perezoso por diseño. Para ahorrar energía, sustituye preguntas difíciles por atajos automáticos. El problema: el cerebro no avisa cuando lo está usando.",
+    sesgos:["Framing Bias","Anclaje","Sesgo de Disponibilidad","Representatividad","Contabilidad Mental"] },
+  { icon:"🔥", name:"Necesidad de Pertenencia",   color:"#1E8449", bg:"#D5F5E3", border:"#A9DFBF",
+    phrase:"El cerebro terceriza decisiones al grupo",
+    desc:"El cerebro es profundamente social. El aislamiento fue históricamente peligroso, entonces desarrollamos un instinto fuerte de alinearnos con el consenso — especialmente bajo incertidumbre.",
+    sesgos:["Halo Effect","Herding Effect","Authority Bias"] },
+  { icon:"⏳", name:"Presente vs. Futuro",         color:"#9A7D0A", bg:"#FEF9E7", border:"#F9E79F",
+    phrase:"El cerebro sobrevalora el ahora",
+    desc:"El cerebro tiene dificultad genuina de imaginar al yo futuro como real. Esta asimetría hace que sistemáticamente sacrifiquemos el futuro por el presente — no por falta de información, sino por una limitación cognitiva fundamental.",
+    sesgos:["Status Quo Bias","Sesgo de Autocontrol"] },
+];
+
+// scores[i] = intensidad del mecanismo i para este perfil (1=baja, 2=media, 3=alta)
+const BIT_PROFILES = [
+  {
+    code:'PP', name:'Passive Preserver', emoji:'🏡',
+    color:'#1A5276', bg:'#D6EAF8', border:'#AED6F1',
+    desc:'Cauteloso, evita pérdidas a toda costa. Sus decisiones están dominadas por el miedo al dolor y la procrastinación hacia el futuro.',
+    tipo:'Predominantemente Emocional',
+    antidoto:'Pre-comprometimiento',
+    scores:[3,1,2,1,3],  // [Aversión Dolor, Protección Ego, Economía Cog, Pertenencia, Presente/Futuro]
+  },
+  {
+    code:'FF', name:'Friendly Follower', emoji:'🔥',
+    color:'#1E8449', bg:'#D5F5E3', border:'#A9DFBF',
+    desc:'Sigue a amigos, colegas y tendencias. Sobreestima su tolerancia al riesgo. Busca invertir en lo que está de moda.',
+    tipo:'Predominantemente Emocional',
+    antidoto:'Protocolo de fuentes diversas + Votación ciega',
+    scores:[2,1,2,3,2],
+  },
+  {
+    code:'AA', name:'Active Accumulator', emoji:'🚀',
+    color:'#7D3C98', bg:'#E8DAEF', border:'#C39BD3',
+    desc:'Muy involucrado, alta tolerancia al riesgo. Emprendedor exitoso que cree dominar el mercado como domina su negocio.',
+    tipo:'Cognitivo-Emocional mixto',
+    antidoto:'Diario de decisiones + Pre-mortem',
+    scores:[2,3,1,1,2],
+  },
+  {
+    code:'II', name:'Independent Individualist', emoji:'🔭',
+    color:'#9A7D0A', bg:'#FEF9E7', border:'#F9E79F',
+    desc:'Piensa por cuenta propia, resistente al grupo. Su punto ciego: confía demasiado en su propio análisis y usa atajos cognitivos sofisticados sin notarlo.',
+    tipo:'Predominantemente Cognitivo',
+    antidoto:'Activación deliberada del S2 + Steel-manning',
+    scores:[1,3,3,1,1],
+  },
+];
+
+// ── DATOS MODALES DE SESGOS ──────────────────────────────────────────────
+const SESGO_CARDS = {
+  1:{name:"Framing Bias",def:"Tomamos decisiones diferentes ante el mismo problema dependiendo de cómo se presentan las opciones — en términos de ganancias o pérdidas, porcentajes o números absolutos.",rem:"El agente racional evalúa el valor objetivo de cada opción independientemente de su presentación. Un 90% de probabilidad de ganar y un 10% de probabilidad de perder son idénticos.",consec:"Un gestor puede hacer parecer un fondo atractivo o peligroso con los mismos datos. Inversores aceptan más riesgo cuando las opciones se enmarcan como ganancias potenciales."},
+  2:{name:"Anclaje",def:"Dependemos en exceso del primer número o dato que recibimos para tomar decisiones, ajustando insuficientemente desde ese punto de partida — aunque el ancla sea completamente arbitraria.",rem:"El REM evalúa cada oportunidad de forma objetiva y desde cero. El precio al que compraste una acción es irrelevante para decidir si debes mantenerla o venderla hoy.",consec:"Inversores fijan un 'precio objetivo' basado en el precio histórico máximo. Negociaciones de portafolios quedan sesgadas por el primer número presentado."},
+  3:{name:"Ilusión de Control",def:"Creemos que podemos influir o controlar resultados que en realidad están determinados por el azar. El cerebro confunde participación activa con habilidad real.",rem:"El REM distingue perfectamente entre habilidad y suerte. No invertiría más en un activo porque 'lo conoce bien' si las probabilidades objetivas no lo justifican.",consec:"Inversores operan con exceso de frecuencia creyendo que su participación activa mejora resultados. Los costos de transacción erosionan el rendimiento sin generar valor."},
+  4:{name:"Sesgo de Disponibilidad",def:"Estimamos la probabilidad de un evento basándonos en la facilidad con que los ejemplos vienen a la mente. Lo reciente, lo vívido y lo emocionalmente impactante parece más probable de lo que estadísticamente es.",rem:"El REM calcula probabilidades con datos estadísticos objetivos, no con la facilidad de recordar ejemplos.",consec:"Tras una crisis financiera mediática, inversores sobreestiman la probabilidad de otra crisis inmediata."},
+  5:{name:"Representatividad",def:"Clasificamos nuevas situaciones basándonos en estereotipos o similitudes superficiales, ignorando las probabilidades estadísticas reales (tasa base).",rem:"El REM aplica el Teorema de Bayes: actualiza probabilidades correctamente combinando la tasa base con la evidencia nueva.",consec:"Un fondo con buenas rentabilidades recientes parece 'un fondo ganador' aunque estadísticamente la mayoría revierta a la media."},
+  6:{name:"Contabilidad Mental",def:"Tratamos sumas de dinero de manera diferente dependiendo de su origen o uso previsto, violando el principio de fungibilidad.",rem:"El REM trata todo el dinero como fungible — un peso es un peso independientemente de su origen.",consec:"Inversores mantienen cuentas separadas para 'dinero de especulación' y 'dinero seguro', destruyendo la eficiencia del portafolio."},
+  7:{name:"Confirmation Bias",def:"Buscamos, interpretamos y recordamos selectivamente la información que confirma nuestras creencias previas, ignorando la evidencia que las contradice.",rem:"El REM procesa toda la información disponible con el mismo peso y busca activamente información que pueda refutar su tesis.",consec:"Inversores solo leen análisis que confirman sus posiciones. Formación de burbujas especulativas."},
+  8:{name:"Regret Aversion",def:"Evitamos tomar decisiones por miedo a que el resultado sea malo y tengamos que cargar con la responsabilidad emocional del error. Actuar duele más que no actuar.",rem:"El REM maximiza la utilidad esperada sin considerar el dolor emocional futuro del arrepentimiento.",consec:"Inversores evitan vender activos perdedores para no 'confirmar' el error. Parálisis ante mercados volátiles."},
+  9:{name:"Overconfidence",def:"Fe injustificada en el propio razonamiento, juicio y habilidades. Sobreestimamos la precisión de nuestras predicciones. Es 'la madre de todos los sesgos'.",rem:"El REM calibra perfectamente sus intervalos de confianza. No confunde un mercado alcista con habilidad personal.",consec:"Exceso de trading que erosiona rendimientos. Sub-diversificación por apostar en exceso en 'ideas propias'."},
+  10:{name:"Self-attribution Bias",def:"Atribuimos los éxitos a nuestra habilidad personal y los fracasos a factores externos como la mala suerte, el mercado o el contexto.",rem:"El REM actualiza sus probabilidades objetivamente ante cualquier resultado — éxito o fracaso.",consec:"El inversor que gana en un mercado alcista asume que es habilidad propia y aumenta su exposición al riesgo."},
+  11:{name:"Status Quo Bias",def:"Tendencia a no hacer nada o a mantener la opción actual por inercia, miedo al cambio o aversión a la pérdida que implica cualquier movimiento activo.",rem:"El REM evalúa todas las opciones objetivamente en cada momento. Si una alternativa maximiza más la utilidad, cambia.",consec:"Carteras que nunca se rebalancean aunque el perfil de riesgo del inversor haya cambiado."},
+  12:{name:"Sesgo de Autocontrol",def:"Fallamos en alcanzar objetivos a largo plazo por falta de disciplina y preferencia por recompensas inmediatas sobre beneficios futuros mayores.",rem:"El REM descuenta el futuro con una tasa constante y consistente. No existe la preferencia por el presente.",consec:"Ahorro insuficiente para el retiro pese a las intenciones declaradas."},
+  13:{name:"Endowment Effect",def:"Valoramos un activo significativamente más cuando lo poseemos que cuando no lo tenemos. El precio mínimo para vender siempre supera el precio máximo que pagaríamos por comprarlo.",rem:"Para el REM, disposición a pagar = disposición a aceptar. El precio de un activo es objetivo e independiente de si lo posees.",consec:"Resistencia a vender acciones heredadas o posiciones antiguas aunque ya no sean apropiadas."},
+  14:{name:"Halo Effect",def:"Generalizamos un atributo positivo o negativo de una persona o empresa hacia todas sus demás características. Una buena primera impresión contamina toda la evaluación posterior.",rem:"El REM evalúa cada variable de forma independiente. La calidad del producto de una empresa es irrelevante si los flujos de caja no lo justifican.",consec:"Inversores compran acciones de empresas con marcas admiradas sin revisar los fundamentos financieros."},
+  15:{name:"Herding Effect",def:"Seguimos las acciones de la multitud asumiendo que el consenso colectivo tiene más información que nosotros. El miedo al aislamiento supera al análisis independiente.",rem:"El REM valora activos con información objetiva propia. Si el mercado está equivocado, toma la posición contraria.",consec:"Formación y amplificación de burbujas especulativas. Venta masiva en pánico que profundiza caídas."},
+  16:{name:"Optimism Bias",def:"Creemos que somos más propensos a vivir eventos positivos y menos propensos a vivir negativos que otras personas en situaciones similares.",rem:"El REM utiliza probabilidades bayesianas objetivas calibradas con la evidencia histórica — no con escenarios ideales.",consec:"Proyecciones de retorno irrealmente altas que llevan a asumir más riesgo del apropiado."},
+  17:{name:"Authority Bias",def:"Acatamos automáticamente las recomendaciones de figuras de autoridad — títulos, credenciales, trajes, cargos — sin evaluar de forma crítica si su análisis es correcto.",rem:"El REM procesa toda información imparcialmente, independientemente de su fuente. Evalúa el argumento, no a quien lo hace.",consec:"Delegación ciega a gestores que cobran altas comisiones sin generar alpha. Fraudes tipo Madoff."},
+  18:{name:"Escalation of Commitment",def:"Continuamos invirtiendo recursos en una decisión fallida simplemente por lo que ya hemos invertido e irrecuperable — el costo hundido.",rem:"El REM ignora completamente los costos hundidos — son irrecuperables y por tanto irrelevantes para decisiones futuras.",consec:"Inversores promedian a la baja en posiciones en declive estructural, multiplicando la exposición."},
+};
+
+// ── ESTADO ──────────────────────────────────────────────────────────────
+let currentScreen = 0;
+let classified = {};
+let mecAtrib = {0:[],1:[],2:[],3:[],4:[]};
+let mecAtribPool = [...SESGOS.map(s=>s.name)];
+let selectedProfileCode = 'PP';
+let clasifMenu = null;
+
+// ── NAVEGACIÓN ───────────────────────────────────────────────────────────
+function goTo(idx) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+idx).classList.add('active');
+  document.querySelectorAll('.step-dot').forEach((d,i) => {
+    d.classList.remove('active','done');
+    if(i===idx) d.classList.add('active');
+    else if(i<idx) d.classList.add('done');
+  });
+  document.getElementById('progressFill').style.width = (idx/6*100)+'%';
+  currentScreen = idx;
+  window.scrollTo(0,0);
+  updateNavBack();
+}
+function goBack() { if(currentScreen>0) goTo(currentScreen-1); }
+function updateNavBack() {
+  const btn = document.getElementById('navBack');
+  if(!btn) return;
+  const labels = ['Apertura','Los Sesgos','Clasificación','Mecanismos','Antídotos','Tu Perfil'];
+  if(currentScreen===0) btn.classList.add('hidden');
+  else { btn.classList.remove('hidden'); btn.textContent = '← '+(labels[currentScreen-1]||'Atrás'); }
+}
+
+// ── PANTALLA 1: SESGOS ────────────────────────────────────────────────────
+function buildSesgosGrid() {
+  const grid = document.getElementById('sesgosGrid');
+  SESGOS.forEach((s,i) => {
+    const card = document.createElement('div');
+    card.className = 'sesgo-card';
+    card.style.animationDelay = (i*0.05)+'s';
+    card.onclick = () => openSesgoModal(s.id);
+    card.title = 'Clic para ver definición';
+    card.innerHTML = `<div class="sesgo-num">${s.id}</div><div style="flex:1"><div class="sesgo-name">${s.name}</div><div class="sesgo-clase">${s.clase}</div></div><div style="font-size:0.65rem;color:var(--text-light);flex-shrink:0">›</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── PANTALLA 2: CLASIFICACIÓN ─────────────────────────────────────────────
+function buildClasifPool() {
+  const pool = document.getElementById('poolCards');
+  pool.innerHTML = '';
+  SESGOS.forEach(s => {
+    if(classified[s.id]) return;
+    const card = document.createElement('div');
+    card.className = 'pool-card';
+    card.innerHTML = s.name+' <span style="opacity:0.5;font-size:0.7rem">›</span>';
+    card.onclick = () => showClasifOptions(s.id, s.name, card);
+    pool.appendChild(card);
+  });
+}
+
+function showClasifOptions(id, name, anchor) {
+  if(clasifMenu) clasifMenu.remove();
+  const menu = document.createElement('div');
+  menu.style.cssText = 'position:fixed;z-index:300;background:white;border-radius:12px;padding:0.5rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:4px;min-width:180px;';
+  const rect = anchor.getBoundingClientRect();
+  menu.style.top = (rect.bottom+6)+'px';
+  menu.style.left = rect.left+'px';
+  [{label:'🧠 Cognitivo',val:'cognitivo',bg:'#D6EAF8',color:'#1A5276'},{label:'❤️ Emocional',val:'emocional',bg:'#FADBD8',color:'#922B21'}].forEach(o=>{
+    const btn = document.createElement('button');
+    btn.style.cssText = `background:${o.bg};color:${o.color};border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;`;
+    btn.textContent = o.label;
+    btn.onclick = ()=>{classify(id,name,o.val);menu.remove();clasifMenu=null;};
+    menu.appendChild(btn);
+  });
+  document.body.appendChild(menu);
+  clasifMenu = menu;
+  document.addEventListener('click', function closeMenu(e){if(!menu.contains(e.target)&&e.target!==anchor){menu.remove();clasifMenu=null;document.removeEventListener('click',closeMenu);}});
+}
+
+function classify(id, name, tipo) {
+  classified[id] = tipo;
+  buildClasifPool();
+  renderClasifResults();
+}
+
+function renderClasifResults() {
+  ['cog','emo'].forEach(t=>{ document.getElementById(t+'List').innerHTML=''; });
+  Object.entries(classified).forEach(([id,tipo])=>{
+    const s = SESGOS.find(x=>x.id==id);
+    const map = {cognitivo:'cog',emocional:'emo'};
+    const container = document.getElementById(map[tipo]+'List');
+    if(!container) return;
+    const item = document.createElement('div');
+    item.className = 'classified-item';
+    item.innerHTML = s.name+' <span style="font-size:0.65rem;opacity:0.5">×</span>';
+    item.title = 'Clic para quitar';
+    item.onclick = ()=>{ delete classified[id]; buildClasifPool(); renderClasifResults(); };
+    container.appendChild(item);
+  });
+}
+
+function revealClasif() {
+  SESGOS.forEach(s=>{ classified[s.id]=s.tipo; });
+  buildClasifPool();
+  renderClasifResults();
+  document.getElementById('revealClasif').classList.add('revealed');
+}
+
+// ── PANTALLA 3: MECANISMOS ────────────────────────────────────────────────
+function buildAtribPool() {
+  const pool = document.getElementById('atribPool');
+  const rows = document.getElementById('mecRows');
+  if(!pool||!rows) return;
+  pool.innerHTML = '';
+  rows.innerHTML = '';
+  if(mecAtribPool.length===0) {
+    pool.innerHTML = '<span style="font-size:0.8rem;color:var(--text-light);padding:0.4rem 0.8rem">Todos los sesgos han sido asignados ✓</span>';
+  } else {
+    mecAtribPool.forEach(name=>{
+      const card = document.createElement('div');
+      card.className = 'atrib-card';
+      card.textContent = name;
+      card.onclick = e=>{e.stopPropagation();showMecOptions(name,card);};
+      pool.appendChild(card);
+    });
+  }
+  MECANISMOS.forEach((m,i)=>{
+    const row = document.createElement('div');
+    row.className = 'mec-row';
+    const label = document.createElement('div');
+    label.className = 'mec-row-label';
+    label.style.background = m.bg;
+    label.style.color = m.color;
+    label.innerHTML = m.icon+' '+m.name;
+    label.onclick = ()=>openMecModal(i);
+    const drop = document.createElement('div');
+    drop.className = 'mec-row-drop';
+    drop.id = 'drop-'+i;
+    row.appendChild(label);
+    row.appendChild(drop);
+    rows.appendChild(row);
+    mecAtrib[i].forEach(n=>renderPlaced(i,n));
+  });
+}
+
+function showMecOptions(name, anchor) {
+  if(clasifMenu){clasifMenu.remove();clasifMenu=null;}
+  const menu = document.createElement('div');
+  menu.style.cssText = 'position:fixed;z-index:400;background:white;border-radius:12px;padding:0.5rem;box-shadow:0 8px 32px rgba(0,0,0,0.22);display:flex;flex-direction:column;gap:4px;min-width:220px;max-height:300px;overflow-y:auto;';
+  const rect = anchor.getBoundingClientRect();
+  let top = rect.bottom+6;
+  if(top+300>window.innerHeight) top = rect.top-310;
+  menu.style.top = Math.max(0,top)+'px';
+  menu.style.left = Math.min(rect.left,window.innerWidth-240)+'px';
+  MECANISMOS.forEach((m,i)=>{
+    const btn = document.createElement('button');
+    btn.style.cssText = `background:${m.bg};color:${m.color};border:none;border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;`;
+    btn.textContent = m.icon+' '+m.name;
+    btn.onclick = e=>{e.stopPropagation();placeInMec(i,name);menu.remove();clasifMenu=null;};
+    menu.appendChild(btn);
+  });
+  document.body.appendChild(menu);
+  clasifMenu = menu;
+  setTimeout(()=>{
+    document.addEventListener('click',function close(e){if(!menu.contains(e.target)){menu.remove();clasifMenu=null;document.removeEventListener('click',close);}});
+  },50);
+}
+
+function placeInMec(mecIdx, name) {
+  mecAtribPool = mecAtribPool.filter(n=>n!==name);
+  Object.keys(mecAtrib).forEach(k=>{mecAtrib[k]=mecAtrib[k].filter(n=>n!==name);});
+  mecAtrib[mecIdx].push(name);
+  buildAtribPool();
+}
+
+function renderPlaced(mecIdx, name) {
+  const drop = document.getElementById('drop-'+mecIdx);
+  if(!drop) return;
+  const m = MECANISMOS[mecIdx];
+  const tag = document.createElement('div');
+  tag.className = 'placed-tag';
+  tag.style.cssText = `background:${m.bg};color:${m.color};`;
+  tag.innerHTML = name+' <span style="opacity:0.5;font-size:0.65rem">×</span>';
+  tag.title = 'Clic para quitar';
+  tag.onclick = ()=>{mecAtrib[mecIdx]=mecAtrib[mecIdx].filter(n=>n!==name);mecAtribPool.push(name);buildAtribPool();};
+  drop.appendChild(tag);
+}
+
+function revealAtrib() {
+  mecAtribPool = [];
+  MECANISMOS.forEach((m,i)=>{mecAtrib[i]=[...m.sesgos];});
+  buildAtribPool();
+}
+
+// ── MODAL MECANISMOS ──────────────────────────────────────────────────────
+function openMecModal(idx) {
+  const m = MECANISMOS[idx];
+  const existing = document.getElementById('mecModal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'mecModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(42,24,16,0.6);display:flex;align-items:center;justify-content:center;padding:2rem;';
+  modal.onclick = e=>{if(e.target===modal)modal.remove();};
+  modal.innerHTML = `
+    <div style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);border-top:4px solid ${m.color};">
+      <div style="padding:2rem 2.5rem 1.5rem;border-bottom:1px solid #EDD9B8;position:relative;flex-shrink:0;">
+        <button onclick="document.getElementById('mecModal').remove()" style="position:absolute;top:1.2rem;right:1.2rem;background:#F5E6D0;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;">✕</button>
+        <div style="display:flex;align-items:center;gap:1rem;"><span style="font-size:2.5rem">${m.icon}</span><div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:${m.color}">${m.name}</div><div style="font-size:0.9rem;color:#9A7B6E;font-style:italic;margin-top:0.2rem">${m.phrase}</div></div></div>
+      </div>
+      <div style="padding:1.5rem 2.5rem;overflow-y:auto;flex:1;">
+        <p style="font-size:0.92rem;line-height:1.8;color:#5C3D2E;margin-bottom:1.5rem">${m.desc}</p>
+        <div style="font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9A7B6E;margin-bottom:0.8rem">Sesgos asociados</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">${m.sesgos.map(s=>`<span style="background:${m.bg};color:${m.color};padding:5px 12px;border-radius:20px;font-size:0.78rem;font-weight:600">${s}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+// ── MODAL SESGOS ──────────────────────────────────────────────────────────
+function openSesgoModal(id) {
+  const s = SESGOS.find(x=>x.id===id);
+  const card = SESGO_CARDS[id];
+  if(!s||!card) return;
+  const existing = document.getElementById('sesgModal');
+  if(existing) existing.remove();
+  const tipoBg = s.tipo==='cognitivo'?'#D6EAF8':'#FADBD8';
+  const tipoColor = s.tipo==='cognitivo'?'#1A5276':'#922B21';
+  const tipoLabel = s.tipo==='cognitivo'?'🧠 Cognitivo':'❤️ Emocional';
+  const modal = document.createElement('div');
+  modal.id = 'sesgModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(42,24,16,0.6);display:flex;align-items:center;justify-content:center;padding:2rem;';
+  modal.onclick = e=>{if(e.target===modal)modal.remove();};
+  modal.innerHTML = `
+    <div style="background:white;border-radius:20px;max-width:560px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="padding:1.5rem 2rem 1.2rem;border-bottom:1px solid #EDD9B8;position:relative;flex-shrink:0;border-top:4px solid #8B1A1A;border-radius:20px 20px 0 0;">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E8734A;margin-bottom:0.3rem">${s.clase}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#8B1A1A;">${card.name}</div>
+        <span style="display:inline-block;margin-top:0.4rem;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;background:${tipoBg};color:${tipoColor}">${tipoLabel}</span>
+        <button onclick="document.getElementById('sesgModal').remove()" style="position:absolute;top:1.2rem;right:1.2rem;background:#F5E6D0;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;">✕</button>
+      </div>
+      <div style="padding:1.5rem 2rem;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:0.8rem;">
+        <div style="background:#FFF5E6;border-radius:10px;padding:1rem 1.2rem;"><div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8B1A1A;margin-bottom:0.5rem;">📖 Definición</div><p style="font-size:0.88rem;line-height:1.7;color:#5C3D2E;margin:0">${card.def}</p></div>
+        <div style="background:#D6EAF8;border-radius:10px;padding:1rem 1.2rem;"><div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1A5276;margin-bottom:0.5rem;">🤖 ¿Qué haría el REM?</div><p style="font-size:0.88rem;line-height:1.7;color:#1A4F72;margin:0">${card.rem}</p></div>
+        <div style="background:#D5F5E3;border-radius:10px;padding:1rem 1.2rem;"><div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1E6B3C;margin-bottom:0.5rem;">📉 Consecuencias financieras</div><p style="font-size:0.88rem;line-height:1.7;color:#1A5233;margin:0">${card.consec}</p></div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+// ── PANTALLA 5: PERFIL BIT CON BARRAS ────────────────────────────────────
+
+const RISK_CFG = [
+  null,
+  { label:'Riesgo bajo',  color:'#1E6B3C', pct:30  },
+  { label:'Riesgo medio', color:'#7D6608', pct:63  },
+  { label:'Riesgo alto',  color:'#922B21', pct:100 },
+];
+
+function buildProfileSelector() {
+  const container = document.getElementById('profileSelector');
+  if(!container) return;
+  BIT_PROFILES.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'prof-btn';
+    btn.id = 'profbtn-'+p.code;
+    btn.style.borderColor = p.border;
+    btn.style.color = p.color;
+    btn.style.background = 'white';
+    btn.innerHTML = `<span style="font-size:1.3rem">${p.emoji}</span> <strong>${p.code}</strong> <span class="prof-btn-name">${p.name}</span>`;
+    btn.onclick = () => selectProfile(p.code);
+    container.appendChild(btn);
+  });
+  selectProfile('PP');
+}
+
+function selectProfile(code) {
+  selectedProfileCode = code;
+  BIT_PROFILES.forEach(p => {
+    const btn = document.getElementById('profbtn-'+p.code);
+    if(!btn) return;
+    if(p.code === code) {
+      btn.style.background = p.bg;
+      btn.style.borderColor = p.color;
+      btn.style.boxShadow = `0 2px 12px ${p.border}`;
+    } else {
+      btn.style.background = 'white';
+      btn.style.borderColor = p.border;
+      btn.style.boxShadow = 'none';
+    }
+  });
+  renderProfileBarChart(code);
+}
+
+function renderProfileBarChart(code) {
+  const profile = BIT_PROFILES.find(p => p.code === code);
+  if(!profile) return;
+  const container = document.getElementById('profileBarChart');
+  if(!container) return;
+
+  // Sort mechanisms by profile score descending
+  const sortedMecs = MECANISMOS.map((m,i) => ({
+    m, i, score: profile.scores[i],
+    sesgos: SESGOS.filter(s => s.mec === i),
+  })).sort((a,b) => b.score - a.score);
+
+  // Top sesgos (score=3)
+  const topSesgos = sortedMecs
+    .filter(g => g.score === 3)
+    .flatMap(g => g.sesgos.map(s => s.name));
+
+  const calloutHtml = topSesgos.length ? `
+    <div class="blindspot-callout">
+      <div class="blindspot-callout-title">⚠ Puntos ciegos principales para ${profile.code}</div>
+      <div class="blindspot-tags">${topSesgos.map(n=>`<span class="blindspot-tag">${n}</span>`).join('')}</div>
+    </div>` : '';
+
+  const groupsHtml = sortedMecs.map(g => {
+    const cfg = RISK_CFG[g.score];
+    const barRows = g.sesgos.map(s => `
+      <div class="sesgo-bar-row">
+        <div class="sesgo-bar-label" onclick="openSesgoModal(${s.id})" title="Ver definición">${s.name}</div>
+        <div class="sesgo-bar-track">
+          <div class="sesgo-bar-fill visible" style="width:${cfg.pct}%;background:${g.m.color};">
+            <span class="sesgo-bar-text">${cfg.label}</span>
+          </div>
+        </div>
+        <div class="sesgo-bar-risk" style="color:${cfg.color}">${cfg.label}</div>
+      </div>`).join('');
+
+    return `
+      <div class="mec-group-block">
+        <div class="mec-group-header" style="background:${g.m.bg};border-color:${g.m.color};">
+          <span class="mec-group-icon">${g.m.icon}</span>
+          <span class="mec-group-name" style="color:${g.m.color}">${g.m.name}</span>
+          <span class="mec-group-count" style="color:${g.m.color}">${g.sesgos.length} sesgo${g.sesgos.length!==1?'s':''}</span>
+          <span class="mec-group-badge" style="color:${cfg.color};border:1px solid ${cfg.color}20;">${cfg.label}</span>
+        </div>
+        ${barRows}
+      </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="profile-callout" style="background:${profile.bg};border-color:${profile.color};color:${profile.color};">
+      <span class="profile-callout-emoji">${profile.emoji}</span>
+      <div style="flex:1">
+        <div class="profile-callout-name">${profile.code} — ${profile.name}</div>
+        <div class="profile-callout-sub">${profile.desc}</div>
+        <span class="profile-callout-tipo">${profile.tipo}</span>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.6;margin-bottom:4px">Antídoto prioritario</div>
+        <div style="font-size:0.78rem;font-weight:600">${profile.antidoto}</div>
+      </div>
+    </div>
+    ${calloutHtml}
+    <div style="font-size:0.75rem;color:var(--text-light);margin-bottom:1rem;">
+      Sesgos ordenados de mayor a menor riesgo · haz clic en el nombre para ver la definición
+    </div>
+    ${groupsHtml}`;
+}
+
+// ── PANTALLA 5: CARDS COMPARATIVA ─────────────────────────────────────────
+const MEC_ICONS_LIST = ['🔴','🛡️','⚡','🔥','⏳'];
+const MEC_NAMES_LIST = ['Aversión al Dolor','Protección del Ego','Economía Cognitiva','Pertenencia','Presente vs. Futuro'];
+
+function buildBitCards() {
+  const container = document.getElementById('bitCards');
+  if(!container) return;
+  BIT_PROFILES.forEach(p => {
+    const card = document.createElement('div');
+    card.style.cssText = `background:white;border-radius:16px;padding:1.5rem;box-shadow:var(--shadow);border-top:4px solid ${p.color};cursor:pointer;transition:transform 0.2s;`;
+    card.onmouseenter = ()=>card.style.transform='translateY(-3px)';
+    card.onmouseleave = ()=>card.style.transform='translateY(0)';
+    card.onclick = ()=>selectProfile(p.code);
+
+    const barsHtml = p.scores.map((s,i)=>{
+      const pct = s===1?30:s===2?62:100;
+      const cfg = RISK_CFG[s];
+      return `<div style="margin-bottom:5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+          <span style="font-size:0.65rem;color:var(--text-light)">${MEC_ICONS_LIST[i]}</span>
+          <span style="font-size:0.62rem;font-weight:700;color:${cfg.color}">${cfg.label}</span>
+        </div>
+        <div style="height:5px;background:var(--ibero-warm);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${MECANISMOS[i].color};border-radius:3px;"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+        <span style="font-size:1.8rem">${p.emoji}</span>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:${p.color}">${p.code}</div><div style="font-size:0.7rem;color:var(--text-light)">${p.name}</div></div>
+      </div>
+      <p style="font-size:0.76rem;line-height:1.6;color:var(--text-mid);margin-bottom:1rem;">${p.desc}</p>
+      <div style="margin-bottom:1rem;">${barsHtml}</div>
+      <div style="background:${p.bg};border-radius:8px;padding:0.5rem 0.8rem;font-size:0.72rem;color:${p.color};">
+        <strong>Ver detalle →</strong> haz clic en la card
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+buildSesgosGrid();
+buildClasifPool();
+buildAtribPool();
+buildProfileSelector();
+buildBitCards();
+updateNavBack();
+</script>
+</body>
+</html>
