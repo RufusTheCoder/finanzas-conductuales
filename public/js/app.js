@@ -1334,31 +1334,6 @@ function renderReport() {
       </div>
 
       <div class="report-section">
-        <div class="report-section-label">Mapa de sesgos</div>
-        <div class="report-section-title">Tus 15 puntos ciegos conductuales</div>
-        <div class="report-sesgo-grid">
-          ${SESGOS.map(s => {
-            const data = sesgos[s.id];
-            if (!data) return '';
-            const intensidad = data.intensidad || 0;
-            const label = intensidad === 0 ? 'No detectado' : intensidad <= 0.34 ? 'Leve' : intensidad <= 0.67 ? 'Moderado' : 'Dominante';
-            const color = intensidad === 0 ? '#059669' : intensidad <= 0.67 ? '#D97706' : '#DC2626';
-            const fixScore = data.fixationScore ?? (Array.isArray(data.fixation) ? data.fixation.filter(x => x === 0).length : 0);
-            const fixTotal = s.fixationQuestions?.length ?? 3;
-            return `
-              <div class="report-sesgo-card">
-                <div class="report-sesgo-title">${s.name}</div>
-                <div class="report-sesgo-type">${s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional'} · Clase ${s.clase}</div>
-                <div class="report-sesgo-finding" style="border-left:3px solid ${color}">
-                  <span style="color:${color};font-weight:700">${label}</span> — ${Math.round(intensidad * 100)}% respuestas sesgadas · Verificación: ${fixScore}/${fixTotal}
-                </div>
-                <div class="report-sesgo-antidote">→ ${s.antidotes[0]}</div>
-              </div>`;
-          }).join('')}
-        </div>
-      </div>
-
-      <div class="report-section">
         <div class="report-section-label">Plan personalizado</div>
         <div class="report-section-title">Recomendaciones para tu perfil</div>
         <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.25rem">Valora qué tan útil te parece cada recomendación — tus respuestas nos ayudan a afinar el contenido del curso.</p>
@@ -1384,6 +1359,31 @@ function renderReport() {
           }).join('')}
         </div>
         <div id="report-reco-status" class="bit-gate-hint" style="margin-top:1rem"></div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-label">Mapa de sesgos</div>
+        <div class="report-section-title">Tus 15 puntos ciegos conductuales</div>
+        <div class="report-sesgo-grid">
+          ${SESGOS.map(s => {
+            const data = sesgos[s.id];
+            if (!data) return '';
+            const intensidad = data.intensidad || 0;
+            const label = intensidad === 0 ? 'No detectado' : intensidad <= 0.34 ? 'Leve' : intensidad <= 0.67 ? 'Moderado' : 'Dominante';
+            const color = intensidad === 0 ? '#059669' : intensidad <= 0.67 ? '#D97706' : '#DC2626';
+            const fixScore = data.fixationScore ?? (Array.isArray(data.fixation) ? data.fixation.filter(x => x === 0).length : 0);
+            const fixTotal = s.fixationQuestions?.length ?? 3;
+            return `
+              <div class="report-sesgo-card">
+                <div class="report-sesgo-title">${s.name}</div>
+                <div class="report-sesgo-type">${s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional'} · Clase ${s.clase}</div>
+                <div class="report-sesgo-finding" style="border-left:3px solid ${color}">
+                  <span style="color:${color};font-weight:700">${label}</span> — ${Math.round(intensidad * 100)}% respuestas sesgadas · Verificación: ${fixScore}/${fixTotal}
+                </div>
+                <div class="report-sesgo-antidote">→ ${s.antidotes[0]}</div>
+              </div>`;
+          }).join('')}
+        </div>
       </div>
 
       <div class="report-cta">
