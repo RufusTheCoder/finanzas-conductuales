@@ -1661,6 +1661,32 @@ button { font: inherit; }
   text-align: center;
 }
 
+.reco-item-rateable {
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--paper-2);
+  margin-bottom: .75rem;
+}
+.reco-text {
+  font-size: .9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-bottom: .75rem;
+}
+.reco-rating-slider {
+  border-top: 1px solid var(--paper-3);
+  padding-top: .75rem;
+  margin-top: .5rem;
+}
+.reco-slider-val {
+  font-size: .75rem;
+  color: var(--ink-4);
+  text-align: center;
+  margin-top: .3rem;
+  min-height: 1.1em;
+}
+
 .report-sesgo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

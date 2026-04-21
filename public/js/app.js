@@ -36,6 +36,8 @@ const state = {
   // BIT result feedback
   bitProfileRating: null,
   bitRecoRating: null,
+  bitRecoRatings: {},
+  bitRecoTouched: {},
   bitProfileRatingTouched: false,
   bitResultStep: 1,
 };
@@ -751,18 +753,28 @@ function renderBitResult() {
       </div>
       <div class="result-card">
         <div class="result-card-title">Recomendaciones para tu perfil</div>
+        <p style="font-size:.82rem;color:var(--ink-4);margin-bottom:1rem">Valora qué tan útil te parece cada recomendación <span style="color:#B91C1C">*</span></p>
         <div class="reco-list">
-          ${profile.recommendations.map((r, i) => `
-            <div class="reco-item">
-              <div class="reco-icon">${i + 1}</div>
-              <div>${r}</div>
-            </div>
-          `).join('')}
+          ${profile.recommendations.map((r, i) => {
+            const val = state.bitRecoRatings[i] ?? 3;
+            return `
+              <div class="reco-item reco-item-rateable">
+                <div class="reco-icon">${i + 1}</div>
+                <div style="flex:1">
+                  <div class="reco-text">${r}</div>
+                  <div class="reco-rating-slider" data-idx="${i}">
+                    <div class="slider-row">
+                      <span class="slider-end-label">Nada útil</span>
+                      <input type="range" class="fit-slider reco-slider" data-idx="${i}" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
+                      <span class="slider-end-label">Muy útil</span>
+                    </div>
+                    <div class="slider-value-label reco-slider-val" data-idx="${i}">${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : 'Mueve el deslizador'}</div>
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
         </div>
-        <div style="margin-top:1.25rem" id="reco-rating-wrap">
-          ${ratingWidget(state.bitRecoRating, '¿Qué tan útiles te parecen estas recomendaciones? *')}
-        </div>
-        <div class="bit-gate-hint" id="bit-gate-hint-2">Selecciona una valoración para continuar</div>
+        <div class="bit-gate-hint" id="bit-gate-hint-2">Valora las ${profile.recommendations.length} recomendaciones para continuar</div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;gap:1rem">
         <button class="btn-ghost" id="btn-bit-back">← Atrás</button>
@@ -803,21 +815,35 @@ function renderBitResult() {
     });
     const dashBtn = document.getElementById('btn-to-dash');
     const hint = document.getElementById('bit-gate-hint-2');
-    const unlockDash = () => { dashBtn.disabled = false; if (hint) hint.style.visibility = 'hidden'; };
-    if (state.bitRecoRating !== null) unlockDash();
-    document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.bitRecoRating = parseInt(btn.dataset.rating);
-        document.querySelectorAll('#reco-rating-wrap .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.bitRecoRating));
-        const txt = document.querySelector('#reco-rating-wrap .rating-feedback-text');
-        if (txt) { txt.textContent = RATING_LABELS[state.bitRecoRating - 1]; txt.classList.add('has-rating'); }
-        unlockDash();
+    const total = profile.recommendations.length;
+    const checkUnlock = () => {
+      const answered = Object.keys(state.bitRecoTouched).filter(k => state.bitRecoTouched[k]).length;
+      if (answered >= total) {
+        dashBtn.disabled = false;
+        if (hint) hint.style.visibility = 'hidden';
+      } else {
+        dashBtn.disabled = true;
+        if (hint) { hint.style.visibility = 'visible'; hint.textContent = `Faltan ${total - answered} recomendación(es) por valorar`; }
+      }
+    };
+    checkUnlock();
+    document.querySelectorAll('.reco-slider').forEach(slider => {
+      const idx = parseInt(slider.dataset.idx);
+      slider.addEventListener('input', () => {
+        const v = parseInt(slider.value);
+        state.bitRecoRatings[idx] = v;
+        state.bitRecoTouched[idx] = true;
+        const lbl = document.querySelector(`.reco-slider-val[data-idx="${idx}"]`);
+        if (lbl) lbl.textContent = SLIDER_LABELS[v];
+        checkUnlock();
       });
     });
     dashBtn.addEventListener('click', () => {
       const rows = [];
       if (state.bitProfileRating !== null) rows.push({ email: state.user.email, q_type: 'bit_profile_fit', question_id: 'bit_profile_fit', sesgo_id: null, rating: state.bitProfileRating });
-      if (state.bitRecoRating !== null) rows.push({ email: state.user.email, q_type: 'bit_reco_useful', question_id: 'bit_reco_useful', sesgo_id: null, rating: state.bitRecoRating });
+      Object.entries(state.bitRecoRatings).forEach(([idx, rating]) => {
+        rows.push({ email: state.user.email, q_type: 'bit_reco_useful', question_id: `bit_reco_${idx}`, sesgo_id: null, rating });
+      });
       if (rows.length) logQuestionFeedback(rows).catch(() => {});
       state.bitResultStep = 1;
       state.screen = 'dashboard';
