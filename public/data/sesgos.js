@@ -105,15 +105,15 @@ export const SESGOS = [
     questions: [
       { situation: '¿Qué causa más muertes anuales en México?', options: [
         { text: 'Homicidios', reveal: 'Sesgo de disponibilidad: los homicidios aparecen más en noticias, parecen más frecuentes' },
-        { text: 'Diabetes y enfermedades crónicas', reveal: 'Correcto: enfermedades crónicas causan 5-10x más muertes, pero son menos "disponibles" en la memoria' },
+        { text: 'Diabetes y enfermedades crónicas', reveal: 'Racional: enfermedades crónicas causan 5-10x más muertes, pero son menos "disponibles" en la memoria' },
       ]},
       { situation: 'Linda tiene 31 años, es inteligente y fue activista. ¿Qué es más probable que sea hoy?', options: [
         { text: 'Cajera de banco y feminista activa', reveal: 'Sesgo de representatividad (Falacia de Conjunción): dos eventos juntos nunca pueden ser más probables que uno solo' },
-        { text: 'Cajera de banco', reveal: 'Correcto: P(A) siempre es ≥ P(A y B). El estereotipo nos distrae de la lógica básica' },
+        { text: 'Cajera de banco', reveal: 'Racional: P(A) siempre es ≥ P(A y B). El estereotipo nos distrae de la lógica básica' },
       ]},
       { situation: 'Una moneda justa cae cara 5 veces seguidas. ¿Qué esperas en el lanzamiento 6?', options: [
         { text: 'Cruz es más probable — ya es "hora" de que salga', reveal: 'Falacia del jugador: cada lanzamiento es independiente. El pasado no influye en el futuro' },
-        { text: '50/50 — cada lanzamiento es independiente del anterior', reveal: 'Correcto: la moneda no tiene memoria. La representatividad nos hace ver patrones donde no existen' },
+        { text: '50/50 — cada lanzamiento es independiente del anterior', reveal: 'Racional: la moneda no tiene memoria. La representatividad nos hace ver patrones donde no existen' },
       ]},
     ],
     fixationQuestions: [
