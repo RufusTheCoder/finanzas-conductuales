@@ -2692,8 +2692,9 @@ body.dark .calendly-card { background: linear-gradient(135deg, #1A3A2E 0%, #0F28
 /* ── BUG REPORT FAB + MODAL ──────────────────── */
 .bug-fab {
   position: fixed;
-  bottom: 18px;
+  top: 50%;
   right: 18px;
+  transform: translateY(-50%);
   z-index: 900;
   display: inline-flex;
   align-items: center;
