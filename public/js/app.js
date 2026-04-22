@@ -2561,7 +2561,7 @@ function mountBugReportWidget() {
   wrap.id = 'bug-report-root';
   wrap.innerHTML = `
     <button id="bug-report-fab" class="bug-fab" title="Reportar un problema" aria-label="Reportar un problema">
-      <span class="bug-fab-icon">🛠</span><span class="bug-fab-label">Reportar un problema</span>
+      <span class="bug-fab-icon">🛠</span><span class="bug-fab-label">Clic aquí para reportar un problema</span>
     </button>
     <div id="bug-report-modal" class="bug-modal" hidden>
       <div class="bug-modal-backdrop"></div>
