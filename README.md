@@ -2,6 +2,8 @@
 
 Projeto inicial de plataforma educacional de finanças comportamentais para alunos da Universidad Iberoamericana CDMX.
 
+> **📘 Documentação técnica:** [DOCS.md](DOCS.md) — guia atualizado com arquitetura, convenções, sistema de backup, deploy e troubleshooting.
+
 ## Estrutura atual
 - `index.html` — versão v6 do produto, single-file com UI e lógica em HTML/CSS/JS
 - `admin.html` — template inicial para backoffice
