@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422c';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422d';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260422c';
+import { SESGOS } from '../data/sesgos.js?v=20260422d';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -184,6 +184,41 @@ function getShuffledOptions(key, options) {
     origIdx,
     displayIdx,
   }));
+}
+
+// ── FEEDBACK SAMPLING ──────────────────────────────────────
+// We ask the inline "¿cómo calificarías esta pregunta?" only on a sample
+// of questions per student to reduce fatigue, while keeping statistical
+// coverage per question. Which questions get sampled is deterministic per
+// (email + module) so the same student always gets the same sample — they
+// can't skip by refreshing.
+function _hashStr(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+function _seededShuffle(arr, seed) {
+  let rng = seed || 1;
+  for (let i = arr.length - 1; i > 0; i--) {
+    rng = (rng * 1103515245 + 12345) & 0x7FFFFFFF;
+    const j = rng % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+// Returns a Set of sampled indices from [0, total). Stable per (email, key).
+function sampledIndices(key, total, count) {
+  state.feedbackSample = state.feedbackSample || {};
+  if (state.feedbackSample[key]) return state.feedbackSample[key];
+  const email = state.user?.email || 'anon';
+  const seed = _hashStr(email + '|' + key);
+  const order = _seededShuffle([...Array(total).keys()], seed);
+  const sampled = new Set(order.slice(0, Math.min(count, total)));
+  state.feedbackSample[key] = sampled;
+  return sampled;
+}
+function isFeedbackSampled(key, total, count, index) {
+  return sampledIndices(key, total, count).has(index);
 }
 
 // Dark mode init
@@ -928,6 +963,7 @@ function renderBit() {
   const q = questions[state.bitIndex];
   const pct = (state.bitIndex / questions.length) * 100;
   const answered = state.bitAnswers[state.bitIndex] !== null;
+  const askFeedback = isFeedbackSampled('bit', questions.length, 3, state.bitIndex);
   const rated = state.bitRatings[state.bitIndex] !== null;
 
   c.innerHTML = `
@@ -950,12 +986,12 @@ function renderBit() {
             </button>
           `).join('')}
         </div>
-        ${answered ? ratingWidget(state.bitRatings[state.bitIndex], '¿cómo calificarías esta pregunta?') : ''}
+        ${answered && askFeedback ? ratingWidget(state.bitRatings[state.bitIndex], '¿cómo calificarías esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-bit-back" ${state.bitIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-bit-next" ${!answered || !rated ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-bit-next" ${!answered || (askFeedback && !rated) ? 'disabled' : ''}>
         ${state.bitIndex === questions.length - 1 ? 'Finalizar →' : 'Siguiente →'}
       </button>
     </div>
@@ -1281,6 +1317,7 @@ function renderSesgoQuiz() {
   const total = s.questions.length;
   const pct = (state.sesgoIndex / total) * 100;
   const answered = state.sesgoAnswers[state.sesgoIndex] !== null;
+  const askFeedback = isFeedbackSampled(`${s.id}_q`, total, 1, state.sesgoIndex);
   const rated = state.sesgoRatings[state.sesgoIndex] !== null;
 
   const c = document.createElement('div');
@@ -1305,12 +1342,12 @@ function renderSesgoQuiz() {
             </button>
           `).join('')}
         </div>
-        ${answered ? ratingWidget(state.sesgoRatings[state.sesgoIndex], '¿cómo calificarías esta pregunta?') : ''}
+        ${answered && askFeedback ? ratingWidget(state.sesgoRatings[state.sesgoIndex], '¿cómo calificarías esta pregunta?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-sq-back" ${state.sesgoIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-sq-next" ${!answered || !rated ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-sq-next" ${!answered || (askFeedback && !rated) ? 'disabled' : ''}>
         ${state.sesgoIndex === total - 1 ? 'Continuar →' : 'Siguiente →'}
       </button>
     </div>
@@ -1463,6 +1500,7 @@ function renderSesgoFixation() {
   const q = fq[state.fixationIndex];
   const total = fq.length;
   const pct = (state.fixationIndex / total) * 100;
+  const askFeedback = isFeedbackSampled(`${s.id}_f`, total, 1, state.fixationIndex);
 
   const c = document.createElement('div');
   c.className = 'quiz-shell';
@@ -1486,12 +1524,12 @@ function renderSesgoFixation() {
             </button>
           `).join('')}
         </div>
-        ${state.fixationAnswers[state.fixationIndex] !== null ? ratingWidget(state.fixationRatings[state.fixationIndex], '¿qué tan claro te quedó el concepto?') : ''}
+        ${state.fixationAnswers[state.fixationIndex] !== null && askFeedback ? ratingWidget(state.fixationRatings[state.fixationIndex], '¿qué tan claro te quedó el concepto?') : ''}
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-fx-back" ${state.fixationIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-      <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null || state.fixationRatings[state.fixationIndex] === null ? 'disabled' : ''}>
+      <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null || (askFeedback && state.fixationRatings[state.fixationIndex] === null) ? 'disabled' : ''}>
         ${state.fixationIndex === total - 1 ? 'Ver mis resultados →' : 'Siguiente →'}
       </button>
     </div>

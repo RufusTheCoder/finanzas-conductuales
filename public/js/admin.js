@@ -1,6 +1,6 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 import { questions as BIT_QUESTIONS } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260422c';
+import { SESGOS } from '../data/sesgos.js?v=20260422d';
 
 const headers = {
   apikey: SUPABASE_ANON_KEY,
