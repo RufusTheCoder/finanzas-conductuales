@@ -1464,7 +1464,10 @@ function renderBackups() {
         <td style="text-align:center;font-weight:700">${b.total_rows}</td>
         <td style="text-align:center;color:${diffColor};font-weight:600;font-size:.8rem">${diffStr}</td>
         <td style="font-family:var(--ff-mono,monospace);font-size:.7rem;color:var(--ink-4)">${(b.fingerprint || '').slice(0, 10)}…</td>
-        <td style="font-size:.72rem;color:var(--ink-4);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(b.location || '')}">${escapeHtml(b.location || '—')}</td>
+        <td style="font-size:.72rem;color:var(--ink-4);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(b.location || '')}">${escapeHtml(b.location || '—')}</td>
+        <td style="text-align:center">
+          <button class="btn-explore-backup" data-fp="${b.fingerprint}" data-stamp="${b.stamp}" style="font-size:.72rem;padding:4px 10px;border-radius:6px;border:1px solid var(--ink-3);background:white;cursor:pointer">Explorar</button>
+        </td>
       </tr>`;
   }).join('');
 
@@ -1482,11 +1485,215 @@ function renderBackups() {
             <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Δ</th>
             <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Fingerprint</th>
             <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Ubicación</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">—</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>
     </div>`;
+
+  pane.querySelectorAll('.btn-explore-backup').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fp = btn.dataset.fp;
+      const stamp = btn.dataset.stamp;
+      const b = (DATA.backups || []).find(x => x.fingerprint === fp);
+      openBackupExplorer(b);
+    });
+  });
+}
+
+// ── BACKUP EXPLORER ──────────────────────────────
+
+async function openBackupExplorer(backup) {
+  const drawer = document.getElementById('user-detail');
+  const body = document.getElementById('user-detail-body');
+  drawer.style.display = 'flex';
+
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div>
+        <div style="font-family:var(--ff-display);font-size:1.25rem">Explorar backup</div>
+        <div style="font-family:var(--ff-mono,monospace);font-size:.82rem;color:var(--ink-3)">${escapeHtml(backup.stamp)}</div>
+      </div>
+      <button id="be-close" style="font-size:1.1rem;border:none;background:none;cursor:pointer;color:var(--ink-3);padding:4px 10px">✕</button>
+    </div>
+
+    <div style="background:white;border:1px solid var(--paper-3);border-radius:var(--r-md);padding:1.25rem 1.5rem;margin-bottom:1rem">
+      <div style="font-size:.9rem;color:var(--ink-2);margin-bottom:.75rem">
+        Elegí la carpeta del backup en tu Drive:
+      </div>
+      <div style="font-family:var(--ff-mono,monospace);font-size:.8rem;background:var(--paper-2);padding:.5rem .75rem;border-radius:6px;color:var(--ink-3);margin-bottom:.85rem;word-break:break-all">${escapeHtml(backup.location || '')}</div>
+      <input type="file" id="be-folder" webkitdirectory directory multiple style="font-size:.85rem">
+      <div style="font-size:.72rem;color:var(--ink-4);margin-top:.5rem">
+        Seleccioná la carpeta <code>${escapeHtml(backup.stamp)}</code> completa. Los archivos se leen localmente (no se suben a ningún servidor).
+      </div>
+    </div>
+
+    <div id="be-status" style="font-size:.85rem;color:var(--ink-4)"></div>
+    <div id="be-content"></div>
+  `;
+
+  document.getElementById('be-close').addEventListener('click', () => {
+    drawer.style.display = 'none';
+  });
+
+  document.getElementById('be-folder').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    await loadBackupFolder(files, backup);
+  });
+}
+
+async function loadBackupFolder(files, backup) {
+  const status = document.getElementById('be-status');
+  const content = document.getElementById('be-content');
+
+  status.textContent = 'Cargando archivos…';
+  const byName = {};
+  for (const f of files) {
+    if (f.name.endsWith('.json')) {
+      try {
+        byName[f.name] = JSON.parse(await f.text());
+      } catch (e) {
+        status.textContent = `✗ Error leyendo ${f.name}: ${e.message}`;
+        return;
+      }
+    }
+  }
+
+  const summary = byName['_summary.json'];
+  if (!summary) {
+    status.textContent = '✗ No se encontró _summary.json — ¿es la carpeta correcta?';
+    return;
+  }
+  if (summary.fingerprint !== backup.fingerprint) {
+    status.innerHTML = `⚠ La carpeta cargada tiene fingerprint <code>${summary.fingerprint?.slice(0,10)}…</code>, pero este backup es <code>${backup.fingerprint.slice(0,10)}…</code>. Continuando de todos modos.`;
+  } else {
+    status.innerHTML = `✓ Fingerprint verificado — <code>${summary.fingerprint.slice(0,10)}…</code>`;
+  }
+
+  const snap = byName['questions_snapshot.json'] || {};
+  const users = byName['users.json'] || [];
+  const progress = byName['progress.json'] || [];
+  const responses = byName['question_responses.json'] || [];
+  const sessions = byName['app_sessions.json'] || [];
+  const qFeedback = byName['question_feedback.json'] || [];
+
+  const byEmail = new Map();
+  for (const u of users) byEmail.set(u.email, { user: u, progress: null, responses: [], sessions: [], feedback: [] });
+  for (const p of progress) { const e = byEmail.get(p.email); if (e) e.progress = p; }
+  for (const r of responses) { const e = byEmail.get(r.email); if (e) e.responses.push(r); }
+  for (const s of sessions) { const e = byEmail.get(s.email); if (e) e.sessions.push(s); }
+  for (const f of qFeedback) { const e = byEmail.get(f.email); if (e) e.feedback.push(f); }
+
+  content.innerHTML = `
+    <div style="background:white;border:1px solid var(--paper-3);border-radius:var(--r-md);padding:1.25rem 1.5rem;margin-top:1rem">
+      <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:.35rem">Resumen del backup</div>
+      <div style="font-size:.85rem;color:var(--ink-3)">
+        ${users.length} usuarios · ${progress.length} con progreso · ${responses.length} respuestas · ${sessions.length} sesiones · ${Object.keys(snap).length} preguntas snapshoteadas
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid var(--paper-3);border-radius:var(--r-md);margin-top:1rem">
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--paper-3);font-family:var(--ff-display);font-size:1rem">Elegí un alumno</div>
+      <select id="be-user-select" style="width:calc(100% - 3rem);margin:1rem 1.5rem;padding:.5rem .75rem;border:1px solid var(--paper-3);border-radius:8px;font-size:.9rem">
+        <option value="">— seleccionar —</option>
+        ${users.map(u => `<option value="${escapeHtml(u.email)}">${escapeHtml(u.email)} ${u.name ? `(${escapeHtml(u.name)})` : ''}</option>`).join('')}
+      </select>
+      <div id="be-user-view" style="padding:0 1.5rem 1.5rem"></div>
+    </div>
+  `;
+
+  document.getElementById('be-user-select').addEventListener('change', (e) => {
+    const email = e.target.value;
+    renderBackupUser(byEmail.get(email), snap);
+  });
+}
+
+function renderBackupUser(entry, snap) {
+  const view = document.getElementById('be-user-view');
+  if (!entry) { view.innerHTML = ''; return; }
+
+  const { user, progress, responses, sessions, feedback } = entry;
+  const respByQ = new Map();
+  for (const r of responses) respByQ.set(r.question_id, r);
+
+  const bitItems = [];
+  const sesgoGrouped = new Map();
+  for (const r of responses) {
+    const q = snap[r.question_id];
+    if (!q) continue;
+    if (q.type === 'bit') {
+      bitItems.push({ r, q });
+    } else if (q.type === 'sesgo_quiz' || q.type === 'sesgo_fixation') {
+      const key = q.sesgo_id;
+      if (!sesgoGrouped.has(key)) sesgoGrouped.set(key, { name: q.sesgo_name, items: [] });
+      sesgoGrouped.get(key).items.push({ r, q });
+    }
+  }
+  bitItems.sort((a, b) => new Date(a.r.created_at) - new Date(b.r.created_at));
+
+  const bitHtml = bitItems.length ? `
+    <div style="background:var(--paper-2);border-radius:var(--r-md);padding:1rem 1.25rem;margin-bottom:1rem">
+      <div style="font-family:var(--ff-display);font-size:.95rem;margin-bottom:.75rem">BIT — ${bitItems.length} respuestas</div>
+      ${bitItems.map(({r, q}) => {
+        const opt = q.options?.[r.answer_idx];
+        return `
+          <div style="padding:.75rem 0;border-bottom:1px solid var(--paper-3)">
+            <div style="font-size:.85rem;color:var(--ink-2);margin-bottom:.35rem">${escapeHtml(q.prompt)}</div>
+            <div style="font-size:.82rem;color:var(--ink-3);margin-left:1rem">
+              <strong>${opt?.label || '?'}.</strong> ${escapeHtml(opt?.text || '(respuesta no reconocida)')}
+              ${opt?.type ? `<span style="background:var(--ink);color:white;font-size:.7rem;padding:1px 6px;border-radius:4px;margin-left:.5rem">${opt.type}</span>` : ''}
+            </div>
+          </div>`;
+      }).join('')}
+    </div>` : '';
+
+  const sesgosHtml = Array.from(sesgoGrouped.entries()).map(([sid, { name, items }]) => {
+    items.sort((a, b) => a.r.question_id.localeCompare(b.r.question_id));
+    return `
+      <div style="background:var(--paper-2);border-radius:var(--r-md);padding:1rem 1.25rem;margin-bottom:1rem">
+        <div style="font-family:var(--ff-display);font-size:.95rem;margin-bottom:.75rem">${escapeHtml(name)} <span style="font-size:.78rem;color:var(--ink-4);font-weight:400">· ${items.length} respuestas</span></div>
+        ${items.map(({r, q}) => {
+          const opt = q.options?.[r.answer_idx];
+          const prompt = q.prompt || q.question || '';
+          return `
+            <div style="padding:.75rem 0;border-bottom:1px solid var(--paper-3)">
+              <div style="font-size:.78rem;color:var(--ink-4);text-transform:uppercase;letter-spacing:.03em;margin-bottom:.3rem">${q.type === 'sesgo_fixation' ? 'Verificación' : 'Escenario'}</div>
+              <div style="font-size:.85rem;color:var(--ink-2);margin-bottom:.35rem">${escapeHtml(prompt)}</div>
+              <div style="font-size:.82rem;color:var(--ink-3);margin-left:1rem">
+                → ${escapeHtml(opt?.text || '(opción no encontrada)')}
+                ${opt?.reveal ? `<div style="color:var(--ink-4);font-size:.78rem;margin-top:.25rem;font-style:italic">${escapeHtml(opt.reveal)}</div>` : ''}
+              </div>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+
+  const sessionsHtml = sessions.length ? `
+    <div style="background:var(--paper-2);border-radius:var(--r-md);padding:1rem 1.25rem;margin-bottom:1rem">
+      <div style="font-family:var(--ff-display);font-size:.95rem;margin-bottom:.75rem">Sesiones (${sessions.length})</div>
+      ${sessions.slice(0, 10).map(s => {
+        const dur = s.last_seen_at ? Math.round((new Date(s.last_seen_at) - new Date(s.started_at)) / 60000) : '?';
+        return `<div style="font-size:.8rem;color:var(--ink-3);padding:.35rem 0;border-bottom:1px solid var(--paper-3)">
+          <strong>${new Date(s.started_at).toLocaleString('es-MX')}</strong> · ${dur} min · termina en <em>${s.last_screen || '?'}</em>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  view.innerHTML = `
+    <div style="padding:1rem 0">
+      <div style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:.25rem">${escapeHtml(user.email)}</div>
+      ${user.name ? `<div style="color:var(--ink-3);font-size:.85rem;margin-bottom:.75rem">${escapeHtml(user.name)}</div>` : ''}
+      <div style="font-size:.78rem;color:var(--ink-4);margin-bottom:1rem">
+        Registrado: ${new Date(user.created_at).toLocaleString('es-MX')}
+        ${progress ? ` · BIT ${progress.bit_done ? 'completado' : 'pendiente'} · ${Object.keys(progress.sesgos || {}).length} sesgos tocados` : ''}
+      </div>
+      ${sessionsHtml}
+      ${bitHtml}
+      ${sesgosHtml}
+      ${!bitItems.length && !sesgoGrouped.size ? '<div style="color:var(--ink-4);font-size:.9rem;padding:2rem;text-align:center">Este alumno no tiene respuestas registradas en este backup.</div>' : ''}
+    </div>
+  `;
 }
 
 function formatRelative(iso) {

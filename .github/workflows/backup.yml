@@ -1,0 +1,36 @@
+name: Weekly backup
+
+on:
+  schedule:
+    # Every Sunday at 03:00 UTC (≈ 21:00 CDMX Saturday in winter / 22:00 in summer).
+    - cron: '0 3 * * 0'
+  workflow_dispatch: {}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run backup
+        env:
+          BACKUP_DIR: ./backup-output
+        run: node scripts/backup.mjs
+
+      - name: List output
+        if: always()
+        run: ls -la ./backup-output || echo "no output (maybe skipped)"
+
+      - name: Upload backup folder as artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-${{ github.run_id }}
+          path: backup-output/
+          retention-days: 90
+          if-no-files-found: ignore
