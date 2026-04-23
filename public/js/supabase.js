@@ -140,10 +140,11 @@ export async function saveProgress(progress) {
   }, 'saveProgress');
 }
 
-export async function createSession(email) {
+export async function createSession(email, meta = {}) {
   if (readOnly) return null;
+  const now = new Date().toISOString();
   return request('/rest/v1/app_sessions', 'POST',
-    { email, started_at: new Date().toISOString(), last_seen_at: new Date().toISOString(), screens: [] },
+    { email, started_at: now, last_seen_at: now, screens: [], ...meta },
     { Prefer: 'return=representation' },
     'createSession'
   );

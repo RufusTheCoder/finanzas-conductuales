@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423a';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423b';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260423a';
+import { SESGOS } from '../data/sesgos.js?v=20260423b';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -1121,6 +1121,9 @@ function renderBitResult() {
       <div class="result-hero-tag">Tu perfil conductual como inversionista</div>
       <div class="result-hero-name" style="color:${profile.color}">${profile.name}</div>
       <div class="result-hero-sub">${profile.tagline}</div>
+      <button class="btn-share-profile" id="btn-share-profile" title="Compartir mi perfil">
+        📤 Compartir mi perfil
+      </button>
       <div class="bit-step-indicator">
         <span class="bit-step${step===1?' active':' done'}">1 · Tu perfil</span>
         <span class="bit-step-sep">→</span>
@@ -1222,6 +1225,10 @@ function renderBitResult() {
   c.className = 'result-shell';
   c.innerHTML = hero + `<div class="result-body">${bodyHtml}</div>`;
   app.appendChild(c);
+
+  document.getElementById('btn-share-profile')?.addEventListener('click', () => {
+    shareBitProfile(profile, result);
+  });
 
   if (step === 1) {
     state.bitProfileRating = state.bitProfileRating ?? 3;
@@ -2276,9 +2283,22 @@ function renderReport() {
 
 // ── SESSION TRACKING ─────────────────────────────
 
+function captureTrafficMeta() {
+  const qp = new URLSearchParams(window.location.search);
+  return {
+    referrer: (document.referrer || '').slice(0, 500) || null,
+    utm_source: qp.get('utm_source') || null,
+    utm_medium: qp.get('utm_medium') || null,
+    utm_campaign: qp.get('utm_campaign') || null,
+    landing_path: window.location.pathname + window.location.search,
+    language: navigator.language || null,
+    viewport: `${window.innerWidth}x${window.innerHeight}`,
+  };
+}
+
 async function startSession() {
   try {
-    const rows = await createSession(state.user.email);
+    const rows = await createSession(state.user.email, captureTrafficMeta());
     state.sessionId = Array.isArray(rows) ? rows[0]?.id : rows?.id;
   } catch (e) {
     console.warn('Session start failed:', e);
@@ -2732,11 +2752,63 @@ window.addEventListener('error', (e) => {
     filename: e.filename, lineno: e.lineno, colno: e.colno,
     stack: e.error?.stack || null,
   });
+  showToast('Ocurrió un problema técnico. Ya recibimos el reporte.', 'error');
 });
 window.addEventListener('unhandledrejection', (e) => {
   const r = e.reason;
-  logJsError('unhandledrejection', String(r?.message || r), { stack: r?.stack || null });
+  const msg = String(r?.message || r);
+  logJsError('unhandledrejection', msg, { stack: r?.stack || null });
+  // Suppress toasts for known-benign cases so we don't spam the user.
+  const silent = /JWT expired|AbortError|Failed to fetch|Load failed/i.test(msg);
+  if (!silent) showToast('Algo no salió bien. Vuelve a intentarlo en unos segundos.', 'error');
 });
+
+// ── SHARE ──────────────────────────────────────────
+async function shareBitProfile(profile, result) {
+  const url = 'https://finanzas-conductuales.netlify.app';
+  const label = bitLabel(result.primary);
+  const text = `Descubrí que mi perfil como inversor es "${profile.name}" (${label}). Haz el test y encuentra el tuyo:`;
+  const shareData = { title: 'Mi perfil BIT · Finanzas Conductuales', text, url };
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+  } catch (e) {
+    if (e?.name === 'AbortError') return; // user cancelled, no-op
+  }
+  // fallback: copy to clipboard
+  try {
+    await navigator.clipboard.writeText(`${text} ${url}`);
+    showToast('Enlace copiado al portapapeles.', 'ok');
+  } catch (_) {
+    showToast('No se pudo copiar. Copia manualmente: ' + url, 'error');
+  }
+}
+
+// ── TOAST SYSTEM ──────────────────────────────────
+let _toastTimer = null;
+function showToast(message, tone = 'info') {
+  let wrap = document.getElementById('toast-wrap');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'toast-wrap';
+    wrap.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10000;pointer-events:none';
+    document.body.appendChild(wrap);
+  }
+  const toast = document.createElement('div');
+  const bg = tone === 'error' ? '#B91C1C' : tone === 'ok' ? '#059669' : '#1F1F1F';
+  toast.style.cssText = `background:${bg};color:white;padding:12px 20px;border-radius:999px;font-size:14px;font-family:-apple-system,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.18);max-width:90vw;margin-top:8px;opacity:0;transition:opacity .2s;pointer-events:auto`;
+  toast.textContent = message;
+  wrap.appendChild(toast);
+  requestAnimationFrame(() => { toast.style.opacity = '1'; });
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 220);
+  }, 4500);
+}
+window.showToast = showToast; // exposed for manual use
 
 // ── UTILS ────────────────────────────────────────
 

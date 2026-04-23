@@ -221,6 +221,33 @@ button { font: inherit; }
 }
 .auth-footer a:hover { color: var(--ink-2); text-decoration: underline; }
 
+.btn-share-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin: 1rem auto 0;
+  padding: .55rem 1.2rem;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: .85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+  backdrop-filter: blur(6px);
+}
+.btn-share-profile:hover {
+  background: rgba(255,255,255,.3);
+  transform: translateY(-1px);
+}
+body.dark .btn-share-profile {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.15);
+  color: var(--ink-1);
+}
+
 .auth-error {
   text-align: center;
   font-size: .82rem;
