@@ -3,8 +3,8 @@
 > Plataforma educacional de finanças comportamentais para alunos da
 > Universidad Iberoamericana CDMX. Curso do Rodrigo Marques.
 >
-> - App: https://finanzas-conductuales.netlify.app
-> - Admin: https://finanzas-conductuales.netlify.app/admin.html
+> - App: https://finanzas-conductuales-ibero.netlify.app
+> - Admin: https://finanzas-conductuales-ibero.netlify.app/admin.html
 > - Supabase: `ncausitrddvtoyivolkj.supabase.co`
 > - Repo: https://github.com/RufusTheCoder/finanzas-conductuales
 

@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423b';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423c';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260423b';
+import { SESGOS } from '../data/sesgos.js?v=20260423c';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -2765,7 +2765,7 @@ window.addEventListener('unhandledrejection', (e) => {
 
 // ── SHARE ──────────────────────────────────────────
 async function shareBitProfile(profile, result) {
-  const url = 'https://finanzas-conductuales.netlify.app';
+  const url = 'https://finanzas-conductuales-ibero.netlify.app';
   const label = bitLabel(result.primary);
   const text = `Descubrí que mi perfil como inversor es "${profile.name}" (${label}). Haz el test y encuentra el tuyo:`;
   const shareData = { title: 'Mi perfil BIT · Finanzas Conductuales', text, url };

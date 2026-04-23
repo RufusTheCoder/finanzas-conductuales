@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Educational platform on behavioral finance for students at Universidad Iberoamericana CDMX (course by Rodrigo Marques). Pure HTML/CSS/JS frontend — no build step, no framework, no package manager.
 
-**Live URL:** finanzas-conductuales.netlify.app  
+**Live URL:** finanzas-conductuales-ibero.netlify.app  
 **Supabase project:** ncausitrddvtoyivolkj.supabase.co
 
 ## Running locally
