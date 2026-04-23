@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260421s';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422b';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260421y';
+import { SESGOS } from '../data/sesgos.js?v=20260422b';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -641,10 +641,10 @@ function renderDashboard() {
   `;
   app.appendChild(c);
 
-  document.getElementById('btn-logout').addEventListener('click', handleLogout);
+  document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
   document.getElementById('btn-dev-fill')?.addEventListener('click', devFillAll);
   document.getElementById('btn-dev-clear')?.addEventListener('click', devClearAll);
-  document.getElementById('btn-dark-mode').addEventListener('click', () => { toggleDarkMode(); render(); });
+  document.getElementById('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); render(); });
   document.getElementById('btn-resend-dash')?.addEventListener('click', async (e) => {
     e.target.disabled = true; e.target.textContent = 'Enviando…';
     try {
@@ -2505,7 +2505,7 @@ function renderNextSteps() {
     state.screen = 'dashboard';
     render();
   });
-  document.getElementById('btn-logout').addEventListener('click', handleLogout);
+  document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
 
   document.querySelectorAll('.next-option input').forEach(cb => {
     cb.addEventListener('change', () => {

@@ -149,9 +149,41 @@ export async function createSession(email) {
   );
 }
 
+// Session heartbeat — bypasses the user JWT so an expired token on a
+// long-open tab doesn't turn every update into a 401. app_sessions has
+// an "allow all" RLS policy, so anon can patch by id.
 export async function updateSession(id, patch) {
   if (readOnly) return null;
-  return request(`/rest/v1/app_sessions?id=eq.${id}`, 'PATCH', patch, {}, 'updateSession');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/app_sessions?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(patch),
+      keepalive: true,
+    });
+    if (!res.ok && res.status !== 401) {
+      // 401 is silenced on purpose; anything else deserves a record.
+      const payload = await res.json().catch(() => null);
+      fireAndForgetClientError({
+        email: errorContext.email,
+        screen: errorContext.screen,
+        op: 'updateSession',
+        http_status: res.status,
+        message: payload?.message || `HTTP ${res.status}`,
+        body: payload,
+        url: `/rest/v1/app_sessions?id=eq.${id}`,
+        user_agent: navigator.userAgent,
+      });
+    }
+  } catch (_) {
+    // network errors on a best-effort heartbeat are not worth logging.
+  }
+  return null;
 }
 
 export async function requestPasswordReset(email) {
