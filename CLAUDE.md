@@ -78,24 +78,43 @@ When user posts a meeting/email/feedback row in `Reuniões IBERO` with Processam
 
 ### Bugs & errors auto-sync
 
-Automated routine that pulls unsynchronized rows from Supabase `bug_reports` and `client_errors` and creates tasks in the Notion database `Tarefas` (Projeto=IBERO).
+Dois crons separados alimentam a database Notion `Tarefas` (Projeto=IBERO).
 
 - **Notion data source id (Tarefas):** `3c807d54-ad67-413a-acca-00b2e7afab20`
-- **Tracking columns:** `bug_reports.notion_task_url`, `client_errors.notion_task_url`, `client_errors.dedupe_hash`
-- **client_errors dedupe:** `op || '|' || LEFT(message, 120)` — one task per distinct error in a 7-day window, even if it fires many times.
-- **Priority heuristic for client_errors:** Alta if `users_affected >= 3` OR `http_status >= 500`, else Média.
+- **Tracking columns:** `bug_reports.notion_task_url`, `client_errors.notion_task_url`, `client_errors.dedupe_hash`, `client_errors.triage_status`
+
+**Cron A — bugs rápido (a cada 2h):**
+Sincroniza `bug_reports` (reportados pelo aluno via FAB). Texto canônico em
+`notion_sync_prompt.md`.
+
+**Cron B — triagem diária de erros (5am):**
+Para `client_errors`. Primeiro filtra ruído conhecido (JWT expired, fetch
+abortado, etc.) marcando `triage_status='noise'`. Erros reais são analisados
+(significado, impacto, fix, risco) e viram tarefa Notion com `triage_status='real-pending'`.
+Texto canônico em `error_triage_prompt.md`.
+
+- **Dedupe de client_errors:** `op || '|' || LEFT(message, 120)` — uma tarefa por erro distinto em janela de 7 dias.
+- **Prioridade heurística:** Alta se severidade crítica/alta OU `users_affected >= 3` OU `http_status >= 500`; Baja se severidade baja; senão Média.
 
 ### Session bootstrap
 
-At the start of every session, call `CronList` and check for a recurring job whose prompt mentions `finanzas-conductuales` and `bug_reports`. If none exists, recreate it with `CronCreate` using:
+No início de cada sessão, chamar `CronList` e verificar se os dois crons estão ativos.
+Se algum faltar, recriar via `CronCreate`:
 
+**Cron A (bug_reports → Notion):**
 - `cron`: `13 */2 * * *` (every 2 hours at :13 local)
-- `recurring`: true
-- `durable`: true
-- `prompt`: the full sync procedure (same as the one currently running — read `notion_sync_prompt.md` for the canonical text).
+- `recurring`: true, `durable`: true
+- `prompt`: texto completo de `notion_sync_prompt.md`
 
-Crons in this environment are session-only and auto-expire after 7 days, so this bootstrap check must run every session to keep the pipeline alive.
+**Cron B (client_errors triage → Notion):**
+- `cron`: `0 5 * * *` (5:00 local todo dia)
+- `recurring`: true, `durable`: true
+- `prompt`: texto completo de `error_triage_prompt.md`
+
+Crons neste ambiente são session-only e auto-expiram após 7 dias, então este
+bootstrap precisa rodar a cada sessão para manter os dois pipelines vivos.
 
 ### Manual trigger
 
-To run the sync immediately without waiting for the next cron fire, ask: "roda o sync do Notion agora".
+- "roda o sync do Notion agora" → dispara só Cron A (bug_reports)
+- "roda a triagem de erros agora" → dispara só Cron B (client_errors)

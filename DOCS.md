@@ -261,25 +261,43 @@ CREATE TABLE public.backup_log (
 - Nenhum pipeline de CI bloqueia o merge hoje — a cron de backup é
   o único workflow ativo
 
-## 8.1 Triagem diária de erros
+## 8.1 Triagem diária de erros (Notion)
 
-Rotina que roda às 5:00 CDMX todo dia, separa ruído de erro real e manda
-digest por email com botões funcionais.
+Rotina que roda às 5am CDMX todo dia, separa ruído de erro real e cria
+tarefa no Notion (database Tarefas, Projeto=IBERO) com análise rica.
+**Custo zero** — roda na session do Claude Code (cron-based), sem API
+externa.
 
-- **Cron:** `.github/workflows/error-triage.yml` (11:00 UTC)
-- **Script:** `scripts/error-triage.mjs`
-- **Edge Function:** `error-action` (recebe cliques dos botões)
-- **Setup inicial:** `scripts/ERROR_TRIAGE_SETUP.md` (secrets a adicionar)
+- **Prompt canônico:** [error_triage_prompt.md](error_triage_prompt.md)
+- **Cron:** gerenciado via `CronCreate` do Claude Code (session-only,
+  expira em 7 dias → CLAUDE.md tem bootstrap pra recriar)
+- **Dedupe:** `dedupe_hash = op || '|' || LEFT(message, 120)`
 
 Fluxo:
-1. Pega `client_errors` com `triage_status='pending'`
-2. Ruído conhecido (JWT heartbeat, aborted fetches) vira `noise` silencioso
-3. Erros reais → Claude API analisa cada um (significado, impacto, fix, risco)
-4. Resend envia email digest com botões `Corregir` / `Dejar para después` / `Ignorar`
-5. Botões batem na Edge Function com HMAC token → atualizam DB
+1. Pega `client_errors` com `triage_status='pending'` dos últimos 7 dias
+2. Ruído conhecido (JWT heartbeat, aborted fetches, 404s esperados)
+   vira `triage_status='noise'` silencioso
+3. Erros reais são analisados pelo Claude da sessão:
+   - **Qué significa** (técnico)
+   - **Impacto para el alumno**
+   - **Cómo corregir** (com referência a arquivo/linha)
+   - **Riesgo del fix** (bajo/medio/alto)
+4. Cria tarefa no Notion com esses 4 campos + contexto técnico
+5. Marca `triage_status='real-pending'`, preenche `notion_task_url`
 
-Colunas novas em `client_errors`: `triage_status`, `triaged_at`,
-`triage_notes` (jsonb com output da análise), `action_taken`, `action_at`.
+O aluno lida com as tarefas no Notion — mudando o Status da tarefa
+(`Sin empezar → En progreso → Concluída` ou `Ignorar`). Não há
+sincronização de volta pra `client_errors.triage_status` hoje (não
+necessária — a tarefa vive no Notion).
+
+Colunas em `client_errors`: `triage_status`, `triaged_at`,
+`triage_notes` (jsonb com a análise), `action_taken`, `action_at`.
+
+### Bug reports (separado, mais rápido)
+
+Bug reports submetidos pelo aluno via FAB vão por cron separado a cada
+2h via `notion_sync_prompt.md`. Mesmo data source no Notion, mas com
+Tipo="Bug reportado" e sem necessidade de filtragem de ruído.
 
 ## 9. Notion sync (bugs + erros)
 
