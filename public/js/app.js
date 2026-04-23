@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422b';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422c';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260422b';
+import { SESGOS } from '../data/sesgos.js?v=20260422c';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -156,7 +156,35 @@ const state = {
   viewAs: null,
   nextStepsCounts: null,
   nextStepsSaving: false,
+  // Shuffle cache for answer options (keyed by question id).
+  // We shuffle display order so students can't learn "A is always the right one",
+  // but answer_idx is stored as the *original* index so scoring, revisión de
+  // respuestas, backups and all analytics keep working unchanged.
+  shuffleOrder: {},
 };
+
+// Fisher-Yates shuffle, in-place.
+function fisherYates(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Returns [{opt, origIdx, displayIdx}] for a given question key.
+// Caches the order so the student sees the same order when navigating back
+// within the session. Refreshing the tab generates a new order — that's fine.
+function getShuffledOptions(key, options) {
+  if (!state.shuffleOrder[key]) {
+    state.shuffleOrder[key] = fisherYates([...Array(options.length).keys()]);
+  }
+  return state.shuffleOrder[key].map((origIdx, displayIdx) => ({
+    opt: options[origIdx],
+    origIdx,
+    displayIdx,
+  }));
+}
 
 // Dark mode init
 if (localStorage.getItem('fc_dark') === '1') document.body.classList.add('dark');
@@ -915,10 +943,10 @@ function renderBit() {
       <div class="quiz-question-card">
         <div class="q-situation">${q.prompt}</div>
         <div class="q-options">
-          ${q.options.map((o, i) => `
-            <button class="q-option ${state.bitAnswers[state.bitIndex] === i ? 'selected' : ''}" data-idx="${i}">
-              <span class="q-letter">${o.label}</span>
-              <span>${o.text}</span>
+          ${getShuffledOptions(`bit_${q.id}`, q.options).map(({ opt, origIdx, displayIdx }) => `
+            <button class="q-option ${state.bitAnswers[state.bitIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
+              <span class="q-letter">${'ABCD'[displayIdx]}</span>
+              <span>${opt.text}</span>
             </button>
           `).join('')}
         </div>
@@ -1270,10 +1298,10 @@ function renderSesgoQuiz() {
       <div class="quiz-question-card">
         <div class="q-situation">${q.situation}</div>
         <div class="q-options">
-          ${q.options.map((o, i) => `
-            <button class="q-option ${state.sesgoAnswers[state.sesgoIndex] === i ? 'selected' : ''}" data-idx="${i}">
-              <span class="q-letter">${['A', 'B'][i]}</span>
-              <span>${o.text}</span>
+          ${getShuffledOptions(`${s.id}_q${state.sesgoIndex}`, q.options).map(({ opt, origIdx, displayIdx }) => `
+            <button class="q-option ${state.sesgoAnswers[state.sesgoIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
+              <span class="q-letter">${'AB'[displayIdx]}</span>
+              <span>${opt.text}</span>
             </button>
           `).join('')}
         </div>
@@ -1451,10 +1479,10 @@ function renderSesgoFixation() {
       <div class="quiz-question-card">
         <div class="q-situation" style="font-size:1.1rem">${q.question}</div>
         <div class="q-options">
-          ${q.options.map((o, i) => `
-            <button class="q-option ${state.fixationAnswers[state.fixationIndex] === i ? 'selected' : ''}" data-idx="${i}">
-              <span class="q-letter">${['A', 'B', 'C'][i]}</span>
-              <span>${o}</span>
+          ${getShuffledOptions(`${s.id}_f${state.fixationIndex}`, q.options).map(({ opt, origIdx, displayIdx }) => `
+            <button class="q-option ${state.fixationAnswers[state.fixationIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
+              <span class="q-letter">${'ABC'[displayIdx]}</span>
+              <span>${opt}</span>
             </button>
           `).join('')}
         </div>
