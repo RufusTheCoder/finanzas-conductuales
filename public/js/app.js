@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260422d';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423a';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260422d';
+import { SESGOS } from '../data/sesgos.js?v=20260423a';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -358,6 +358,9 @@ function authShell(body) {
         <div class="auth-logo-text">Ibero CDMX<br>Finanzas Conductuales</div>
       </div>
       ${body}
+      <div class="auth-footer">
+        <a href="privacy.html" target="_blank" rel="noopener">Aviso de Privacidad</a>
+      </div>
     </div>
   `;
   app.appendChild(c);
@@ -420,6 +423,7 @@ function renderAuth() {
 
 function renderAuthLogin() {
   authShell(`
+    <div class="auth-context">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>
     <h1 class="auth-headline">Conoce tu mente<br><em>de inversionista</em></h1>
     <p class="auth-sub">Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.</p>
     ${authErrHtml()}
@@ -445,6 +449,7 @@ function renderAuthLogin() {
 
 function renderAuthSignup() {
   authShell(`
+    <div class="auth-context">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>
     <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">Crear cuenta</h1>
     <p class="auth-sub">Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.</p>
     ${authErrHtml()}
@@ -452,6 +457,10 @@ function renderAuthSignup() {
       <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required>
       <input type="password" name="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="new-password" minlength="6" required>
       <input type="password" name="password2" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+      <label class="auth-consent">
+        <input type="checkbox" name="consent" required>
+        <span>Acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.</span>
+      </label>
       <button class="btn-primary" type="submit">Crear cuenta</button>
     </form>
     <div style="text-align:center;margin-top:.75rem">

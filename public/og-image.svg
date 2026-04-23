@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FBF7EF"/>
+      <stop offset="100%" stop-color="#F3EADA"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#C6412B"/>
+      <stop offset="100%" stop-color="#E86A4E"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- subtle pattern dots -->
+  <g fill="#D6CCB8" opacity="0.45">
+    <circle cx="100" cy="100" r="3"/>
+    <circle cx="160" cy="80" r="2"/>
+    <circle cx="220" cy="110" r="3"/>
+    <circle cx="1100" cy="520" r="3"/>
+    <circle cx="1040" cy="540" r="2"/>
+    <circle cx="1080" cy="470" r="3"/>
+  </g>
+
+  <!-- accent bar -->
+  <rect x="80" y="150" width="84" height="6" rx="3" fill="url(#accent)"/>
+
+  <!-- title -->
+  <text x="80" y="235" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#1A1A1A">
+    Finanzas
+  </text>
+  <text x="80" y="325" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#1A1A1A">
+    Conductuales
+  </text>
+
+  <!-- subtitle -->
+  <text x="80" y="400" font-family="-apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#555" font-weight="400">
+    Descubrí tu perfil como inversor · 15 sesgos cognitivos
+  </text>
+  <text x="80" y="440" font-family="-apple-system, 'Segoe UI', sans-serif" font-size="26" fill="#555" font-weight="400">
+    explicados con escenarios reales · ~25 minutos
+  </text>
+
+  <!-- CTA pill -->
+  <rect x="80" y="495" width="280" height="58" rx="29" fill="url(#accent)"/>
+  <text x="220" y="533" font-family="-apple-system, 'Segoe UI', sans-serif" font-size="21" font-weight="600" fill="white" text-anchor="middle">
+    Empezá gratis →
+  </text>
+
+  <!-- right: big brain emoji -->
+  <text x="1020" y="380" font-size="280" text-anchor="middle">🧠</text>
+</svg>
