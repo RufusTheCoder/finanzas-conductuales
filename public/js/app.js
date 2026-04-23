@@ -1,7 +1,7 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423d';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260423e';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260423d';
+import { SESGOS } from '../data/sesgos.js?v=20260423e';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 
 const app = document.getElementById('app');
@@ -2487,7 +2487,7 @@ const NEXT_STEPS_OPTIONS = [
   { id: 'herramientas', label: 'Herramientas prácticas para mitigar sesgos', hint: 'Plantillas, checklists, rutinas accionables' },
   { id: 'coaching',     label: 'Coaching 1:1 sobre mi perfil BIT',       hint: 'Sesiones individuales con Rodrigo' },
   { id: 'comunidad',    label: 'Comunidad de ex-alumnos',                hint: 'Grupo para seguir aprendiendo y compartir casos' },
-  { id: 'corporativa',  label: 'Capacitación corporativa Pandava',       hint: 'Llevar este programa a tu equipo o empresa' },
+  { id: 'corporativa',  label: 'Capacitación corporativa Pandava',       hint: 'Llevar este programa a tu equipo o empresa', hidden: true },
   { id: 'informe-pdf',  label: 'Informe PDF exportable',                 hint: 'Descargar tu informe final en PDF' },
 ];
 
@@ -2545,7 +2545,7 @@ function renderNextSteps() {
       <div class="next-card">
         <div class="next-card-title">Lo que me interesa</div>
         <div class="next-options">
-          ${NEXT_STEPS_OPTIONS.map(opt => `
+          ${NEXT_STEPS_OPTIONS.filter(opt => !opt.hidden).map(opt => `
             <label class="next-option ${interests.includes(opt.id) ? 'checked' : ''}">
               <input type="checkbox" data-opt="${opt.id}" ${interests.includes(opt.id) ? 'checked' : ''}>
               <div class="next-option-body">
@@ -2571,7 +2571,7 @@ function renderNextSteps() {
         <div class="next-card-title">Qué eligen los demás participantes</div>
         <p class="next-sub" style="margin-bottom:1.25rem">Respuestas consolidadas — así ves dónde se concentra el interés del grupo.</p>
         <div class="next-stats">
-          ${NEXT_STEPS_OPTIONS.map(opt => {
+          ${NEXT_STEPS_OPTIONS.filter(opt => !opt.hidden).map(opt => {
             const n = counts.find(r => r.interest === opt.id)?.n || 0;
             const pct = Math.round((n / total) * 100);
             return `
