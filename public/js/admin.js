@@ -103,7 +103,7 @@ let DATA = null;
 
 async function loadAll() {
   try {
-    const [users, progress, responses, flags, sessions, qFeedback, cFeedback, bugs, nextSteps, errors] = await Promise.all([
+    const [users, progress, responses, flags, sessions, qFeedback, cFeedback, bugs, nextSteps, errors, backups] = await Promise.all([
       get('/rest/v1/users?select=email,name,created_at,onboarding_seen_at&order=created_at.desc'),
       get('/rest/v1/progress?select=*&order=updated_at.desc'),
       get('/rest/v1/question_responses?select=email,question_id,q_type,sesgo_id,answer_idx,answer_type,created_at'),
@@ -114,17 +114,19 @@ async function loadAll() {
       get('/rest/v1/bug_reports?select=*&order=created_at.desc').catch(() => []),
       get('/rest/v1/next_steps_responses?select=*&order=updated_at.desc').catch(() => []),
       get('/rest/v1/client_errors?select=*&order=created_at.desc&limit=500').catch(() => []),
+      get('/rest/v1/backup_log?select=*&order=created_at.desc&limit=100').catch(() => []),
     ]);
     const flagMap = {};
     flags.forEach(f => { flagMap[f.question_id] = f; });
 
-    DATA = { users, progress, responses, flagMap, sessions, qFeedback, cFeedback, bugs, nextSteps, errors };
+    DATA = { users, progress, responses, flagMap, sessions, qFeedback, cFeedback, bugs, nextSteps, errors, backups };
 
     renderResumen();
     renderPreguntas();
     renderUsuarios();
     renderFeedback();
     renderErrores();
+    renderBackups();
 
     if (lastRefresh) lastRefresh.textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'});
   } catch (e) {
@@ -1408,4 +1410,93 @@ function udSection(title, html) {
     <div style="font-family:var(--ff-display);font-size:1rem;margin-bottom:.75rem">${title}</div>
     ${html}
   </div>`;
+}
+
+// ── BACKUPS ──────────────────────────────────────
+
+function renderBackups() {
+  const pane = document.getElementById('tab-backups');
+  const backups = DATA.backups || [];
+  const last = backups[0];
+
+  const header = `
+    <div style="background:white;border-radius:var(--r-md);padding:1.5rem;border:1px solid var(--paper-3);margin-bottom:1.5rem">
+      <div style="font-family:var(--ff-display);font-size:1.15rem;margin-bottom:.5rem">Backups registrados</div>
+      <p style="font-size:.85rem;color:var(--ink-3);line-height:1.55;margin:0 0 1rem 0">
+        Cada backup guarda (a) un dump por tabla en JSON y (b) un <em>snapshot</em> de cada pregunta con su texto exacto al momento del backup.
+        Si cambias el texto de una pregunta en el futuro, las respuestas antiguas siguen enlazadas al texto que el alumno vio realmente.
+      </p>
+      <div style="font-size:.82rem;color:var(--ink-3)">
+        Para crear un backup nuevo, desde la raíz del repo:
+        <code style="display:inline-block;background:var(--paper-2);padding:3px 8px;border-radius:6px;margin-left:.35rem;font-size:.85em">node scripts/backup.mjs</code>
+      </div>
+      <div style="font-size:.75rem;color:var(--ink-4);margin-top:.5rem">
+        Si no hay cambios desde el último backup, el script se autoexcluye — no duplica ni borra nada previo.
+      </div>
+    </div>`;
+
+  if (!backups.length) {
+    pane.innerHTML = header + `<div style="color:var(--ink-4);font-size:.9rem;padding:1.5rem;text-align:center;background:white;border-radius:var(--r-md);border:1px solid var(--paper-3)">
+      Aún no hay backups registrados.
+    </div>`;
+    return;
+  }
+
+  const kpis = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem">
+      ${kpi(backups.length, 'Total backups', `último: ${formatRelative(last.created_at)}`, 'var(--ink-3)')}
+      ${kpi(last.user_count, 'Usuarios en el último', `${last.progress_count} con progreso`, 'var(--success)')}
+      ${kpi(last.response_count, 'Respuestas guardadas', `${last.total_rows} filas totales`, 'var(--ink-3)')}
+    </div>`;
+
+  const rows = backups.map((b, i) => {
+    const prev = backups[i + 1];
+    const diff = prev ? (b.total_rows - prev.total_rows) : b.total_rows;
+    const diffColor = diff > 0 ? 'var(--success)' : diff < 0 ? 'var(--red)' : 'var(--ink-4)';
+    const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+    return `
+      <tr>
+        <td style="font-family:var(--ff-mono,monospace);font-size:.78rem">${b.stamp}</td>
+        <td style="font-size:.8rem;color:var(--ink-3)">${new Date(b.created_at).toLocaleString('es-MX')}</td>
+        <td style="text-align:center;font-weight:700">${b.user_count}</td>
+        <td style="text-align:center">${b.progress_count}</td>
+        <td style="text-align:center">${b.response_count}</td>
+        <td style="text-align:center;font-weight:700">${b.total_rows}</td>
+        <td style="text-align:center;color:${diffColor};font-weight:600;font-size:.8rem">${diffStr}</td>
+        <td style="font-family:var(--ff-mono,monospace);font-size:.7rem;color:var(--ink-4)">${(b.fingerprint || '').slice(0, 10)}…</td>
+        <td style="font-size:.72rem;color:var(--ink-4);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(b.location || '')}">${escapeHtml(b.location || '—')}</td>
+      </tr>`;
+  }).join('');
+
+  pane.innerHTML = header + kpis + `
+    <div style="background:white;border-radius:var(--r-md);border:1px solid var(--paper-3);overflow:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--paper-2);text-align:left">
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Stamp</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Creado</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Usr</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Prog</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Resp</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Total</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;text-align:center">Δ</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Fingerprint</th>
+            <th style="padding:.65rem .85rem;font-size:.72rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function formatRelative(iso) {
+  const then = new Date(iso).getTime();
+  const diff = Date.now() - then;
+  const mins = Math.round(diff / 60000);
+  if (mins < 2) return 'ahora mismo';
+  if (mins < 60) return `hace ${mins} min`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return `hace ${hrs} h`;
+  const days = Math.round(hrs / 24);
+  return `hace ${days} d`;
 }
