@@ -261,6 +261,26 @@ CREATE TABLE public.backup_log (
 - Nenhum pipeline de CI bloqueia o merge hoje — a cron de backup é
   o único workflow ativo
 
+## 8.1 Triagem diária de erros
+
+Rotina que roda às 5:00 CDMX todo dia, separa ruído de erro real e manda
+digest por email com botões funcionais.
+
+- **Cron:** `.github/workflows/error-triage.yml` (11:00 UTC)
+- **Script:** `scripts/error-triage.mjs`
+- **Edge Function:** `error-action` (recebe cliques dos botões)
+- **Setup inicial:** `scripts/ERROR_TRIAGE_SETUP.md` (secrets a adicionar)
+
+Fluxo:
+1. Pega `client_errors` com `triage_status='pending'`
+2. Ruído conhecido (JWT heartbeat, aborted fetches) vira `noise` silencioso
+3. Erros reais → Claude API analisa cada um (significado, impacto, fix, risco)
+4. Resend envia email digest com botões `Corregir` / `Dejar para después` / `Ignorar`
+5. Botões batem na Edge Function com HMAC token → atualizam DB
+
+Colunas novas em `client_errors`: `triage_status`, `triaged_at`,
+`triage_notes` (jsonb com output da análise), `action_taken`, `action_at`.
+
 ## 9. Notion sync (bugs + erros)
 
 Cron externo (prompt-based) puxa linhas não sincronizadas de

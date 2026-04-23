@@ -1,0 +1,29 @@
+name: Daily error triage
+
+on:
+  schedule:
+    # 11:00 UTC = 5:00 am CDMX (UTC−6, sin DST).
+    - cron: '0 11 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run triage
+        env:
+          SUPABASE_URL: https://ncausitrddvtoyivolkj.supabase.co
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ERROR_ACTION_SECRET: ${{ secrets.ERROR_ACTION_SECRET }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          EDGE_FUNCTION_BASE_URL: https://ncausitrddvtoyivolkj.supabase.co/functions/v1
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+        run: node scripts/error-triage.mjs
