@@ -125,6 +125,7 @@ async function loadAll() {
     renderPreguntas();
     renderUsuarios();
     renderFeedback();
+    renderNextSteps();
     renderErrores();
     renderBackups();
 
@@ -971,6 +972,148 @@ function renderFeedback() {
         ${nsTextsHtml}
       </div>
     </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════
+// ── PRÓXIMOS PASOS ────────────────────────────────
+// ══════════════════════════════════════════════════
+
+const NEXT_STEPS_LABELS = {
+  'otro-curso':   { label: 'Otro curso (mismo formato)',           hint: 'Negociación, Inversiones, Valuación…' },
+  'saber-mas':    { label: 'Saber más sobre finanzas conductuales', hint: 'Lecturas, videos, referencias' },
+  'herramientas': { label: 'Herramientas prácticas',                hint: 'Plantillas, checklists, rutinas' },
+  'coaching':     { label: 'Coaching 1:1 sobre perfil BIT',         hint: 'Sesiones individuales con Rodrigo' },
+  'comunidad':    { label: 'Comunidad de ex-alumnos',               hint: 'Grupo para seguir aprendiendo' },
+  'corporativa':  { label: 'Capacitación corporativa Pandava',      hint: 'Llevar el programa a su equipo' },
+  'informe-pdf':  { label: 'Informe PDF exportable',                hint: 'Descargar informe final' },
+};
+
+function renderNextSteps() {
+  const { nextSteps = [], users = [], progress = [] } = DATA;
+  const total = nextSteps.length;
+  const usersTotal = users.length;
+  const nsDoneFlag = progress.filter(p => p.next_steps_done).length;
+
+  if (!total) {
+    document.getElementById('tab-next-steps').innerHTML = `
+      <div style="background:white;border-radius:var(--r-lg);padding:2.5rem;border:1px solid var(--paper-3);text-align:center;color:var(--ink-4)">
+        Aún no hay respuestas en próximos pasos.
+      </div>`;
+    return;
+  }
+
+  // Counts per interest
+  const counts = {};
+  let totalChecks = 0;
+  nextSteps.forEach(n => {
+    (n.interests || []).forEach(i => {
+      counts[i] = (counts[i] || 0) + 1;
+      totalChecks++;
+    });
+  });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const avgInterests = (totalChecks / total).toFixed(1);
+
+  const withOther = nextSteps.filter(n => n.other && n.other.trim()).length;
+  const conversion = usersTotal ? Math.round(total / usersTotal * 100) : 0;
+
+  // KPIs
+  const kpiRow = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:1.5rem">
+      ${kpi(total, 'Respuestas', `${conversion}% de ${usersTotal} alumnos`)}
+      ${kpi(nsDoneFlag, 'Cerraron la etapa', nsDoneFlag === total ? 'todas guardadas' : `${total - nsDoneFlag} sin marcar como done`, nsDoneFlag === total ? 'var(--success)' : 'var(--warning)')}
+      ${kpi(avgInterests, 'Intereses por persona', `${totalChecks} clics totales`)}
+      ${kpi(withOther, 'Comentarios libres', withOther ? `${Math.round(withOther/total*100)}% escribió "otro"` : 'nadie escribió "otro"', withOther ? 'var(--ink)' : 'var(--ink-4)')}
+    </div>`;
+
+  // Bar chart (sorted by popularity)
+  const palette = ['#2563EB','#7C3AED','#059669','#DC2626','#D97706','#0891B2','#9333EA'];
+  const max = sorted.length ? sorted[0][1] : 1;
+  const bars = sorted.map(([id, n], i) => {
+    const meta = NEXT_STEPS_LABELS[id] || { label: id, hint: '' };
+    const pct = total ? Math.round(n / total * 100) : 0;
+    const barPct = Math.round(n / max * 100);
+    const color = palette[i % palette.length];
+    return `<div style="margin-bottom:1.1rem">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:5px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.92rem;font-weight:600;color:var(--ink)">${meta.label}</div>
+          <div style="font-size:.72rem;color:var(--ink-4);margin-top:1px">${meta.hint}</div>
+        </div>
+        <div style="text-align:right;white-space:nowrap">
+          <span style="font-family:var(--ff-display);font-size:1.15rem;font-weight:700;color:${color}">${n}</span>
+          <span style="font-size:.78rem;color:var(--ink-4);margin-left:6px">${pct}%</span>
+        </div>
+      </div>
+      <div style="height:10px;background:var(--paper-2);border-radius:100px;overflow:hidden">
+        <div style="height:100%;width:${barPct}%;background:${color};border-radius:100px;transition:width .6s"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const chartCard = `
+    <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3);margin-bottom:1.5rem">
+      <div style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:.3rem">Qué quieren después</div>
+      <div style="font-size:.78rem;color:var(--ink-4);margin-bottom:1.25rem">Ranking por número de alumnos que marcó cada opción · % sobre ${total} respuestas (pueden marcar varias)</div>
+      ${bars}
+    </div>`;
+
+  // Open text comments
+  const otherRows = nextSteps.filter(n => n.other && n.other.trim()).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  const otherHtml = otherRows.length ? otherRows.map(n => `
+    <div style="padding:1rem;background:var(--paper);border-radius:var(--r-sm);margin-bottom:.6rem;border-left:3px solid #7C3AED">
+      <div style="font-size:.88rem;color:var(--ink-2);line-height:1.5;margin-bottom:.4rem;white-space:pre-wrap">"${n.other}"</div>
+      <div style="font-size:.7rem;color:var(--ink-4)">${n.email} · ${fmtDate(n.updated_at)}</div>
+    </div>
+  `).join('') : `<div style="color:var(--ink-4);font-size:.85rem;padding:.5rem">Aún nadie escribió en "otro".</div>`;
+
+  // Per-user table
+  const usersByEmail = {};
+  users.forEach(u => { usersByEmail[u.email] = u; });
+  const tableRows = [...nextSteps].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).map(n => {
+    const u = usersByEmail[n.email];
+    const chips = (n.interests || []).map(id => {
+      const lbl = NEXT_STEPS_LABELS[id]?.label || id;
+      return `<span style="display:inline-block;padding:2px 9px;border-radius:100px;background:var(--paper-2);font-size:.72rem;color:var(--ink-2);margin:1px 3px 1px 0">${lbl}</span>`;
+    }).join('');
+    return `<tr>
+      <td>
+        <div style="font-size:.85rem;font-weight:600;color:var(--ink)">${u?.name || '—'}</div>
+        <div style="font-size:.72rem;color:var(--ink-4)">${n.email}</div>
+      </td>
+      <td>${chips || '<span style="color:var(--ink-4);font-size:.78rem">— sin selección —</span>'}</td>
+      <td style="max-width:280px">
+        ${n.other && n.other.trim() ? `<div style="font-size:.8rem;color:var(--ink-2);line-height:1.4">"${n.other}"</div>` : '<span style="color:var(--ink-4);font-size:.78rem">—</span>'}
+      </td>
+      <td style="font-size:.75rem;color:var(--ink-4);white-space:nowrap">${fmtDate(n.updated_at)}</td>
+    </tr>`;
+  }).join('');
+
+  const tableCard = `
+    <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3)">
+      <div style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:1rem">Respuestas individuales</div>
+      <div class="admin-table-wrap" style="overflow-x:auto">
+        <table class="admin-table" style="min-width:780px">
+          <thead><tr>
+            <th style="width:200px">Alumno</th>
+            <th>Intereses marcados</th>
+            <th>Comentario libre</th>
+            <th style="width:80px">Fecha</th>
+          </tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    </div>`;
+
+  document.getElementById('tab-next-steps').innerHTML = `
+    ${kpiRow}
+    ${chartCard}
+    <div style="background:white;border-radius:var(--r-lg);padding:1.75rem;border:1px solid var(--paper-3);margin-bottom:1.5rem">
+      <div style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:1rem">Comentarios libres ("otro")</div>
+      ${otherHtml}
+    </div>
+    ${tableCard}
   `;
 }
 
