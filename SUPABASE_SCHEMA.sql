@@ -35,6 +35,25 @@ CREATE TABLE IF NOT EXISTS public.question_metrics (
 
 CREATE INDEX IF NOT EXISTS question_metrics_question_id_idx ON public.question_metrics (question_id);
 
+-- Table: public.translations
+-- i18n storage. Canonical IDs live in JS files; only translated strings live here.
+CREATE TABLE IF NOT EXISTS public.translations (
+  key text NOT NULL,
+  lang text NOT NULL,
+  text text NOT NULL,
+  domain text,
+  comment text,
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (key, lang)
+);
+
+CREATE INDEX IF NOT EXISTS translations_lang_idx ON public.translations (lang);
+CREATE INDEX IF NOT EXISTS translations_domain_idx ON public.translations (domain);
+
+-- i18n: user language preference (defaults to es-MX so existing users keep current UX)
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS lang text NOT NULL DEFAULT 'es-MX';
+
 -- Table: public.progress
 CREATE TABLE IF NOT EXISTS public.progress (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -56,10 +75,13 @@ CREATE INDEX IF NOT EXISTS progress_user_id_idx ON public.progress (user_id);
 ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.question_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.translations ENABLE ROW LEVEL SECURITY;
 
 -- Public read access for questions and metrics
 CREATE POLICY "Public read questions" ON public.questions FOR SELECT USING (true);
 CREATE POLICY "Public read question metrics" ON public.question_metrics FOR SELECT USING (true);
+CREATE POLICY "Public read translations" ON public.translations FOR SELECT USING (true);
+CREATE POLICY "Admin write translations" ON public.translations FOR ALL USING (auth.role() = 'authenticated' AND auth.jwt() ->> 'role' = 'admin') WITH CHECK (auth.role() = 'authenticated' AND auth.jwt() ->> 'role' = 'admin');
 
 -- Admin-only write access for questions and metrics
 -- This assumes your admin JWT includes claim: role = 'admin'

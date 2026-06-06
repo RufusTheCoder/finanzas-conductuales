@@ -5,6 +5,7 @@
 - `email` text, unique, not null
 - `name` text
 - `password_hash` text
+- `lang` text not null default `'es-MX'`  # preferência de idioma; `es-MX` ou `pt-BR`
 - `created_at` timestamptz default now()
 
 ## Tabela `progress`
@@ -34,6 +35,20 @@
 ## Arquivo SQL
 - `SUPABASE_SCHEMA.sql` contém a criação de tabelas e índices para `questions` e `question_metrics`.
 
+## Tabela `translations`
+Conteúdo traduzível (UI + perguntas + sesgos + relatórios). IDs canônicos vivem nos arquivos JS; aqui só ficam strings por idioma.
+
+- `key` text not null  # ex: `dashboard.start`, `bit.q.001.text`, `sesgo.anclaje.explanation`
+- `lang` text not null  # `es-MX` ou `pt-BR`
+- `text` text not null  # conteúdo já traduzido
+- `domain` text  # `ui` / `question` / `sesgo` / `report` — facilita filtrar no admin
+- `comment` text  # contexto opcional pro tradutor (ex: "botão da tela inicial")
+- `updated_at` timestamptz not null default now()
+- PK: `(key, lang)`
+- Índices: `translations_lang_idx (lang)`, `translations_domain_idx (domain)`
+- RLS: leitura pública, escrita restrita a admin/service-role
+- Fallback de aplicação: se `pt-BR` ausente, usar `es-MX` (nunca quebrar UI)
+
 ## Tabela `question_metrics`
 - `id` serial (PK)
 - `question_id` int references `questions(id)`
@@ -49,6 +64,7 @@
 - `users`: permitir apenas leitura/escrita para a própria conta
 - `progress`: permitir acesso apenas ao `user_id` do usuário logado
 - `questions`: leitura pública, escrita restrita ao admin/service-role
+- `translations`: leitura pública, escrita restrita ao admin/service-role
 
 ## Exemplo de upsert via REST
 ```
