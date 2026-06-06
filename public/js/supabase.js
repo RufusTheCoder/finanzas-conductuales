@@ -218,8 +218,8 @@ export async function logQuestionFeedback(rows) {
 
 export async function logContentFeedback(rows) {
   if (readOnly) return null;
-  return request('/rest/v1/content_feedback', 'POST', rows, {
-    Prefer: 'resolution=merge-duplicates',
+  return request('/rest/v1/content_feedback?on_conflict=email,sesgo_id,block', 'POST', rows, {
+    Prefer: 'resolution=merge-duplicates,return=minimal',
   }, 'logContentFeedback');
 }
 
