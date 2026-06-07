@@ -797,6 +797,7 @@ function renderJourneyPanel(tab, ctx) {
 }
 
 function renderPanelBit({ bitDone, bitProfile }) {
+  const bitCode = state.progress?.bit_result?.primary;
   return `
     <div class="panel-header">
       <div class="panel-title">Etapa 1 · Test BIT</div>
@@ -810,7 +811,7 @@ function renderPanelBit({ bitDone, bitProfile }) {
         <div class="bit-card-info">
           <div class="bit-card-title">Behavioral Investor Type (BIT)</div>
           <div class="bit-card-desc">${bitDone && bitProfile
-            ? bitProfile.name + ' · ' + bitProfile.tagline
+            ? t(`profile.${bitCode}.name`, bitProfile.name) + ' · ' + t(`profile.${bitCode}.tagline`, bitProfile.tagline)
             : 'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.'}</div>
           <div class="bit-card-meta"><span>📋 20 preguntas</span><span>⏱ ~10 min</span></div>
         </div>
@@ -1144,8 +1145,8 @@ function renderBitResult() {
   const hero = `
     <div class="result-hero">
       <div class="result-hero-tag">Tu perfil conductual como inversionista</div>
-      <div class="result-hero-name" style="color:${profile.color}">${profile.name}</div>
-      <div class="result-hero-sub">${profile.tagline}</div>
+      <div class="result-hero-name" style="color:${profile.color}">${t(`profile.${result.primary}.name`, profile.name)}</div>
+      <div class="result-hero-sub">${t(`profile.${result.primary}.tagline`, profile.tagline)}</div>
       <button class="btn-share-profile" id="btn-share-profile" title="Compartir mi perfil">
         📤 Compartir mi perfil
       </button>
@@ -1166,7 +1167,7 @@ function renderBitResult() {
           ${Object.entries(result.scores).map(([type, score]) => `
             <div class="score-row">
               <div class="score-row-header">
-                <span>${BIT_PROFILES[type].name} (${bitLabel(type)})</span>
+                <span>${t(`profile.${type}.name`, BIT_PROFILES[type].name)} (${bitLabel(type)})</span>
                 <span>${score} / ${total}</span>
               </div>
               <div class="score-track">
@@ -1181,12 +1182,12 @@ function renderBitResult() {
         <div class="profile-header">
           <div class="profile-badge" style="background:${profile.color}">${bitLabel(result.primary)}</div>
           <div>
-            <div class="profile-name">${profile.name}</div>
-            <div class="profile-tagline">${profile.tagline}</div>
+            <div class="profile-name">${t(`profile.${result.primary}.name`, profile.name)}</div>
+            <div class="profile-tagline">${t(`profile.${result.primary}.tagline`, profile.tagline)}</div>
           </div>
         </div>
-        <div class="profile-desc">${profile.description}</div>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${secondary.name} (${bitLabel(secondary ? result.secondary : '')})</strong></div>
+        <div class="profile-desc">${t(`profile.${result.primary}.description`, profile.description)}</div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${t(`profile.${result.secondary}.name`, secondary.name)} (${bitLabel(secondary ? result.secondary : '')})</strong></div>
         <div class="profile-id-slider" style="margin-top:1.25rem">
           <div class="slider-question">¿Qué tanto te identificas con este perfil? <span style="color:var(--danger,#B91C1C)">*</span></div>
           <div class="slider-row">
@@ -1209,8 +1210,8 @@ function renderBitResult() {
         <div class="bias-list">
           ${profile.biases.map(b => `
             <div class="bias-item">
-              <div class="bias-item-name">${b.name}</div>
-              <div class="bias-item-desc">${b.desc}</div>
+              <div class="bias-item-name">${t(`profile.${result.primary}.bias.${profile.biases.indexOf(b)}.name`, b.name)}</div>
+              <div class="bias-item-desc">${t(`profile.${result.primary}.bias.${profile.biases.indexOf(b)}.desc`, b.desc)}</div>
             </div>
           `).join('')}
         </div>
@@ -1225,7 +1226,7 @@ function renderBitResult() {
               <div class="reco-item reco-item-rateable">
                 <div class="reco-icon">${i + 1}</div>
                 <div style="flex:1">
-                  <div class="reco-text">${r}</div>
+                  <div class="reco-text">${t(`profile.${result.primary}.recommendation.${i}`, r)}</div>
                   <div class="reco-rating-slider" data-idx="${i}">
                     <div class="slider-row">
                       <span class="slider-end-label">Nada útil</span>
@@ -1907,11 +1908,11 @@ function renderReportStep1_Profile(profile, bitResult) {
         <div class="profile-header">
           <div class="profile-badge" style="background:${profile.color}">${bitLabel(bitResult.primary)}</div>
           <div>
-            <div class="profile-name">${profile.name}</div>
-            <div class="profile-tagline">${profile.tagline}</div>
+            <div class="profile-name">${t(`profile.${bitResult.primary}.name`, profile.name)}</div>
+            <div class="profile-tagline">${t(`profile.${bitResult.primary}.tagline`, profile.tagline)}</div>
           </div>
         </div>
-        <div class="profile-desc">${profile.description}</div>
+        <div class="profile-desc">${t(`profile.${bitResult.primary}.description`, profile.description)}</div>
       </div>
       <div class="bit-disclaimer" style="margin-top:1rem">
         <p style="font-size:.85rem;color:var(--ink-4);line-height:1.55"><strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.</p>
@@ -2792,7 +2793,7 @@ window.addEventListener('unhandledrejection', (e) => {
 async function shareBitProfile(profile, result) {
   const url = 'https://finanzas-conductuales-ibero.netlify.app';
   const label = bitLabel(result.primary);
-  const text = `Descubrí que mi perfil como inversor es "${profile.name}" (${label}). Haz el test y encuentra el tuyo:`;
+  const text = `Descubrí que mi perfil como inversor es "${t(`profile.${result.primary}.name`, profile.name)}" (${label}). Haz el test y encuentra el tuyo:`;
   const shareData = { title: 'Mi perfil BIT · Finanzas Conductuales', text, url };
   try {
     if (navigator.share) {
