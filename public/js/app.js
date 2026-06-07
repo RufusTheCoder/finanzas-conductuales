@@ -1963,10 +1963,10 @@ function renderReportStep3_Severidad(profile, sesgos) {
                 <div class="sev-group-head-top">
                   <span class="sev-group-rank">#${gi + 1}</span>
                   <span class="sev-group-icon">${g.m.icon}</span>
-                  <span class="sev-group-name" style="color:${mecColor}">${g.m.name}</span>
+                  <span class="sev-group-name" style="color:${mecColor}">${t(`report.mecanismo.${g.m.id}.name`, g.m.name)}</span>
                   <span class="sev-group-pct" style="background:${mecColor};color:#fff">${mecPct}%</span>
                 </div>
-                <div class="sev-group-phrase">"${g.m.phrase}"</div>
+                <div class="sev-group-phrase">"${t(`report.mecanismo.${g.m.id}.phrase`, g.m.phrase)}"</div>
                 <div class="sev-group-meta">
                   <span>${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}</span>
                 </div>
