@@ -14,6 +14,7 @@
 import { questions } from '../public/data/questions.js';
 import { SESGOS } from '../public/data/sesgos.js';
 import { BIT_PROFILES } from '../public/data/profiles.js';
+import { MECANISMOS, ANTIDOTOS, DECISION_MATRIX, NEXT_STEPS_OPTIONS } from '../public/data/report-content.js';
 import { fileURLToPath } from 'node:url';
 
 const LANG = 'es-MX';
@@ -72,6 +73,29 @@ export function buildRows() {
     (p.recommendations || []).forEach((r, i) => {
       add('profile', `profile.${code}.recommendation.${i}`, r);
     });
+  }
+
+  for (const m of MECANISMOS) {
+    add('report', `report.mecanismo.${m.id}.name`, m.name);
+    add('report', `report.mecanismo.${m.id}.phrase`, m.phrase);
+    add('report', `report.mecanismo.${m.id}.desc`, m.desc);
+    add('report', `report.mecanismo.${m.id}.relation`, m.relation);
+  }
+  for (const a of ANTIDOTOS) {
+    add('report', `report.antidoto.${a.id}.name`, a.name);
+    add('report', `report.antidoto.${a.id}.what`, a.what);
+    add('report', `report.antidoto.${a.id}.how`, a.how);
+  }
+  for (const [code, entries] of Object.entries(DECISION_MATRIX)) {
+    entries.forEach((e, i) => {
+      add('report', `report.matrix.${code}.${i}.sit`, e.sit);
+      add('report', `report.matrix.${code}.${i}.tendency`, e.tendency);
+      add('report', `report.matrix.${code}.${i}.rational`, e.rational);
+    });
+  }
+  for (const o of NEXT_STEPS_OPTIONS) {
+    add('report', `report.nextstep.${o.id}.label`, o.label);
+    add('report', `report.nextstep.${o.id}.hint`, o.hint);
   }
 
   return rows;
