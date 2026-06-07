@@ -231,7 +231,16 @@ export async function markOnboardingSeen(email) {
 }
 
 export async function getUserProfile(email) {
-  return request(`/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=email,name,onboarding_seen_at`, 'GET', null, {}, 'getUserProfile');
+  return request(`/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=email,name,onboarding_seen_at,lang`, 'GET', null, {}, 'getUserProfile');
+}
+
+// ── i18n ────────────────────────────────
+// translations has a public-read RLS policy, so the anon key suffices.
+export async function fetchTranslations(lang) {
+  return request(
+    `/rest/v1/translations?lang=eq.${encodeURIComponent(lang)}&select=key,text`,
+    'GET', null, {}, 'fetchTranslations'
+  );
 }
 
 // ── Next Steps ──────────────────────────
