@@ -2005,7 +2005,7 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
       <div class="mec-dominant" style="background:${dominant.m.color}12;border-color:${dominant.m.color}40">
         <div class="mec-dominant-label">Tu mecanismo dominante</div>
         <div class="mec-dominant-name" style="color:${dominant.m.color}">${dominant.m.icon} ${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</div>
-        <div class="mec-dominant-phrase">"${dominant.m.phrase}"</div>
+        <div class="mec-dominant-phrase">"${t(`report.mecanismo.${dominant.m.id}.phrase`, dominant.m.phrase)}"</div>
       </div>
       <div class="mec-bars">
         ${ranked.map(({ m, i, sev }) => {
