@@ -1864,18 +1864,18 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
       <div class="plan-top1" style="border-color:${profile.color}">
         <div class="plan-top1-badge" style="background:${profile.color}">Tu antídoto #1</div>
         <div class="plan-top1-icon">${top1.icon}</div>
-        <div class="plan-top1-name">${top1.name}</div>
+        <div class="plan-top1-name">${t(`report.antidoto.${top1.id}.name`, top1.name)}</div>
         <div class="plan-top1-cov" style="color:${profile.color}">Cubre ${top1.coveragePct}% de tu peso sesgado</div>
         <div class="plan-top1-mecs">
-          ${top1.mecsCovered.map(m => `<span class="mec-pill" style="background:${m.mec.color}15;color:${m.mec.color};border-color:${m.mec.color}40">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+          ${top1.mecsCovered.map(m => `<span class="mec-pill" style="background:${m.mec.color}15;color:${m.mec.color};border-color:${m.mec.color}40">${m.mec.icon} ${t(`report.mecanismo.${m.mec.id}.name`, m.mec.name)}</span>`).join('')}
         </div>
         <div class="antidoto-what">
           <div class="antidoto-label">¿Qué es?</div>
-          <div class="antidoto-text">${top1.what}</div>
+          <div class="antidoto-text">${t(`report.antidoto.${top1.id}.what`, top1.what)}</div>
         </div>
         <div class="antidoto-how">
           <div class="antidoto-label">¿Cómo se implementa?</div>
-          <div class="antidoto-text">${top1.how}</div>
+          <div class="antidoto-text">${t(`report.antidoto.${top1.id}.how`, top1.how)}</div>
         </div>
       </div>
       <div class="plan-others-title">Tus otros 2 antídotos de mayor retorno:</div>
@@ -1885,20 +1885,20 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
             <div class="plan-other-head">
               <div class="plan-other-rank">#${i + 2}</div>
               <div style="flex:1">
-                <div class="plan-other-name">${a.icon} ${a.name}</div>
+                <div class="plan-other-name">${a.icon} ${t(`report.antidoto.${a.id}.name`, a.name)}</div>
                 <div class="plan-other-cov">Cubre ${a.coveragePct}% de tu peso sesgado</div>
                 <div class="plan-other-mecs">
-                  ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${m.mec.name}</span>`).join('')}
+                  ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${t(`report.mecanismo.${m.mec.id}.name`, m.mec.name)}</span>`).join('')}
                 </div>
               </div>
             </div>
             <div class="antidoto-what-sm">
               <div class="antidoto-label-sm">¿Qué es?</div>
-              <div class="antidoto-text-sm">${a.what}</div>
+              <div class="antidoto-text-sm">${t(`report.antidoto.${a.id}.what`, a.what)}</div>
             </div>
             <div class="antidoto-how-sm">
               <div class="antidoto-label-sm">¿Cómo se implementa?</div>
-              <div class="antidoto-text-sm">${a.how}</div>
+              <div class="antidoto-text-sm">${t(`report.antidoto.${a.id}.how`, a.how)}</div>
             </div>
           </div>`).join('')}
       </div>
@@ -2004,7 +2004,7 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
       <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.</p>
       <div class="mec-dominant" style="background:${dominant.m.color}12;border-color:${dominant.m.color}40">
         <div class="mec-dominant-label">Tu mecanismo dominante</div>
-        <div class="mec-dominant-name" style="color:${dominant.m.color}">${dominant.m.icon} ${dominant.m.name}</div>
+        <div class="mec-dominant-name" style="color:${dominant.m.color}">${dominant.m.icon} ${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</div>
         <div class="mec-dominant-phrase">"${dominant.m.phrase}"</div>
       </div>
       <div class="mec-bars">
@@ -2019,18 +2019,18 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
             <div class="mec-row">
               <div class="mec-row-head">
                 <span class="mec-icon">${m.icon}</span>
-                <span class="mec-name" style="color:${m.color}">${m.name}</span>
+                <span class="mec-name" style="color:${m.color}">${t(`report.mecanismo.${m.id}.name`, m.name)}</span>
                 <span class="mec-pct">${pct}%</span>
               </div>
               <div class="mec-track"><div class="mec-fill" style="width:${pct}%;background:${m.color}"></div></div>
-              <div class="mec-phrase">"${m.phrase}"</div>
+              <div class="mec-phrase">"${t(`report.mecanismo.${m.id}.phrase`, m.phrase)}"</div>
               <div class="mec-desc">
                 <div class="mec-desc-label">Qué es este mecanismo</div>
-                <div class="mec-desc-text">${m.desc}</div>
+                <div class="mec-desc-text">${t(`report.mecanismo.${m.id}.desc`, m.desc)}</div>
               </div>
               <div class="mec-desc">
                 <div class="mec-desc-label">Cómo se relaciona con tus sesgos</div>
-                <div class="mec-desc-text">${m.relation}</div>
+                <div class="mec-desc-text">${t(`report.mecanismo.${m.id}.relation`, m.relation)}</div>
               </div>
               <div class="mec-biases-label">Tus sesgos en este mecanismo:</div>
               <div class="mec-biases">${belongs.join(' · ')}</div>
@@ -2111,15 +2111,15 @@ function renderReportStep6_Matriz(bitResult) {
       <div class="matriz-list">
         ${scenarios.map((sc, i) => `
           <div class="matriz-item">
-            <div class="matriz-sit"><span class="matriz-num">${i + 1}</span>${sc.sit}</div>
+            <div class="matriz-sit"><span class="matriz-num">${i + 1}</span>${t(`report.matrix.${bitResult.primary}.${i}.sit`, sc.sit)}</div>
             <div class="matriz-cols">
               <div class="matriz-col matriz-tend">
                 <div class="matriz-col-label">Tu tendencia</div>
-                <div class="matriz-col-text">${sc.tendency}</div>
+                <div class="matriz-col-text">${t(`report.matrix.${bitResult.primary}.${i}.tendency`, sc.tendency)}</div>
               </div>
               <div class="matriz-col matriz-rat">
                 <div class="matriz-col-label">Respuesta racional</div>
-                <div class="matriz-col-text">${sc.rational}</div>
+                <div class="matriz-col-text">${t(`report.matrix.${bitResult.primary}.${i}.rational`, sc.rational)}</div>
               </div>
             </div>
           </div>`).join('')}
@@ -2497,8 +2497,8 @@ function renderNextSteps() {
             <label class="next-option ${interests.includes(opt.id) ? 'checked' : ''}">
               <input type="checkbox" data-opt="${opt.id}" ${interests.includes(opt.id) ? 'checked' : ''}>
               <div class="next-option-body">
-                <div class="next-option-label">${opt.label}</div>
-                <div class="next-option-hint">${opt.hint}</div>
+                <div class="next-option-label">${t(`report.nextstep.${opt.id}.label`, opt.label)}</div>
+                <div class="next-option-hint">${t(`report.nextstep.${opt.id}.hint`, opt.hint)}</div>
               </div>
             </label>
           `).join('')}
@@ -2524,7 +2524,7 @@ function renderNextSteps() {
             const pct = Math.round((n / total) * 100);
             return `
               <div class="next-stat-row">
-                <div class="next-stat-label">${opt.label}</div>
+                <div class="next-stat-label">${t(`report.nextstep.${opt.id}.label`, opt.label)}</div>
                 <div class="next-stat-bar"><div class="next-stat-fill" style="width:${pct}%"></div></div>
                 <div class="next-stat-num">${n}</div>
               </div>`;
