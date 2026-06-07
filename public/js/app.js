@@ -1,8 +1,9 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession } from './supabase.js?v=20260606a';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession, fetchTranslations } from './supabase.js?v=20260606a';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js?v=20260606a';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
+import { t, setLang, getLang, ingest } from './i18n.js';
 
 const app = document.getElementById('app');
 
@@ -392,7 +393,9 @@ async function afterAuth(auth) {
   try { await createUserProfile(auth.user.email); } catch(e) {}
   persistSession();
   state.progress = await loadUserProgress(state.user.email);
-  state.onboardingSeen = await checkOnboardingSeen(state.user.email);
+  const meta = await loadUserMeta(state.user.email);
+  state.onboardingSeen = meta.onboardingSeen;
+  await applyLang(meta.lang);
   state.screen = state.onboardingSeen ? 'dashboard' : 'onboarding';
   state.authMode = 'login';
   state.authError = null;
@@ -400,14 +403,36 @@ async function afterAuth(auth) {
   render();
 }
 
-async function checkOnboardingSeen(email) {
+async function loadUserMeta(email) {
   try {
     const rows = await getUserProfile(email);
     const row = Array.isArray(rows) ? rows[0] : rows;
-    return !!row?.onboarding_seen_at;
-  } catch(e) {
-    return true; // fail open: don't block user
+    return { onboardingSeen: !!row?.onboarding_seen_at, lang: row?.lang || 'es-MX' };
+  } catch (e) {
+    return { onboardingSeen: true, lang: getLang() }; // fail open: don't block user
   }
+}
+
+// Fetch the active language once; cache in localStorage. Never throws.
+async function loadTranslations(lang) {
+  setLang(lang);
+  const cacheKey = `fc_i18n_${getLang()}`;
+  try {
+    const rows = await fetchTranslations(getLang());
+    if (Array.isArray(rows) && rows.length) {
+      ingest(rows);
+      try { localStorage.setItem(cacheKey, JSON.stringify(rows)); } catch (_) {}
+      return;
+    }
+  } catch (_) { /* fall through to cache */ }
+  try { const c = localStorage.getItem(cacheKey); if (c) ingest(JSON.parse(c)); } catch (_) {}
+}
+
+// Apply the user's stored language; reload + persist only if it changed.
+async function applyLang(lang) {
+  const l = lang || 'es-MX';
+  try { localStorage.setItem('fc_lang', l); } catch (_) {}
+  if (l !== getLang()) { setLang(l); await loadTranslations(l); }
 }
 
 function renderAuth() {
@@ -2912,7 +2937,9 @@ async function loadSession() {
     setSession(state.user.accessToken);
     if (parsed.refreshToken) persistSession();
     state.progress = await loadUserProgress(state.user.email);
-    state.onboardingSeen = await checkOnboardingSeen(state.user.email);
+    const meta = await loadUserMeta(state.user.email);
+    state.onboardingSeen = meta.onboardingSeen;
+    await applyLang(meta.lang);
     state.screen = state.onboardingSeen ? 'dashboard' : 'onboarding';
     startSession();
     render();
@@ -2921,6 +2948,9 @@ async function loadSession() {
   }
 }
 
-render();
+const bootLang = (() => { try { return localStorage.getItem('fc_lang') || 'es-MX'; } catch (_) { return 'es-MX'; } })();
+setLang(bootLang);
+render();                                          // immediate paint with data-file fallbacks
+loadTranslations(bootLang).then(() => render());   // re-render once the DB strings load
 loadSession();
 mountBugReportWidget();
