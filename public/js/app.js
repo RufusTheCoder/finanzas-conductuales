@@ -865,7 +865,7 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
                 return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
                   <div class="sesgo-num">${num}</div>
                   <div class="sesgo-info">
-                    <div class="sesgo-name">${done ? s.name : 'Módulo ' + num}</div>
+                    <div class="sesgo-name">${done ? t(`sesgo.${s.id}.name`, s.name) : 'Módulo ' + num}</div>
                     <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">~5 min · se revela al completar</span>'}</div>
                   </div>
                 </div>`;
@@ -1375,12 +1375,12 @@ function renderSesgoQuiz() {
     </div>
     <div class="quiz-main">
       <div class="quiz-question-card">
-        <div class="q-situation">${q.situation}</div>
+        <div class="q-situation">${t(`sesgo.${s.id}.question.${state.sesgoIndex}.situation`, q.situation)}</div>
         <div class="q-options">
           ${getShuffledOptions(`${s.id}_q${state.sesgoIndex}`, q.options).map(({ opt, origIdx, displayIdx }) => `
             <button class="q-option ${state.sesgoAnswers[state.sesgoIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
               <span class="q-letter">${'AB'[displayIdx]}</span>
-              <span>${opt.text}</span>
+              <span>${t(`sesgo.${s.id}.question.${state.sesgoIndex}.option.${origIdx}.text`, opt.text)}</span>
             </button>
           `).join('')}
         </div>
@@ -1441,19 +1441,19 @@ const LEARN_BLOCKS = [
 function learnBlockContent(s, step) {
   switch (step) {
     case 0: return `
-      <div class="learn-block-hero">${s.definition}</div>
-      <div class="learn-prose"><p>${s.description}</p></div>
+      <div class="learn-block-hero">${t(`sesgo.${s.id}.definition`, s.definition)}</div>
+      <div class="learn-prose"><p>${t(`sesgo.${s.id}.description`, s.description)}</p></div>
     `;
     case 1: return `
-      <div class="learn-prose"><p>${s.mechanism}</p></div>
-      <div class="learn-highlight"><strong>La trampa del cuestionario:</strong> ${s.trapQuestion}</div>
+      <div class="learn-prose"><p>${t(`sesgo.${s.id}.mechanism`, s.mechanism)}</p></div>
+      <div class="learn-highlight"><strong>La trampa del cuestionario:</strong> ${t(`sesgo.${s.id}.trapQuestion`, s.trapQuestion)}</div>
     `;
     case 2: return `
       <div class="learn-examples">
         ${s.examples.map(e => `
           <div class="learn-example">
-            <div class="learn-example-label">${e.label}</div>
-            <div class="learn-example-text">${e.text}</div>
+            <div class="learn-example-label">${t(`sesgo.${s.id}.example.${s.examples.indexOf(e)}.label`, e.label)}</div>
+            <div class="learn-example-text">${t(`sesgo.${s.id}.example.${s.examples.indexOf(e)}.text`, e.text)}</div>
           </div>
         `).join('')}
       </div>
@@ -1461,7 +1461,7 @@ function learnBlockContent(s, step) {
     case 3: return `
       <div class="learn-antidote">
         <ul class="learn-antidote-list">
-          ${s.antidotes.map(a => `<li>${a}</li>`).join('')}
+          ${s.antidotes.map((a, i) => `<li>${t(`sesgo.${s.id}.antidote.${i}`, a)}</li>`).join('')}
         </ul>
       </div>
     `;
@@ -1481,7 +1481,7 @@ function renderSesgoLearn() {
   c.innerHTML = `
     <div class="learn-topbar">
       <div class="learn-topbar-left">
-        <div class="learn-breadcrumb"><strong>${s.name}</strong> · ${block.icon} ${block.title}</div>
+        <div class="learn-breadcrumb"><strong>${t(`sesgo.${s.id}.name`, s.name)}</strong> · ${block.icon} ${block.title}</div>
         <div class="learn-step-progress">
           ${LEARN_BLOCKS.map((_, i) => `<div class="learn-step-dot ${i === step ? 'active' : i < step ? 'done' : ''}"></div>`).join('')}
         </div>
@@ -1492,7 +1492,7 @@ function renderSesgoLearn() {
       <div class="learn-hero">
         <div class="learn-block-tag ${s.tipo}">${tipoLabel}</div>
         <div class="learn-block-step-label">${block.icon} ${block.label}</div>
-        <h1 class="learn-title">${s.name}</h1>
+        <h1 class="learn-title">${t(`sesgo.${s.id}.name`, s.name)}</h1>
       </div>
       <div class="learn-section">
         ${learnBlockContent(s, step)}
@@ -1551,18 +1551,18 @@ function renderSesgoFixation() {
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
         <div class="quiz-label">Verificación · ${state.fixationIndex + 1} de ${total}</div>
-        <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${s.name}</div>
+        <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${t(`sesgo.${s.id}.name`, s.name)}</div>
         <button class="btn-exit" id="btn-exit-fix">✕</button>
       </div>
     </div>
     <div class="quiz-main">
       <div class="quiz-question-card">
-        <div class="q-situation" style="font-size:1.1rem">${q.question}</div>
+        <div class="q-situation" style="font-size:1.1rem">${t(`sesgo.${s.id}.fixation.${state.fixationIndex}.question`, q.question)}</div>
         <div class="q-options">
           ${getShuffledOptions(`${s.id}_f${state.fixationIndex}`, q.options).map(({ opt, origIdx, displayIdx }) => `
             <button class="q-option ${state.fixationAnswers[state.fixationIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
               <span class="q-letter">${'ABC'[displayIdx]}</span>
-              <span>${opt}</span>
+              <span>${t(`sesgo.${s.id}.fixation.${state.fixationIndex}.option.${origIdx}`, opt)}</span>
             </button>
           `).join('')}
         </div>
@@ -1624,13 +1624,13 @@ function renderSesgoSelfAssessment() {
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div>
       <div class="quiz-topbar-inner">
         <div class="quiz-label">Autoevaluación</div>
-        <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${s.name}</div>
+        <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${t(`sesgo.${s.id}.name`, s.name)}</div>
         <button class="btn-exit" id="btn-exit-self">✕</button>
       </div>
     </div>
     <div class="quiz-main">
       <div class="quiz-question-card">
-        <div class="q-situation" style="font-size:1.1rem;margin-bottom:1.25rem">Antes de ver tus resultados: <strong>¿qué tanto crees que <span style="color:var(--ibero-orange,#DC6B19)">${s.name}</span> te afecta?</strong></div>
+        <div class="q-situation" style="font-size:1.1rem;margin-bottom:1.25rem">Antes de ver tus resultados: <strong>¿qué tanto crees que <span style="color:var(--ibero-orange,#DC6B19)">${t(`sesgo.${s.id}.name`, s.name)}</span> te afecta?</strong></div>
         <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.5rem">Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.</p>
         <div class="self-assess-slider">
           <div class="slider-row">
@@ -1758,7 +1758,7 @@ async function renderSesgoResult() {
   c.className = 'result-shell';
   c.innerHTML = `
     <div class="result-hero">
-      <div class="result-hero-tag">${s.name}</div>
+      <div class="result-hero-tag">${t(`sesgo.${s.id}.name`, s.name)}</div>
       <div class="result-hero-name">Tu diagnóstico</div>
       <div class="result-hero-sub">Tus decisiones vs. lo que haría el inversor racional</div>
     </div>
@@ -1767,7 +1767,7 @@ async function renderSesgoResult() {
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:.75rem">
           <div style="flex:1">
             <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${intensidadColor};margin-bottom:.2rem">${intensidadLabel}</div>
-            <div style="font-size:1.1rem;font-weight:700;color:var(--ink);font-family:var(--ff-display)">${s.name}</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--ink);font-family:var(--ff-display)">${t(`sesgo.${s.id}.name`, s.name)}</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:1.6rem;font-weight:700;color:${intensidadColor};font-family:var(--ff-display);line-height:1">${sesgadasCount}/${s.questions.length}</div>
@@ -1802,8 +1802,8 @@ async function renderSesgoResult() {
             return `
               <div class="response-item">
                 <div class="response-q">Situación ${i + 1}</div>
-                <div class="response-a">${opt.text}</div>
-                <div class="response-reveal" style="color:${isRational ? 'var(--success)' : 'var(--red)'}">${opt.reveal}</div>
+                <div class="response-a">${t(`sesgo.${s.id}.question.${i}.option.${ansIdx}.text`, opt.text)}</div>
+                <div class="response-reveal" style="color:${isRational ? 'var(--success)' : 'var(--red)'}">${t(`sesgo.${s.id}.question.${i}.option.${ansIdx}.reveal`, opt.reveal)}</div>
               </div>`;
           }).join('')}
         </div>
@@ -2046,7 +2046,7 @@ function renderReportStep3_Severidad(profile, sesgos) {
                   return `
                     <div class="sev-row">
                       <div class="sev-row-head">
-                        <span class="sev-name">${r.s.name}</span>
+                        <span class="sev-name">${t(`sesgo.${r.s.id}.name`, r.s.name)}</span>
                         <span class="sev-pct" style="color:${c}">${pct}%</span>
                       </div>
                       <div class="sev-track"><div class="sev-fill" style="width:${pct}%;background:${c}"></div></div>
@@ -2081,7 +2081,7 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
           const belongs = SESGOS.filter(s => SESGO_MECANISMO[s.id] === i).map(s => {
             const d = sesgos[s.id];
             const sPct = d ? Math.round(getIntensidad(d, s) * 100) : null;
-            return sPct !== null ? `${s.name} (${sPct}%)` : s.name;
+            return sPct !== null ? `${t(`sesgo.${s.id}.name`, s.name)} (${sPct}%)` : t(`sesgo.${s.id}.name`, s.name);
           });
           return `
             <div class="mec-row">
@@ -2144,7 +2144,7 @@ function renderReportStep5_Autoconciencia(sesgos) {
           <text x="12" y="${H/2}" font-size="11" fill="var(--ink-3)" transform="rotate(-90 12 ${H/2})" text-anchor="middle">← Observado</text>
           ${items.map(it => {
             const color = it.category === 'calibrated' ? '#059669' : it.category === 'blind' ? '#DC2626' : '#D97706';
-            return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${it.sesgo.name}: auto ${it.self}% / observado ${it.observed}%</title></circle>`;
+            return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${t(`sesgo.${it.sesgo.id}.name`, it.sesgo.name)}: auto ${it.self}% / observado ${it.observed}%</title></circle>`;
           }).join('')}
         </svg>
       </div>
@@ -2152,17 +2152,17 @@ function renderReportStep5_Autoconciencia(sesgos) {
         <div class="awareness-card" style="border-color:#DC262640">
           <div class="aw-card-title" style="color:#DC2626">Puntos ciegos (${blind.length})</div>
           <div class="aw-card-sub">Te afectan más de lo que crees</div>
-          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${x.sesgo.name} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno — buena calibración por el lado de la subestimación.</p>'}
+          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno — buena calibración por el lado de la subestimación.</p>'}
         </div>
         <div class="awareness-card" style="border-color:#D9770640">
           <div class="aw-card-title" style="color:#D97706">Sobreestimados (${over.length})</div>
           <div class="aw-card-sub">Crees que te afectan más de lo que realmente aparece</div>
-          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${x.sesgo.name} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno.</p>'}
+          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno.</p>'}
         </div>
         <div class="awareness-card" style="border-color:#05966940">
           <div class="aw-card-title" style="color:#059669">Bien calibrado (${calibrated.length})</div>
           <div class="aw-card-sub">Tu autoevaluación coincide con las respuestas (±15 pp)</div>
-          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${x.sesgo.name}</li>`).join('')}</ul>` : '<p class="aw-empty">Aún no tienes sesgos calibrados.</p>'}
+          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)}</li>`).join('')}</ul>` : '<p class="aw-empty">Aún no tienes sesgos calibrados.</p>'}
         </div>
       </div>
       <div class="aw-score">Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados</div>
