@@ -1,108 +1,105 @@
 // Extract es-MX text from data JS files into SQL INSERTs for `translations`.
 // Run: node scripts/extract_translations.mjs > scripts/i18n_seed_es_mx.sql
+// Also exports buildRows() so the alignment checker reuses the exact same keys.
 //
 // Key scheme:
-//   question.<id>.prompt
-//   question.<id>.opt.<label>.text
+//   question.<id>.prompt | question.<id>.opt.<label>.text
 //   sesgo.<id>.name | definition | description | mechanism | trapQuestion
-//   sesgo.<id>.example.<i>.{label,text}
-//   sesgo.<id>.antidote.<i>
-//   sesgo.<id>.question.<i>.situation
-//   sesgo.<id>.question.<i>.option.<j>.{text,reveal}
-//   sesgo.<id>.fixation.<i>.question
-//   sesgo.<id>.fixation.<i>.option.<j>
+//   sesgo.<id>.example.<i>.{label,text} | sesgo.<id>.antidote.<i>
+//   sesgo.<id>.question.<i>.situation | sesgo.<id>.question.<i>.option.<j>.{text,reveal}
+//   sesgo.<id>.fixation.<i>.question | sesgo.<id>.fixation.<i>.option.<j>
 //   profile.<key>.name | nameEs | tagline | description
-//   profile.<key>.bias.<i>.{name,desc}
-//   profile.<key>.recommendation.<i>
+//   profile.<key>.bias.<i>.{name,desc} | profile.<key>.recommendation.<i>
 
 import { questions } from '../public/data/questions.js';
 import { SESGOS } from '../public/data/sesgos.js';
 import { BIT_PROFILES } from '../public/data/profiles.js';
+import { fileURLToPath } from 'node:url';
 
 const LANG = 'es-MX';
-const rows = [];
 
-function add(domain, key, text) {
-  if (text === undefined || text === null || text === '') return;
-  rows.push({ key, lang: LANG, text: String(text), domain });
-}
+export function buildRows() {
+  const rows = [];
+  const add = (domain, key, text) => {
+    if (text === undefined || text === null || text === '') return;
+    rows.push({ key, lang: LANG, text: String(text), domain });
+  };
 
-for (const q of questions) {
-  add('question', `question.${q.id}.prompt`, q.prompt);
-  for (const o of q.options) {
-    add('question', `question.${q.id}.opt.${o.label}.text`, o.text);
+  for (const q of questions) {
+    add('question', `question.${q.id}.prompt`, q.prompt);
+    for (const o of q.options) {
+      add('question', `question.${q.id}.opt.${o.label}.text`, o.text);
+    }
   }
-}
 
-for (const s of SESGOS) {
-  add('sesgo', `sesgo.${s.id}.name`, s.name);
-  add('sesgo', `sesgo.${s.id}.definition`, s.definition);
-  add('sesgo', `sesgo.${s.id}.description`, s.description);
-  add('sesgo', `sesgo.${s.id}.mechanism`, s.mechanism);
-  add('sesgo', `sesgo.${s.id}.trapQuestion`, s.trapQuestion);
-
-  (s.examples || []).forEach((ex, i) => {
-    add('sesgo', `sesgo.${s.id}.example.${i}.label`, ex.label);
-    add('sesgo', `sesgo.${s.id}.example.${i}.text`, ex.text);
-  });
-
-  (s.antidotes || []).forEach((a, i) => {
-    add('sesgo', `sesgo.${s.id}.antidote.${i}`, a);
-  });
-
-  (s.questions || []).forEach((q, i) => {
-    add('sesgo', `sesgo.${s.id}.question.${i}.situation`, q.situation);
-    (q.options || []).forEach((o, j) => {
-      add('sesgo', `sesgo.${s.id}.question.${i}.option.${j}.text`, o.text);
-      add('sesgo', `sesgo.${s.id}.question.${i}.option.${j}.reveal`, o.reveal);
+  for (const s of SESGOS) {
+    add('sesgo', `sesgo.${s.id}.name`, s.name);
+    add('sesgo', `sesgo.${s.id}.definition`, s.definition);
+    add('sesgo', `sesgo.${s.id}.description`, s.description);
+    add('sesgo', `sesgo.${s.id}.mechanism`, s.mechanism);
+    add('sesgo', `sesgo.${s.id}.trapQuestion`, s.trapQuestion);
+    (s.examples || []).forEach((ex, i) => {
+      add('sesgo', `sesgo.${s.id}.example.${i}.label`, ex.label);
+      add('sesgo', `sesgo.${s.id}.example.${i}.text`, ex.text);
     });
-  });
-
-  (s.fixationQuestions || []).forEach((fq, i) => {
-    add('sesgo', `sesgo.${s.id}.fixation.${i}.question`, fq.question);
-    (fq.options || []).forEach((opt, j) => {
-      add('sesgo', `sesgo.${s.id}.fixation.${i}.option.${j}`, opt);
+    (s.antidotes || []).forEach((a, i) => {
+      add('sesgo', `sesgo.${s.id}.antidote.${i}`, a);
     });
-  });
+    (s.questions || []).forEach((q, i) => {
+      add('sesgo', `sesgo.${s.id}.question.${i}.situation`, q.situation);
+      (q.options || []).forEach((o, j) => {
+        add('sesgo', `sesgo.${s.id}.question.${i}.option.${j}.text`, o.text);
+        add('sesgo', `sesgo.${s.id}.question.${i}.option.${j}.reveal`, o.reveal);
+      });
+    });
+    (s.fixationQuestions || []).forEach((fq, i) => {
+      add('sesgo', `sesgo.${s.id}.fixation.${i}.question`, fq.question);
+      (fq.options || []).forEach((opt, j) => {
+        add('sesgo', `sesgo.${s.id}.fixation.${i}.option.${j}`, opt);
+      });
+    });
+  }
+
+  for (const [code, p] of Object.entries(BIT_PROFILES)) {
+    add('profile', `profile.${code}.name`, p.name);
+    add('profile', `profile.${code}.nameEs`, p.nameEs);
+    add('profile', `profile.${code}.tagline`, p.tagline);
+    add('profile', `profile.${code}.description`, p.description);
+    (p.biases || []).forEach((b, i) => {
+      add('profile', `profile.${code}.bias.${i}.name`, b.name);
+      add('profile', `profile.${code}.bias.${i}.desc`, b.desc);
+    });
+    (p.recommendations || []).forEach((r, i) => {
+      add('profile', `profile.${code}.recommendation.${i}`, r);
+    });
+  }
+
+  return rows;
 }
 
-for (const [code, p] of Object.entries(BIT_PROFILES)) {
-  add('profile', `profile.${code}.name`, p.name);
-  add('profile', `profile.${code}.nameEs`, p.nameEs);
-  add('profile', `profile.${code}.tagline`, p.tagline);
-  add('profile', `profile.${code}.description`, p.description);
-  (p.biases || []).forEach((b, i) => {
-    add('profile', `profile.${code}.bias.${i}.name`, b.name);
-    add('profile', `profile.${code}.bias.${i}.desc`, b.desc);
-  });
-  (p.recommendations || []).forEach((r, i) => {
-    add('profile', `profile.${code}.recommendation.${i}`, r);
-  });
+function emitSql(rows) {
+  const esc = (v) => v === null || v === undefined
+    ? 'NULL'
+    : "'" + String(v).replace(/'/g, "''") + "'";
+  const counts = {};
+  for (const r of rows) counts[r.domain] = (counts[r.domain] || 0) + 1;
+  console.log(`-- Auto-generated by scripts/extract_translations.mjs`);
+  console.log(`-- Total rows: ${rows.length}`);
+  for (const [d, n] of Object.entries(counts)) console.log(`--   ${d}: ${n}`);
+  console.log(`BEGIN;`);
+  const CHUNK = 100;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const slice = rows.slice(i, i + CHUNK);
+    console.log(`INSERT INTO public.translations (key, lang, text, domain) VALUES`);
+    const lines = slice.map((r, j) => {
+      const sep = j === slice.length - 1 ? '' : ',';
+      return `  (${esc(r.key)}, ${esc(r.lang)}, ${esc(r.text)}, ${esc(r.domain)})${sep}`;
+    });
+    console.log(lines.join('\n'));
+    console.log(`ON CONFLICT (key, lang) DO NOTHING;`);
+  }
+  console.log(`COMMIT;`);
 }
 
-// Emit SQL
-const esc = (v) => v === null || v === undefined
-  ? 'NULL'
-  : "'" + String(v).replace(/'/g, "''") + "'";
-
-const counts = {};
-for (const r of rows) counts[r.domain] = (counts[r.domain] || 0) + 1;
-
-console.log(`-- Auto-generated by scripts/extract_translations.mjs`);
-console.log(`-- Total rows: ${rows.length}`);
-for (const [d, n] of Object.entries(counts)) console.log(`--   ${d}: ${n}`);
-console.log(`BEGIN;`);
-
-const CHUNK = 100;
-for (let i = 0; i < rows.length; i += CHUNK) {
-  const slice = rows.slice(i, i + CHUNK);
-  console.log(`INSERT INTO public.translations (key, lang, text, domain) VALUES`);
-  const lines = slice.map((r, j) => {
-    const sep = j === slice.length - 1 ? '' : ',';
-    return `  (${esc(r.key)}, ${esc(r.lang)}, ${esc(r.text)}, ${esc(r.domain)})${sep}`;
-  });
-  console.log(lines.join('\n'));
-  console.log(`ON CONFLICT (key, lang) DO NOTHING;`);
-}
-
-console.log(`COMMIT;`);
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMain) emitSql(buildRows());
