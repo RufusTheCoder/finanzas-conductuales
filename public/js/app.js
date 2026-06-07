@@ -1011,12 +1011,12 @@ function renderBit() {
     </div>
     <div class="quiz-main">
       <div class="quiz-question-card">
-        <div class="q-situation">${q.prompt}</div>
+        <div class="q-situation">${t(`question.${q.id}.prompt`, q.prompt)}</div>
         <div class="q-options">
           ${getShuffledOptions(`bit_${q.id}`, q.options).map(({ opt, origIdx, displayIdx }) => `
             <button class="q-option ${state.bitAnswers[state.bitIndex] === origIdx ? 'selected' : ''}" data-idx="${origIdx}">
               <span class="q-letter">${'ABCD'[displayIdx]}</span>
-              <span>${opt.text}</span>
+              <span>${t(`question.${q.id}.opt.${opt.label}.text`, opt.text)}</span>
             </button>
           `).join('')}
         </div>
