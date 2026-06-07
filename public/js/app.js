@@ -1,10 +1,10 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession, fetchTranslations } from './supabase.js?v=20260606b';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession, fetchTranslations } from './supabase.js?v=20260606c';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
-import { SESGOS } from '../data/sesgos.js?v=20260606b';
+import { SESGOS } from '../data/sesgos.js?v=20260606c';
 import { BIT_PROFILES, bitLabel } from '../data/profiles.js';
 import { MECANISMOS, ANTIDOTOS, DECISION_MATRIX, NEXT_STEPS_OPTIONS } from '../data/report-content.js?v=20260606c';
-import { t, setLang, getLang, ingest } from './i18n.js?v=20260606b';
+import { t, setLang, getLang, ingest } from './i18n.js?v=20260606c';
 
 const app = document.getElementById('app');
 
