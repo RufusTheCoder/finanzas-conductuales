@@ -126,10 +126,18 @@ report.mecanismo.<id>.{name,phrase,desc,relation}   # id = dolor|ego|econ|grupo|
 report.antidoto.<id>.{name,what,how}                # id = precom|diario|s2|votcie|testnd|premortem|steelman|chklist  (8×3=24)
 report.matrix.<code>.<i>.{sit,tendency,rational}    # code = PP|FK|AA|II ; i=0..2  (4×3×3=36)
 report.nextstep.<id>.{label,hint}                   # id = otro-curso|saber-mas|...  (7×2=14)
+# OJO: el `icon` de mecanismos y antídotos SÍ se renderiza inline al usuario
+# (p. ej. `${a.icon} ${a.name}`), pero es un emoji estructural — NO se traduce,
+# NO lleva clave. El script de extracción no debe emitir claves `*.icon`.
 ```
 
-Total nuevo: **94 filas es-MX** (20+24+36+14). Campos de estructura (`id`, `icon`, `color`,
-`coverage`, `weights`, `key`, `num`, `hidden`) **no se traducen**.
+Total nuevo: **exactamente 94 filas es-MX** (20+24+36+14). Campos de estructura (`id`, `icon`,
+`color`, `coverage`, `weights`, `key`, `num`, `hidden`) **no se traducen**.
+
+> **Regla de reúso:** el nombre de cada mecanismo (`report.mecanismo.<id>.name`) aparece en
+> varios sitios del informe (Step 2 "mecanismos cubiertos", Step 3 severidad, Step 4 detalle).
+> Es **una sola clave compartida** consumida desde todos — nunca inventar claves divergentes,
+> o el mismo mecanismo saldría traducido distinto en pt-BR.
 
 ## Trampas técnicas (deben respetarse al cablear)
 
@@ -155,12 +163,26 @@ Total nuevo: **94 filas es-MX** (20+24+36+14). Campos de estructura (`id`, `icon
 
 ## Inventario de consumidores
 
-**`app.js` — datos ya sembrados (40 sitios):** question=11, sesgo=18, profile=11.
-Lista completa con `file:line` en el mapa de la sesión (workflow `i18n-fase1b-map`).
+**`app.js` — datos ya sembrados (44 sitios):** question=11, sesgo=18, profile=11 (mapa del
+workflow `i18n-fase1b-map`) **+ 4 lecturas de `sesgo.<id>.name`** en la sección de
+autoconciencia del informe (`renderReportStep5_Autoconciencia`, ~`app.js:2121/2129/2134/2139`)
+que el mapa de 40 omitió. Estas 4 usan la clave **ya sembrada** `sesgo.<id>.name` — no son
+claves nuevas, solo hay que cablearlas con `t()`.
 
-**`app.js` — contenido inline (Checkpoint 2):** consumidores en las funciones del informe
-final (p. ej. `renderReportStep4_Mecanismos` ~`app.js:2058`), la sección de antídotos, la
-matriz de decisión, y `renderNextSteps`. Se mapean con precisión en el plan de implementación.
+**`app.js` — contenido inline (Checkpoint 2):** cablear por **función + campo** (los números
+de línea son aproximados, pre-edición; van a moverse al editar):
+
+| Función | Lee | Clave |
+|---|---|---|
+| `renderReportStep2_Plan` | `ANTIDOTOS[].name` (~1909, 1930), `.what` (~1916), `.how` (~1920) | `report.antidoto.<id>.{name,what,how}` |
+| `renderReportStep2_Plan` | mecanismos cubiertos `m.mec.name` (~1912, 1933) | `report.mecanismo.<id>.name` *(reúso)* |
+| `renderReportStep3_Severidad` | `MECANISMOS[].name` (~1977, 1980, 1982, 2008), `.phrase` (~2011) | `report.mecanismo.<id>.{name,phrase}` |
+| `renderReportStep4_Mecanismos` | `MECANISMOS[].name` (~2049, 2064), `.phrase` (~2068), `.desc` (~2071), `.relation` (~2075) | `report.mecanismo.<id>.{name,phrase,desc,relation}` |
+| (matriz de decisión del informe) | `DECISION_MATRIX[code][i].{sit,tendency,rational}` (~2156, 2160, 2164) | `report.matrix.<code>.<i>.{sit,tendency,rational}` |
+| `renderNextSteps` | `NEXT_STEPS_OPTIONS[].label` (~2552), `.hint` (~2553) | `report.nextstep.<id>.{label,hint}` |
+
+> El `icon` de antídotos/mecanismos se renderiza inline (~1908/1930/2007/2049/2063) pero
+> es emoji estructural — no se traduce (ver bloque de claves).
 
 **Fuera de alcance (queda en español para pt-BR — hueco documentado, no olvido):**
 `LEARN_BLOCKS` (títulos "¿Qué es?"/"¿Cómo funciona?"…), `JOURNEY_STAGES` (nav),
@@ -172,7 +194,8 @@ cuestionario:", botones) y todo `admin.js`.
 **Checkpoint 1 — infraestructura + datos ya sembrados**
 1. Crear `i18n.js` y `fetchTranslations` en `supabase.js`.
 2. Integrar la carga en el boot.
-3. Cablear los 40 sitios de preguntas/sesgos/perfiles con `t(clave, respaldo)`.
+3. Cablear los 44 sitios de preguntas/sesgos/perfiles con `t(clave, respaldo)` (incluye las
+   4 lecturas de `sesgo.name` en autoconciencia que el mapa de 40 omitió).
 4. Deploy → **verificar es-MX idéntico**.
 
 **Checkpoint 2 — contenido inline**
@@ -189,6 +212,8 @@ cuestionario:", botones) y todo `admin.js`.
 - **Chequeo de alineación:** un script/función dev que compara cada fila es-MX de la BD
   contra el texto del archivo de datos y avisa si hay desalineación (detecta drift).
 - `report-content.js` es la única fuente del contenido inline (sin duplicación en `app.js`).
+- **El seed regenerado agrega exactamente 94 filas nuevas** (dominio `report`), **sin ninguna
+  clave `*.icon`**. Si el conteo difiere, hay un campo de más o de menos.
 
 ## Riesgos y mitigaciones
 
