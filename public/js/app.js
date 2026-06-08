@@ -1341,7 +1341,7 @@ function renderSesgoQuiz() {
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-sq-back" ${state.sesgoIndex === 0 ? 'disabled' : ''}>${t('ui.sesgo.btn-back', '← Anterior')}</button>
       <button class="btn-nav-next" id="btn-sq-next" ${!answered || (askFeedback && !rated) ? 'disabled' : ''}>
-        ${state.sesgoIndex === total - 1 ? '${t('ui.sesgo.btn-continue', 'Continuar →')}' : '${t('ui.sesgo.btn-next', 'Siguiente →')}'}
+        ${state.sesgoIndex === total - 1 ? t('ui.sesgo.btn-continue', 'Continuar →') : t('ui.sesgo.btn-next', 'Siguiente →')}
       </button>
     </div>
   `;
@@ -1455,7 +1455,7 @@ function renderSesgoLearn() {
       <div class="learn-cta-right">
         ${ratingWidget(rating, '¿cómo calificarías este bloque?')}
         <button class="btn-cta" id="btn-learn-next" ${rating === null ? 'disabled' : ''}>
-          ${isLast ? '${t('ui.sesgo.btn-learn-verify', 'Preguntas de verificación →')}' : 'Continuar →'}
+          ${isLast ? t('ui.sesgo.btn-learn-verify', 'Preguntas de verificación →') : t('ui.sesgo.btn-continue', 'Continuar →')}
         </button>
       </div>
     </div>
@@ -1523,7 +1523,7 @@ function renderSesgoFixation() {
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-fx-back" ${state.fixationIndex === 0 ? 'disabled' : ''}>← Anterior</button>
       <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null || (askFeedback && state.fixationRatings[state.fixationIndex] === null) ? 'disabled' : ''}>
-        ${state.fixationIndex === total - 1 ? '${t('ui.sesgo.btn-fixation-last', 'Ver mis resultados →')}' : 'Siguiente →'}
+        ${state.fixationIndex === total - 1 ? t('ui.sesgo.btn-fixation-last', 'Ver mis resultados →') : t('ui.sesgo.btn-next', 'Siguiente →')}
       </button>
     </div>
   `;
@@ -1589,7 +1589,7 @@ function renderSesgoSelfAssessment() {
             <input type="range" id="slider-self" class="fit-slider" min="0" max="100" step="1" value="${val}">
             <span class="slider-end-label">${t('ui.sesgo.slider-label-much', '100% — mucho')}</span>
           </div>
-          <div class="self-assess-value" id="self-val-display">${touched ? val + '%' : '${touched ? val + '%' : t('ui.sesgo.slider-placeholder', 'Mueve el deslizador')}'}</div>
+          <div class="self-assess-value" id="self-val-display">${touched ? val + '%' : t('ui.sesgo.slider-placeholder', 'Mueve el deslizador')}</div>
         </div>
       </div>
     </div>
@@ -2103,17 +2103,17 @@ function renderReportStep5_Autoconciencia(sesgos) {
         <div class="awareness-card" style="border-color:#DC262640">
           <div class="aw-card-title" style="color:#DC2626">${t('ui.report.blind-spots-title', `Puntos ciegos (${blind.length})`, { count: blind.length })}</div>
           <div class="aw-card-sub">${t('ui.report.blind-spots-sub', 'Te afectan más de lo que crees')}</div>
-          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>${t('ui.report.aw-list-item-detail', `· auto ${x.self}% vs observado ${x.observed}%`, { self: x.self, observed: x.observed })}</span></li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.blind-spots-empty', 'Ninguno — buena calibración por el lado de la subestimación.')}</p>'}
+          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>${t('ui.report.aw-list-item-detail', `· auto ${x.self}% vs observado ${x.observed}%`, { self: x.self, observed: x.observed })}</span></li>`).join('')}</ul>` : `<p class="aw-empty">${t('ui.report.blind-spots-empty', 'Ninguno — buena calibración por el lado de la subestimación.')}</p>`}
         </div>
         <div class="awareness-card" style="border-color:#D9770640">
           <div class="aw-card-title" style="color:#D97706">${t('ui.report.overestimated-title', `Sobreestimados (${over.length})`, { count: over.length })}</div>
           <div class="aw-card-sub">${t('ui.report.overestimated-sub', 'Crees que te afectan más de lo que realmente aparece')}</div>
-          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.overestimated-empty', 'Ninguno.')}</p>'}
+          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : `<p class="aw-empty">${t('ui.report.overestimated-empty', 'Ninguno.')}</p>`}
         </div>
         <div class="awareness-card" style="border-color:#05966940">
           <div class="aw-card-title" style="color:#059669">${t('ui.report.calibrated-title', `Bien calibrado (${calibrated.length})`, { count: calibrated.length })}</div>
           <div class="aw-card-sub">${t('ui.report.calibrated-sub', 'Tu autoevaluación coincide con las respuestas (±15 pp)')}</div>
-          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)}</li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.calibrated-empty', 'Aún no tienes sesgos calibrados.')}</p>'}
+          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)}</li>`).join('')}</ul>` : `<p class="aw-empty">${t('ui.report.calibrated-empty', 'Aún no tienes sesgos calibrados.')}</p>`}
         </div>
       </div>
       <div class="aw-score">${t('ui.report.awareness-score', `Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados`, { calibrated: calibrated.length, total: items.length })}</div>
@@ -2528,7 +2528,7 @@ function renderNextSteps() {
 
         <div class="next-actions">
           <button class="btn-cta" id="btn-save-next" ${interests.length === 0 && !(other || '').trim() ? 'disabled' : ''}>
-            ${saved ? '${t('ui.next.btn_update', 'Actualizar respuestas')}' : '${t('ui.next.btn_save', 'Guardar y ver resultados →')}'}
+            ${saved ? t('ui.next.btn_update', 'Actualizar respuestas') : t('ui.next.btn_save', 'Guardar y ver resultados →')}
           </button>
         </div>
       </div>
