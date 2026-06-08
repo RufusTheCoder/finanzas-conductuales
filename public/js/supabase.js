@@ -230,6 +230,12 @@ export async function markOnboardingSeen(email) {
     { onboarding_seen_at: new Date().toISOString() }, {}, 'markOnboardingSeen');
 }
 
+export async function setUserLang(email, lang) {
+  if (readOnly) return null;
+  return request(`/rest/v1/users?email=eq.${encodeURIComponent(email)}`, 'PATCH',
+    { lang }, {}, 'setUserLang');
+}
+
 export async function getUserProfile(email) {
   return request(`/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=email,name,onboarding_seen_at,lang`, 'GET', null, {}, 'getUserProfile');
 }
