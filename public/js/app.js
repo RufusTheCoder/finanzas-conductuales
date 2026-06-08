@@ -644,6 +644,7 @@ function renderDashboard() {
     <nav class="dash-nav">
       <div class="dash-nav-logo">Finanzas Conductuales</div>
       <div class="dash-nav-right">
+        ${langToggleHtml()}
         <span class="dash-user">${state.user.email}</span>
         <button class="btn-icon" id="btn-dark-mode" title="Cambiar modo claro/oscuro">${document.body.classList.contains('dark') ? '☀️' : '🌙'}</button>
         ${isDevUser() ? `
