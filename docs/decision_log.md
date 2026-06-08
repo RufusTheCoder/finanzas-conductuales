@@ -14,6 +14,17 @@ descartada**. Lo más reciente arriba.
 
 ---
 
+## 2026-06-08 — Nueva dirección: reposicionamiento de marca (Proyecto Interlegere / Pandava)
+
+**Contexto:** Tras cerrar la i18n, Rodrigo define una nueva dirección estratégica para el producto. Registrado como próxima iniciativa (aún sin diseñar en detalle).
+
+- **Decisión (dirección):** la plataforma deja de presentarse como *materia/curso de la Universidad Iberoamericana CDMX* y pasa a ser la **frente educativa de Pandava**, con la **lenguaje visual de Pandava**; nuevo nombre interno **Proyecto Interlegere**. El contenido (finanzas conductuales) permanece — cambia el envoltorio de marca. — **Por qué:** nuevo posicionamiento de Rodrigo (Pandava como marca educativa). — **En vez de:** mantener el encuadre Ibero/curso.
+- **Pendiente de decidir (kickoff/brainstorming):** qué es Pandava + guía de marca (logo/colores/tipografía); si "Interlegere" es el nombre mostrado o solo interno; alcance del "descaracterizar Ibero" (¿quitar atribución a Rodrigo/Ibero por completo?); cambio de dominio (el actual lleva "ibero"); idioma prioritario (¿pt-BR?). — **Nota:** la marca mostrada ya pasa por `t('ui.*')`, así que cambiarla es editar `translations`, sin deploy de código.
+
+**Artefactos:** tarea Notion [`379f4525-1682-8118-a160-effcd77cfffb`](https://app.notion.com/p/379f452516828118a160effcd77cfffb) (Sin empezar) · puntos de toque conocidos: `index.html` (title/meta/OG), `app.js` (`ui.*`), `admin/privacy/catalogo/Clase23` HTML, `styles.css`, dominio Netlify, docs internos.
+
+---
+
 ## 2026-06-08 — Fase 2b deployada + bug del techo de 1000 filas + cierre i18n
 
 **Contexto:** Deploy de Fase 2b (UI chrome) a prod. La verificación en pt-BR reveló que el informe renderizaba en español; diagnóstico → fix → re-deploy. Decisión de alcance sobre el admin cierra toda la iniciativa i18n. Rama `feat/i18n-fase2b` → master.
