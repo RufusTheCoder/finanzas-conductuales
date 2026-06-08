@@ -14,6 +14,19 @@ descartada**. Lo más reciente arriba.
 
 ---
 
+## 2026-06-08 — Fase 2b deployada + bug del techo de 1000 filas + cierre i18n
+
+**Contexto:** Deploy de Fase 2b (UI chrome) a prod. La verificación en pt-BR reveló que el informe renderizaba en español; diagnóstico → fix → re-deploy. Decisión de alcance sobre el admin cierra toda la iniciativa i18n. Rama `feat/i18n-fase2b` → master.
+
+- **Decisión (deploy):** merge ff `feat/i18n-fase2b` → master + push (Netlify auto-deploy), `?v=20260607b` → tras el fix `?v=20260607c`. — **Por qué:** completar la fase autorizada. — **En vez de:** dejar el chrome a medias.
+- **Hallazgo + fix (bug real):** con `ui.*` (337) sobre el contenido (880), cada idioma pasó de **1217 filas**, pero el REST de Supabase corta cada respuesta en **1000 filas**; `fetchTranslations` (sin paginar) descartaba ~217 claves → en pt-BR el informe caía al fallback español. **es-MX lo enmascaraba** (fallback = español), por eso el verificador en es-MX pasaba. — **Decisión:** paginar `fetchTranslations` con `limit/offset` + `order=key.asc` estable hasta agotar. — **En vez de:** subir `db-max-rows` (frágil, sigue teniendo techo) o filtrar por dominio (no escala). **Lección:** probar i18n siempre en el idioma **no-fallback** (pt-BR).
+- **Decisión (alcance, del usuario):** el **admin NO se traduce** — queda siempre en es-MX (idioma del dueño). — **Por qué:** lo usa solo Rodrigo; traducirlo no aporta. — **En vez de:** adaptar `admin.js` para ser agnóstico de idioma (era el bloque 3 de la "Fase 3").
+- **Consecuencia:** la **iniciativa i18n queda completa** (F0/F1/F2/F3 entregadas y en prod; app 100% es-MX + pt-BR en contenido y chrome). Tareas Notion master/F0/F1/F2/F3 cerradas (`Listo`). Próxima gran iniciativa = **gerador de perguntas no admin** (desbloqueada). Pendiente único: validación manual de Rodrigo en navegador.
+
+**Artefactos:** commits `fix(i18n): paginate fetchTranslations` (`43b60ad`) + cierre Fase 2b · `public/js/supabase.js:245` · ramas `feat/i18n-fase2b` (mergeada).
+
+---
+
 ## 2026-06-07 — Fase 2 (pt-BR) deployada + diseño Fase 2b (UI chrome)
 
 **Contexto:** Fase 2 (contenido pt-BR) deployada a prod (`9ab132a..fa7df78`, live `?v=20260607a`, 880 linhas pt-BR, verificada). Durante la ejecución surgieron 2 correcciones de localización del usuario; luego se diseñó Fase 2b (chrome). Rama `feat/i18n-fase2b`.
