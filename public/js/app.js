@@ -1,4 +1,4 @@
-import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession, fetchTranslations } from './supabase.js?v=20260606c';
+import { signIn, signUp, createUserProfile, loadProgress, saveProgress, logResponses, logQuestionFeedback, logContentFeedback, createSession, updateSession, signInWithGoogle, signInWithFacebook, signInWithApple, getUser, setSession, requestPasswordReset, updatePassword, resendConfirmation, markOnboardingSeen, getUserProfile, saveNextSteps, getMyNextSteps, getNextStepsCounts, submitBug, setErrorContext, setReadOnly, refreshSession, fetchTranslations, setUserLang } from './supabase.js?v=20260606c';
 import { SUPABASE_URL as _SBU, SUPABASE_ANON_KEY as _SBK } from './config.js';
 import { questions } from '../data/questions.js';
 import { SESGOS } from '../data/sesgos.js?v=20260606c';
@@ -358,6 +358,23 @@ async function loadTranslations(lang) {
     }
   } catch (_) { /* fall through to cache */ }
   try { const c = localStorage.getItem(cacheKey); if (c) ingest(JSON.parse(c)); } catch (_) {}
+}
+
+function langToggleHtml() {
+  const cur = getLang();
+  const btn = (code, label) =>
+    `<button data-lang="${code}" class="lang-btn" aria-pressed="${cur === code}" style="border:none;background:${cur === code ? 'var(--ink,#1F1F1F)' : 'transparent'};color:${cur === code ? '#fff' : 'var(--ink-4,#888)'};font:600 12px/1 -apple-system,sans-serif;padding:5px 9px;border-radius:6px;cursor:pointer">${label}</button>`;
+  return `<div class="lang-toggle" style="display:inline-flex;gap:2px;border:1px solid var(--line,#e5e5e5);border-radius:8px;padding:2px">${btn('es-MX', 'ES')}${btn('pt-BR', 'PT')}</div>`;
+}
+
+async function switchLang(lang) {
+  if (lang === getLang()) return;
+  setLang(lang);
+  try { localStorage.setItem('fc_lang', lang); } catch (_) {}
+  await loadTranslations(lang);
+  render();
+  // Don't write another user's lang while impersonating (view_as).
+  if (state.user?.email && !state.viewAs) { setUserLang(state.user.email, lang).catch(() => {}); }
 }
 
 // Apply the user's stored language; reload + persist only if it changed.
@@ -2871,8 +2888,18 @@ async function loadSession() {
   }
 }
 
-const bootLang = (() => { try { return localStorage.getItem('fc_lang') || 'es-MX'; } catch (_) { return 'es-MX'; } })();
+const bootLang = (() => {
+  try {
+    const saved = localStorage.getItem('fc_lang');
+    if (saved) return saved;
+    return (navigator.language || '').toLowerCase().startsWith('pt') ? 'pt-BR' : 'es-MX';
+  } catch (_) { return 'es-MX'; }
+})();
 setLang(bootLang);
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-lang]');
+  if (b) switchLang(b.dataset.lang);
+});
 render();                                          // immediate paint with data-file fallbacks
 loadTranslations(bootLang).then(() => render());   // re-render once the DB strings load
 loadSession();
