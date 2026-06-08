@@ -10,9 +10,12 @@ let activeLang = 'es-MX';
 export function getLang() { return activeLang; }
 export function setLang(lang) { activeLang = lang || 'es-MX'; }
 
-export function t(key, fallback) {
-  const v = store[key];
-  if (v === undefined || v === null) return fallback !== undefined ? fallback : key;
+export function t(key, fallback, params) {
+  let v = store[key];
+  if (v === undefined || v === null) v = (fallback !== undefined ? fallback : key);
+  if (params && typeof v === 'string') {
+    v = v.replace(/\{(\w+)\}/g, (m, k) => (params[k] !== undefined && params[k] !== null ? String(params[k]) : m));
+  }
   return v;
 }
 
