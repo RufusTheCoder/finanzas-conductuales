@@ -1,0 +1,3435 @@
+[
+ {
+  "key": "ui.rating.slider.0",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "['Nada', 'Muy poco', 'Algo', 'Bastante', 'Mucho', 'Totalmente']",
+  "newSnippet": "[t('ui.rating.slider.0','Nada'), t('ui.rating.slider.1','Muy poco'), t('ui.rating.slider.2','Algo'), t('ui.rating.slider.3','Bastante'), t('ui.rating.slider.4','Mucho'), t('ui.rating.slider.5','Totalmente')]",
+  "params": [],
+  "notes": "Array item index 0. The whole SLIDER_LABELS array literal should be replaced at once with all six t() calls; see newSnippet of index 0 for the full replacement."
+ },
+ {
+  "key": "ui.rating.slider.1",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "'Muy poco'",
+  "newSnippet": "t('ui.rating.slider.1','Muy poco')",
+  "params": [],
+  "notes": "Array item index 1. Replace as part of the full array replacement described in index 0."
+ },
+ {
+  "key": "ui.rating.slider.2",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "'Algo'",
+  "newSnippet": "t('ui.rating.slider.2','Algo')",
+  "params": [],
+  "notes": "Array item index 2. Replace as part of the full array replacement."
+ },
+ {
+  "key": "ui.rating.slider.3",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "'Bastante'",
+  "newSnippet": "t('ui.rating.slider.3','Bastante')",
+  "params": [],
+  "notes": "Array item index 3. Replace as part of the full array replacement."
+ },
+ {
+  "key": "ui.rating.slider.4",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "'Mucho'",
+  "newSnippet": "t('ui.rating.slider.4','Mucho')",
+  "params": [],
+  "notes": "Array item index 4. Replace as part of the full array replacement."
+ },
+ {
+  "key": "ui.rating.slider.5",
+  "area": "auth",
+  "fn": "const SLIDER_LABELS",
+  "approxLine": 260,
+  "oldSnippet": "'Totalmente'",
+  "newSnippet": "t('ui.rating.slider.5','Totalmente')",
+  "params": [],
+  "notes": "Array item index 5. Replace as part of the full array replacement."
+ },
+ {
+  "key": "ui.rating.level.0",
+  "area": "auth",
+  "fn": "const RATING_LABELS",
+  "approxLine": 262,
+  "oldSnippet": "['muy baja', 'baja', 'regular', 'alta', 'muy alta']",
+  "newSnippet": "[t('ui.rating.level.0','muy baja'), t('ui.rating.level.1','baja'), t('ui.rating.level.2','regular'), t('ui.rating.level.3','alta'), t('ui.rating.level.4','muy alta')]",
+  "params": [],
+  "notes": "Array item index 0. Used as title attribute on rating buttons and as rating-feedback-text. Full array replacement in newSnippet."
+ },
+ {
+  "key": "ui.rating.level.1",
+  "area": "auth",
+  "fn": "const RATING_LABELS",
+  "approxLine": 262,
+  "oldSnippet": "'baja'",
+  "newSnippet": "t('ui.rating.level.1','baja')",
+  "params": [],
+  "notes": "Array item index 1. Replace as part of full RATING_LABELS array replacement."
+ },
+ {
+  "key": "ui.rating.level.2",
+  "area": "auth",
+  "fn": "const RATING_LABELS",
+  "approxLine": 262,
+  "oldSnippet": "'regular'",
+  "newSnippet": "t('ui.rating.level.2','regular')",
+  "params": [],
+  "notes": "Array item index 2. Replace as part of full RATING_LABELS array replacement."
+ },
+ {
+  "key": "ui.rating.level.3",
+  "area": "auth",
+  "fn": "const RATING_LABELS",
+  "approxLine": 262,
+  "oldSnippet": "'alta'",
+  "newSnippet": "t('ui.rating.level.3','alta')",
+  "params": [],
+  "notes": "Array item index 3. Replace as part of full RATING_LABELS array replacement."
+ },
+ {
+  "key": "ui.rating.level.4",
+  "area": "auth",
+  "fn": "const RATING_LABELS",
+  "approxLine": 262,
+  "oldSnippet": "'muy alta'",
+  "newSnippet": "t('ui.rating.level.4','muy alta')",
+  "params": [],
+  "notes": "Array item index 4. Replace as part of full RATING_LABELS array replacement."
+ },
+ {
+  "key": "ui.auth.rate-to-continue",
+  "area": "auth",
+  "fn": "ratingWidget",
+  "approxLine": 277,
+  "oldSnippet": "'califica para continuar'",
+  "newSnippet": "t('ui.auth.rate-to-continue','califica para continuar')",
+  "params": [],
+  "notes": "Shown in rating-feedback-text div when no rating has been selected yet."
+ },
+ {
+  "key": "ui.auth.privacy-link",
+  "area": "auth",
+  "fn": "authShell",
+  "approxLine": 296,
+  "oldSnippet": ">Aviso de Privacidad</a>",
+  "newSnippet": ">${t('ui.auth.privacy-link','Aviso de Privacidad')}</a>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-bad-credentials",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 309,
+  "oldSnippet": "return 'Correo o contraseña incorrectos.';",
+  "newSnippet": "return t('ui.auth.error-bad-credentials','Correo o contraseña incorrectos.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-email-not-confirmed",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 310,
+  "oldSnippet": "return 'Confirma tu correo electrónico antes de iniciar sesión.';",
+  "newSnippet": "return t('ui.auth.error-email-not-confirmed','Confirma tu correo electrónico antes de iniciar sesión.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-already-registered",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 311,
+  "oldSnippet": "return 'Ya existe una cuenta con este correo. Inicia sesión.';",
+  "newSnippet": "return t('ui.auth.error-already-registered','Ya existe una cuenta con este correo. Inicia sesión.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-password-too-short",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 312,
+  "oldSnippet": "return 'La contraseña debe tener al menos 6 caracteres.';",
+  "newSnippet": "return t('ui.auth.error-password-too-short','La contraseña debe tener al menos 6 caracteres.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-rate-limit",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 313,
+  "oldSnippet": "return 'Espera unos segundos antes de intentarlo de nuevo.';",
+  "newSnippet": "return t('ui.auth.error-rate-limit','Espera unos segundos antes de intentarlo de nuevo.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.error-unknown",
+  "area": "auth",
+  "fn": "mapAuthError",
+  "approxLine": 314,
+  "oldSnippet": "return msg || 'Error desconocido. Intenta de nuevo.';",
+  "newSnippet": "return msg || t('ui.auth.error-unknown','Error desconocido. Intenta de nuevo.');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.login-context",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 401,
+  "oldSnippet": "<div class=\"auth-context\">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>",
+  "newSnippet": "<div class=\"auth-context\">${t('ui.auth.login-context','Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques')}</div>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.login-headline",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 403,
+  "oldSnippet": "<h1 class=\"auth-headline\">Conoce tu mente<br><em>de inversionista</em></h1>",
+  "newSnippet": "<h1 class=\"auth-headline\">${t('ui.auth.login-headline','Conoce tu mente<br><em>de inversionista</em>')}</h1>",
+  "params": [],
+  "notes": "Contains HTML tags; translation value must preserve the <br> and <em> tags or the pt-BR translation should do the same."
+ },
+ {
+  "key": "ui.auth.login-sub",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 403,
+  "oldSnippet": "<p class=\"auth-sub\">Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.</p>",
+  "newSnippet": "<p class=\"auth-sub\">${t('ui.auth.login-sub','Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-google",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 406,
+  "oldSnippet": "${GOOGLE_SVG} Continuar con Google",
+  "newSnippet": "${GOOGLE_SVG} ${t('ui.auth.btn-google','Continuar con Google')}",
+  "params": [],
+  "notes": "The SVG icon precedes the text; only the text portion is translated."
+ },
+ {
+  "key": "ui.auth.divider-or",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 407,
+  "oldSnippet": "<div class=\"auth-divider\"><span>o</span></div>",
+  "newSnippet": "<div class=\"auth-divider\"><span>${t('ui.auth.divider-or','o')}</span></div>",
+  "params": [],
+  "notes": "Single-character divider word between Google sign-in and email form. Short but learner-visible; pt-BR equivalent is also 'ou'."
+ },
+ {
+  "key": "ui.auth.placeholder-email",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 409,
+  "oldSnippet": "placeholder=\"Correo electrónico\" autocomplete=\"email\" required>\n        <input type=\"password\" name=\"password\" placeholder=\"Contraseña\"",
+  "newSnippet": "placeholder=\"${t('ui.auth.placeholder-email','Correo electrónico')}\" autocomplete=\"email\" required>\n        <input type=\"password\" name=\"password\" placeholder=\"${t('ui.auth.placeholder-password','Contraseña')}\"",
+  "params": [],
+  "notes": "Covers both the email and password placeholders in the login form; see also ui.auth.placeholder-password."
+ },
+ {
+  "key": "ui.auth.placeholder-password",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 410,
+  "oldSnippet": "placeholder=\"Contraseña\" autocomplete=\"current-password\"",
+  "newSnippet": "placeholder=\"${t('ui.auth.placeholder-password','Contraseña')}\" autocomplete=\"current-password\"",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-login",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 411,
+  "oldSnippet": "<button class=\"btn-primary\" type=\"submit\">Entrar</button>",
+  "newSnippet": "<button class=\"btn-primary\" type=\"submit\">${t('ui.auth.btn-login','Entrar')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-forgot-password",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 414,
+  "oldSnippet": ">¿Olvidaste tu contraseña?</button>",
+  "newSnippet": ">${t('ui.auth.btn-forgot-password','¿Olvidaste tu contraseña?')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-to-signup",
+  "area": "auth",
+  "fn": "renderAuthLogin",
+  "approxLine": 415,
+  "oldSnippet": ">Crear cuenta →</button>",
+  "newSnippet": ">${t('ui.auth.btn-to-signup','Crear cuenta →')}</button>",
+  "params": [],
+  "notes": "The → arrow is part of the string; include it in the translation value."
+ },
+ {
+  "key": "ui.auth.signup-headline",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 428,
+  "oldSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">Crear cuenta</h1>",
+  "newSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">${t('ui.auth.signup-headline','Crear cuenta')}</h1>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.signup-sub",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 429,
+  "oldSnippet": "<p class=\"auth-sub\">Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.</p>",
+  "newSnippet": "<p class=\"auth-sub\">${t('ui.auth.signup-sub','Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.placeholder-new-password",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 433,
+  "oldSnippet": "placeholder=\"Contraseña (mín. 6 caracteres)\"",
+  "newSnippet": "placeholder=\"${t('ui.auth.placeholder-new-password','Contraseña (mín. 6 caracteres)')}\"",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.placeholder-confirm-password",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 434,
+  "oldSnippet": "placeholder=\"Confirmar contraseña\" autocomplete=\"new-password\" required>",
+  "newSnippet": "placeholder=\"${t('ui.auth.placeholder-confirm-password','Confirmar contraseña')}\" autocomplete=\"new-password\" required>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.consent-label",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 437,
+  "oldSnippet": "<span>Acepto la <a href=\"privacy.html\" target=\"_blank\" rel=\"noopener\">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.</span>",
+  "newSnippet": "<span>${t('ui.auth.consent-label','Acepto la <a href=\"privacy.html\" target=\"_blank\" rel=\"noopener\">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.')}</span>",
+  "params": [],
+  "notes": "Contains an anchor tag. The href is hardcoded inside the string value; translators must preserve the link markup."
+ },
+ {
+  "key": "ui.auth.btn-signup",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 439,
+  "oldSnippet": "<button class=\"btn-primary\" type=\"submit\">Crear cuenta</button>\n    </form>",
+  "newSnippet": "<button class=\"btn-primary\" type=\"submit\">${t('ui.auth.btn-signup','Crear cuenta')}</button>\n    </form>",
+  "params": [],
+  "notes": "Submit button inside the signup form; distinct from ui.auth.btn-to-signup (the link on the login screen)."
+ },
+ {
+  "key": "ui.auth.btn-to-login",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 443,
+  "oldSnippet": ">¿Ya tienes cuenta? Inicia sesión</button>",
+  "newSnippet": ">${t('ui.auth.btn-to-login','¿Ya tienes cuenta? Inicia sesión')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.forgot-headline",
+  "area": "auth",
+  "fn": "renderAuthForgot",
+  "approxLine": 451,
+  "oldSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">Recuperar contraseña</h1>",
+  "newSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">${t('ui.auth.forgot-headline','Recuperar contraseña')}</h1>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.forgot-sub",
+  "area": "auth",
+  "fn": "renderAuthForgot",
+  "approxLine": 452,
+  "oldSnippet": "<p class=\"auth-sub\">Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.</p>",
+  "newSnippet": "<p class=\"auth-sub\">${t('ui.auth.forgot-sub','Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-send-instructions",
+  "area": "auth",
+  "fn": "renderAuthForgot",
+  "approxLine": 457,
+  "oldSnippet": "<button class=\"btn-primary\" type=\"submit\">Enviar instrucciones</button>",
+  "newSnippet": "<button class=\"btn-primary\" type=\"submit\">${t('ui.auth.btn-send-instructions','Enviar instrucciones')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-back",
+  "area": "auth",
+  "fn": "renderAuthForgot",
+  "approxLine": 461,
+  "oldSnippet": ">← Volver</button>",
+  "newSnippet": ">${t('ui.auth.btn-back','← Volver')}</button>",
+  "params": [],
+  "notes": "Used in renderAuthForgot. The ← arrow is part of the label."
+ },
+ {
+  "key": "ui.auth.reset-sent-title",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 471,
+  "oldSnippet": "title: 'Revisa tu correo',",
+  "newSnippet": "title: t('ui.auth.reset-sent-title','Revisa tu correo'),",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.reset-sent-body",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 472,
+  "oldSnippet": "body: `Enviamos las instrucciones a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace del correo para crear tu nueva contraseña.`,",
+  "newSnippet": "body: t('ui.auth.reset-sent-body',`Enviamos las instrucciones a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace del correo para crear tu nueva contraseña.`, { email: state.pendingEmail }),",
+  "params": [
+   "email"
+  ],
+  "notes": "Contains HTML <strong> tag around the email placeholder."
+ },
+ {
+  "key": "ui.auth.reset-sent-hint",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 473,
+  "oldSnippet": "hint: 'No lo encuentras? Revisa la carpeta de spam.',",
+  "newSnippet": "hint: t('ui.auth.reset-sent-hint','No lo encuentras? Revisa la carpeta de spam.'),",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.check-email-title",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 478,
+  "oldSnippet": "title: 'Confirma tu correo',",
+  "newSnippet": "title: t('ui.auth.check-email-title','Confirma tu correo'),",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.check-email-body",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 479,
+  "oldSnippet": "body: `Enviamos un enlace de confirmación a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace para activar tu cuenta y luego inicia sesión.`,",
+  "newSnippet": "body: t('ui.auth.check-email-body',`Enviamos un enlace de confirmación a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace para activar tu cuenta y luego inicia sesión.`, { email: state.pendingEmail }),",
+  "params": [
+   "email"
+  ],
+  "notes": "Contains HTML <strong> tag around the email placeholder."
+ },
+ {
+  "key": "ui.auth.check-email-hint",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 480,
+  "oldSnippet": "hint: 'No lo encuentras? Revisa spam o reenvía el correo.',",
+  "newSnippet": "hint: t('ui.auth.check-email-hint','No lo encuentras? Revisa spam o reenvía el correo.'),",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-resend-confirmation",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 491,
+  "oldSnippet": ">Reenviar correo de confirmación</button>",
+  "newSnippet": ">${t('ui.auth.btn-resend-confirmation','Reenviar correo de confirmación')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.btn-back-to-login",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 492,
+  "oldSnippet": ">← Volver al inicio de sesión</button>",
+  "newSnippet": ">${t('ui.auth.btn-back-to-login','← Volver al inicio de sesión')}</button>",
+  "params": [],
+  "notes": "Back button in the email-confirmation / reset-sent message screens. Distinct from ui.auth.btn-back used in renderAuthForgot."
+ },
+ {
+  "key": "ui.auth.resend-sending",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 499,
+  "oldSnippet": "el.textContent = 'Enviando…';\n      try {",
+  "newSnippet": "el.textContent = t('ui.auth.resend-sending','Enviando…');\n      try {",
+  "params": [],
+  "notes": "Loading state text set imperatively on the resend button in renderAuthMsg handler."
+ },
+ {
+  "key": "ui.auth.resend-done",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 502,
+  "oldSnippet": "el.textContent = '✓ Correo enviado';",
+  "newSnippet": "el.textContent = t('ui.auth.resend-done','✓ Correo enviado');",
+  "params": [],
+  "notes": "The ✓ checkmark is part of the string value."
+ },
+ {
+  "key": "ui.auth.resend-error",
+  "area": "auth",
+  "fn": "renderAuthMsg",
+  "approxLine": 504,
+  "oldSnippet": "el.textContent = 'Error al reenviar';",
+  "newSnippet": "el.textContent = t('ui.auth.resend-error','Error al reenviar');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.new-password-headline",
+  "area": "auth",
+  "fn": "renderAuthNewPassword",
+  "approxLine": 513,
+  "oldSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">Nueva contraseña</h1>",
+  "newSnippet": "<h1 class=\"auth-headline\" style=\"font-size:1.5rem;margin-bottom:.5rem\">${t('ui.auth.new-password-headline','Nueva contraseña')}</h1>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.new-password-sub",
+  "area": "auth",
+  "fn": "renderAuthNewPassword",
+  "approxLine": 514,
+  "oldSnippet": "<p class=\"auth-sub\">Elige una nueva contraseña para tu cuenta.</p>",
+  "newSnippet": "<p class=\"auth-sub\">${t('ui.auth.new-password-sub','Elige una nueva contraseña para tu cuenta.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.placeholder-new-password-set",
+  "area": "auth",
+  "fn": "renderAuthNewPassword",
+  "approxLine": 517,
+  "oldSnippet": "placeholder=\"Nueva contraseña (mín. 6 caracteres)\"",
+  "newSnippet": "placeholder=\"${t('ui.auth.placeholder-new-password-set','Nueva contraseña (mín. 6 caracteres)')}\"",
+  "params": [],
+  "notes": "Distinct from ui.auth.placeholder-new-password in signup; this is the reset-password form."
+ },
+ {
+  "key": "ui.auth.btn-save-password",
+  "area": "auth",
+  "fn": "renderAuthNewPassword",
+  "approxLine": 519,
+  "oldSnippet": "<button class=\"btn-primary\" type=\"submit\">Guardar contraseña</button>",
+  "newSnippet": "<button class=\"btn-primary\" type=\"submit\">${t('ui.auth.btn-save-password','Guardar contraseña')}</button>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.login-loading",
+  "area": "auth",
+  "fn": "handleLoginSubmit",
+  "approxLine": 528,
+  "oldSnippet": "btn.disabled = true; btn.textContent = 'Entrando…';",
+  "newSnippet": "btn.disabled = true; btn.textContent = t('ui.auth.login-loading','Entrando…');",
+  "params": [],
+  "notes": "Imperative loading state text set on the login submit button while the auth request is in-flight."
+ },
+ {
+  "key": "ui.auth.passwords-mismatch",
+  "area": "auth",
+  "fn": "handleSignupSubmit",
+  "approxLine": 541,
+  "oldSnippet": "state.authError = 'Las contraseñas no coinciden.';\n    render();\n    return;\n  }\n  const btn = e.target.querySelector('button[type=submit]');\n  btn.disabled = true; btn.textContent = 'Creando cuenta…';",
+  "newSnippet": "state.authError = t('ui.auth.passwords-mismatch','Las contraseñas no coinciden.');\n    render();\n    return;\n  }\n  const btn = e.target.querySelector('button[type=submit]');\n  btn.disabled = true; btn.textContent = t('ui.auth.signup-loading','Creando cuenta…');",
+  "params": [],
+  "notes": "Covers two strings; see also ui.auth.signup-loading. The same 'Las contraseñas no coinciden.' string appears again in handleNewPasswordSubmit (line 584) — both should use this same key."
+ },
+ {
+  "key": "ui.auth.signup-loading",
+  "area": "auth",
+  "fn": "handleSignupSubmit",
+  "approxLine": 546,
+  "oldSnippet": "btn.textContent = 'Creando cuenta…';",
+  "newSnippet": "btn.textContent = t('ui.auth.signup-loading','Creando cuenta…');",
+  "params": [],
+  "notes": "Loading state text on the signup submit button."
+ },
+ {
+  "key": "ui.auth.forgot-loading",
+  "area": "auth",
+  "fn": "handleForgotSubmit",
+  "approxLine": 568,
+  "oldSnippet": "btn.disabled = true; btn.textContent = 'Enviando…';\n  try {\n    await requestPasswordReset",
+  "newSnippet": "btn.disabled = true; btn.textContent = t('ui.auth.forgot-loading','Enviando…');\n  try {\n    await requestPasswordReset",
+  "params": [],
+  "notes": "Loading state on the forgot-password submit button. Same Spanish text as ui.auth.resend-sending but different context and function — keeping separate keys for independent translateability."
+ },
+ {
+  "key": "ui.auth.new-password-loading",
+  "area": "auth",
+  "fn": "handleNewPasswordSubmit",
+  "approxLine": 589,
+  "oldSnippet": "btn.disabled = true; btn.textContent = 'Guardando…';",
+  "newSnippet": "btn.disabled = true; btn.textContent = t('ui.auth.new-password-loading','Guardando…');",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.signup-context",
+  "area": "auth",
+  "fn": "renderAuthSignup",
+  "approxLine": 427,
+  "oldSnippet": "<div class=\"auth-context\">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>\n    <h1 class=\"auth-headline\" style=\"font-size:1.5rem",
+  "newSnippet": "<div class=\"auth-context\">${t('ui.auth.login-context','Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques')}</div>\n    <h1 class=\"auth-headline\" style=\"font-size:1.5rem",
+  "params": [],
+  "notes": "Identical text to ui.auth.login-context; reuse the same key (ui.auth.login-context) rather than creating a duplicate key."
+ },
+ {
+  "key": "ui.auth.onboarding-welcome-mark",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2381,
+  "oldSnippet": "<div class=\"onboarding-mark\">Bienvenido</div>",
+  "newSnippet": "<div class=\"onboarding-mark\">${t('ui.auth.onboarding-welcome-mark','Bienvenido')}</div>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-title",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2382,
+  "oldSnippet": "<h1 class=\"onboarding-title\">10 años compilados en una jornada de autoconocimiento</h1>",
+  "newSnippet": "<h1 class=\"onboarding-title\">${t('ui.auth.onboarding-title','10 años compilados en una jornada de autoconocimiento')}</h1>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-lead",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2383,
+  "oldSnippet": "<p class=\"onboarding-lead\">Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.</p>",
+  "newSnippet": "<p class=\"onboarding-lead\">${t('ui.auth.onboarding-lead','Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-time-title",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2386,
+  "oldSnippet": "<div class=\"onboarding-time-title\">⏱ Alrededor de 2 horas en total</div>",
+  "newSnippet": "<div class=\"onboarding-time-title\">${t('ui.auth.onboarding-time-title','⏱ Alrededor de 2 horas en total')}</div>",
+  "params": [],
+  "notes": "Starts with a ⏱ emoji that is part of the current string; included per the rule that emojis embedded in text strings are kept. The emoji itself should not be translated but the text following it should be."
+ },
+ {
+  "key": "ui.auth.onboarding-time-body",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2387,
+  "oldSnippet": "<div class=\"onboarding-time-body\">No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.</div>",
+  "newSnippet": "<div class=\"onboarding-time-body\">${t('ui.auth.onboarding-time-body','No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.')}</div>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-bit-num",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2389,
+  "oldSnippet": "<span class=\"time-pill-num\">~10 min</span><span class=\"time-pill-lbl\">Test BIT · perfil inversionista</span>",
+  "newSnippet": "<span class=\"time-pill-num\">${t('ui.auth.onboarding-pill-bit-num','~10 min')}</span><span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-bit-lbl','Test BIT · perfil inversionista')}</span>",
+  "params": [],
+  "notes": "Duration label for BIT pill; paired with ui.auth.onboarding-pill-bit-lbl."
+ },
+ {
+  "key": "ui.auth.onboarding-pill-bit-lbl",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2389,
+  "oldSnippet": "<span class=\"time-pill-lbl\">Test BIT · perfil inversionista</span></div>",
+  "newSnippet": "<span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-bit-lbl','Test BIT · perfil inversionista')}</span></div>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-sesgo-num",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2390,
+  "oldSnippet": "<span class=\"time-pill-num\">~5 min</span><span class=\"time-pill-lbl\">Cada módulo de sesgo (×15)</span>",
+  "newSnippet": "<span class=\"time-pill-num\">${t('ui.auth.onboarding-pill-sesgo-num','~5 min')}</span><span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-sesgo-lbl','Cada módulo de sesgo (×15)')}</span>",
+  "params": [],
+  "notes": "Duration label for per-sesgo module pill."
+ },
+ {
+  "key": "ui.auth.onboarding-pill-sesgo-lbl",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2390,
+  "oldSnippet": "<span class=\"time-pill-lbl\">Cada módulo de sesgo (×15)</span>",
+  "newSnippet": "<span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-sesgo-lbl','Cada módulo de sesgo (×15)')}</span>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-informe-num",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2391,
+  "oldSnippet": "<span class=\"time-pill-num\">~10 min</span><span class=\"time-pill-lbl\">Informe final · 6 pasos</span>",
+  "newSnippet": "<span class=\"time-pill-num\">${t('ui.auth.onboarding-pill-informe-num','~10 min')}</span><span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-informe-lbl','Informe final · 6 pasos')}</span>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-informe-lbl",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2391,
+  "oldSnippet": "<span class=\"time-pill-lbl\">Informe final · 6 pasos</span>",
+  "newSnippet": "<span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-informe-lbl','Informe final · 6 pasos')}</span>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-next-num",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2392,
+  "oldSnippet": "<span class=\"time-pill-num\">~3 min</span><span class=\"time-pill-lbl\">Próximos pasos</span>",
+  "newSnippet": "<span class=\"time-pill-num\">${t('ui.auth.onboarding-pill-next-num','~3 min')}</span><span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-next-lbl','Próximos pasos')}</span>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-pill-next-lbl",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2392,
+  "oldSnippet": "<span class=\"time-pill-lbl\">Próximos pasos</span>",
+  "newSnippet": "<span class=\"time-pill-lbl\">${t('ui.auth.onboarding-pill-next-lbl','Próximos pasos')}</span>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-advice-title",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2397,
+  "oldSnippet": "<div class=\"onboarding-advice-title\">Un consejo antes de empezar</div>",
+  "newSnippet": "<div class=\"onboarding-advice-title\">${t('ui.auth.onboarding-advice-title','Un consejo antes de empezar')}</div>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-advice-body",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2398,
+  "oldSnippet": "<p>Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.</p>",
+  "newSnippet": "<p>${t('ui.auth.onboarding-advice-body','Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-feedback-note",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2402,
+  "oldSnippet": "<strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.",
+  "newSnippet": "${t('ui.auth.onboarding-feedback-note','<strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.')}",
+  "params": [],
+  "notes": "Contains a <strong> tag; translators must preserve the markup."
+ },
+ {
+  "key": "ui.auth.onboarding-thanks",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2405,
+  "oldSnippet": "<p class=\"onboarding-thanks\">Gracias por prestar tu atención.</p>",
+  "newSnippet": "<p class=\"onboarding-thanks\">${t('ui.auth.onboarding-thanks','Gracias por prestar tu atención.')}</p>",
+  "params": [],
+  "notes": ""
+ },
+ {
+  "key": "ui.auth.onboarding-btn-start",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2407,
+  "oldSnippet": "id=\"btn-start-journey\">Comenzar la jornada →</button>",
+  "newSnippet": "id=\"btn-start-journey\">${t('ui.auth.onboarding-btn-start','Comenzar la jornada →')}</button>",
+  "params": [],
+  "notes": "The → arrow is part of the label."
+ },
+ {
+  "key": "ui.auth.onboarding-btn-start-loading",
+  "area": "auth",
+  "fn": "renderOnboarding",
+  "approxLine": 2413,
+  "oldSnippet": "btn.disabled = true; btn.textContent = 'Entrando…';\n    try { await markOnboardingSeen",
+  "newSnippet": "btn.disabled = true; btn.textContent = t('ui.auth.onboarding-btn-start-loading','Entrando…');\n    try { await markOnboardingSeen",
+  "params": [],
+  "notes": "Imperative loading state set on the start-journey button. Same Spanish text as ui.auth.login-loading but different context; separate keys allow independent translation."
+ },
+ {
+  "key": "ui.journey.bit.label",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array, consumed in renderDashboard loop)",
+  "approxLine": 611,
+  "oldSnippet": "label: 'Test BIT'",
+  "newSnippet": "label: t('ui.journey.bit.label', 'Test BIT')",
+  "params": [],
+  "notes": "JOURNEY_STAGES is a const array. Each stage.label is rendered at line ~679 as `${stage.label}`. Wrap the literal in the const definition OR inline at the consumption site in the map."
+ },
+ {
+  "key": "ui.journey.bit.short",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 611,
+  "oldSnippet": "short: 'BIT'",
+  "newSnippet": "short: t('ui.journey.bit.short', 'BIT')",
+  "params": [],
+  "notes": "stage.short not currently rendered in the visible tab markup (only stage.label and stage.num are used in the tab button), but included for completeness as a learner-visible string if used elsewhere."
+ },
+ {
+  "key": "ui.journey.sesgos.label",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 612,
+  "oldSnippet": "label: 'Sesgos'",
+  "newSnippet": "label: t('ui.journey.sesgos.label', 'Sesgos')",
+  "params": [],
+  "notes": "Rendered as the journey tab label in renderDashboard map at ~line 679."
+ },
+ {
+  "key": "ui.journey.sesgos.short",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 612,
+  "oldSnippet": "short: 'Sesgos'",
+  "newSnippet": "short: t('ui.journey.sesgos.short', 'Sesgos')",
+  "params": [],
+  "notes": "Same value as label for this stage."
+ },
+ {
+  "key": "ui.journey.informe.label",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 613,
+  "oldSnippet": "label: 'Informe'",
+  "newSnippet": "label: t('ui.journey.informe.label', 'Informe')",
+  "params": [],
+  "notes": "Rendered as the journey tab label."
+ },
+ {
+  "key": "ui.journey.informe.short",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 613,
+  "oldSnippet": "short: 'Informe'",
+  "newSnippet": "short: t('ui.journey.informe.short', 'Informe')",
+  "params": [],
+  "notes": "Same value as label for this stage."
+ },
+ {
+  "key": "ui.journey.next.label",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 614,
+  "oldSnippet": "label: 'Próximos pasos'",
+  "newSnippet": "label: t('ui.journey.next.label', 'Próximos pasos')",
+  "params": [],
+  "notes": "Rendered as the journey tab label."
+ },
+ {
+  "key": "ui.journey.next.short",
+  "area": "dash",
+  "fn": "JOURNEY_STAGES (const array)",
+  "approxLine": 614,
+  "oldSnippet": "short: 'Próximos'",
+  "newSnippet": "short: t('ui.journey.next.short', 'Próximos')",
+  "params": [],
+  "notes": "Truncated version for narrower viewports if stage.short is used."
+ },
+ {
+  "key": "ui.dash.nav-logo",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 646,
+  "oldSnippet": "Finanzas Conductuales</div>",
+  "newSnippet": "${t('ui.dash.nav-logo', 'Finanzas Conductuales')}</div>",
+  "params": [],
+  "notes": "Brand/course name in the nav bar. Uncertain inclusion — may be intentionally untranslated as a proper name. Included because it is visible learner-facing chrome."
+ },
+ {
+  "key": "ui.dash.dark-mode-tooltip",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 650,
+  "oldSnippet": "title=\"Cambiar modo claro/oscuro\"",
+  "newSnippet": "title=\"${t('ui.dash.dark-mode-tooltip', 'Cambiar modo claro/oscuro')}\"",
+  "params": [],
+  "notes": "Tooltip on the dark-mode toggle button."
+ },
+ {
+  "key": "ui.dash.btn-logout",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 654,
+  "oldSnippet": "<button class=\"btn-link\" id=\"btn-logout\">Salir</button>",
+  "newSnippet": "<button class=\"btn-link\" id=\"btn-logout\">${t('ui.dash.btn-logout', 'Salir')}</button>",
+  "params": [],
+  "notes": "Logout button label."
+ },
+ {
+  "key": "ui.dash.email-verify-banner",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 659,
+  "oldSnippet": "Confirma tu correo electrónico para proteger el acceso a tu cuenta.",
+  "newSnippet": "${t('ui.dash.email-verify-banner', 'Confirma tu correo electrónico para proteger el acceso a tu cuenta.')}",
+  "params": [],
+  "notes": "Banner text for unconfirmed email."
+ },
+ {
+  "key": "ui.dash.btn-resend",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 660,
+  "oldSnippet": "Reenviar →</button>",
+  "newSnippet": "${t('ui.dash.btn-resend', 'Reenviar →')}</button>",
+  "params": [],
+  "notes": "Button to resend confirmation email inside the verify banner."
+ },
+ {
+  "key": "ui.dash.hero-title",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 664,
+  "oldSnippet": "<h1 class=\"journey-hero-title\">Hola, ${state.user.email.split('@')[0]}</h1>",
+  "newSnippet": "<h1 class=\"journey-hero-title\">${t('ui.dash.hero-title', 'Hola, {name}', { name: state.user.email.split('@')[0] })}</h1>",
+  "params": [
+   "name"
+  ],
+  "notes": "Greeting in the journey hero section. Placeholder {name} is the username part of the email."
+ },
+ {
+  "key": "ui.dash.hero-sub",
+  "area": "dash",
+  "fn": "renderDashboard",
+  "approxLine": 665,
+  "oldSnippet": "Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.",
+  "newSnippet": "${t('ui.dash.hero-sub', 'Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.')}",
+  "params": [],
+  "notes": "Subtitle under the greeting in the hero area."
+ },
+ {
+  "key": "ui.dash.panel-bit-title",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 754,
+  "oldSnippet": "<div class=\"panel-title\">Etapa 1 · Test BIT</div>",
+  "newSnippet": "<div class=\"panel-title\">${t('ui.dash.panel-bit-title', 'Etapa 1 · Test BIT')}</div>",
+  "params": [],
+  "notes": "Panel header title for the BIT stage."
+ },
+ {
+  "key": "ui.dash.panel-bit-time",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 755,
+  "oldSnippet": "<div class=\"panel-time\">⏱ ~10 min</div>",
+  "newSnippet": "<div class=\"panel-time\">⏱ ${t('ui.dash.panel-bit-time', '~10 min')}</div>",
+  "params": [],
+  "notes": "Time hint next to the BIT panel title. Emoji is excluded per rules."
+ },
+ {
+  "key": "ui.dash.panel-bit-sub",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 757,
+  "oldSnippet": "Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.",
+  "newSnippet": "${t('ui.dash.panel-bit-sub', 'Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.')}",
+  "params": [],
+  "notes": "Description paragraph under the BIT panel title."
+ },
+ {
+  "key": "ui.dash.bit-card-title",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 763,
+  "oldSnippet": "<div class=\"bit-card-title\">Behavioral Investor Type (BIT)</div>",
+  "newSnippet": "<div class=\"bit-card-title\">${t('ui.dash.bit-card-title', 'Behavioral Investor Type (BIT)')}</div>",
+  "params": [],
+  "notes": "Card title for the BIT card. Uncertain inclusion — partly an English proper name; included because it is the visible card heading."
+ },
+ {
+  "key": "ui.dash.bit-card-desc-pending",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 765,
+  "oldSnippet": "'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.'",
+  "newSnippet": "t('ui.dash.bit-card-desc-pending', 'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.')",
+  "params": [],
+  "notes": "BIT card description shown when the test has not been completed yet."
+ },
+ {
+  "key": "ui.dash.bit-card-meta-questions",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 767,
+  "oldSnippet": "<span>📋 20 preguntas</span>",
+  "newSnippet": "<span>📋 ${t('ui.dash.bit-card-meta-questions', '20 preguntas')}</span>",
+  "params": [],
+  "notes": "Metadata chip showing question count on the BIT card."
+ },
+ {
+  "key": "ui.dash.bit-card-meta-time",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 767,
+  "oldSnippet": "<span>⏱ ~10 min</span>",
+  "newSnippet": "<span>⏱ ${t('ui.dash.bit-card-meta-time', '~10 min')}</span>",
+  "params": [],
+  "notes": "Metadata chip showing time estimate on the BIT card."
+ },
+ {
+  "key": "ui.dash.btn-bit-done",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 769,
+  "oldSnippet": "bitDone ? 'Ver resultado →' : 'Comenzar →'",
+  "newSnippet": "bitDone ? t('ui.dash.btn-bit-done', 'Ver resultado →') : t('ui.dash.btn-bit-start', 'Comenzar →')",
+  "params": [],
+  "notes": "Two-state CTA button on the BIT card."
+ },
+ {
+  "key": "ui.dash.btn-bit-start",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 769,
+  "oldSnippet": "bitDone ? 'Ver resultado →' : 'Comenzar →'",
+  "newSnippet": "bitDone ? t('ui.dash.btn-bit-done', 'Ver resultado →') : t('ui.dash.btn-bit-start', 'Comenzar →')",
+  "params": [],
+  "notes": "Paired with ui.dash.btn-bit-done — same ternary expression."
+ },
+ {
+  "key": "ui.dash.panel-bit-tip",
+  "area": "dash",
+  "fn": "renderPanelBit",
+  "approxLine": 772,
+  "oldSnippet": "💡 Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.",
+  "newSnippet": "💡 ${t('ui.dash.panel-bit-tip', 'Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.')}",
+  "params": [],
+  "notes": "Tip text at the bottom of the BIT panel. Emoji excluded per rules."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-title",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 781,
+  "oldSnippet": "<div class=\"panel-title\">Etapa 2 · Sesgos <span class=\"panel-count\">",
+  "newSnippet": "<div class=\"panel-title\">${t('ui.dash.panel-sesgos-title', 'Etapa 2 · Sesgos')} <span class=\"panel-count\">",
+  "params": [],
+  "notes": "Panel header title for Sesgos stage."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-time",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 782,
+  "oldSnippet": "<div class=\"panel-time\">⏱ ~5 min por módulo</div>",
+  "newSnippet": "<div class=\"panel-time\">⏱ ${t('ui.dash.panel-sesgos-time', '~5 min por módulo')}</div>",
+  "params": [],
+  "notes": "Time hint for the Sesgos panel."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-sub-all-done",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 786,
+  "oldSnippet": "'¡Los 15 módulos completados!'",
+  "newSnippet": "t('ui.dash.panel-sesgos-sub-all-done', '¡Los 15 módulos completados!')",
+  "params": [],
+  "notes": "Shown when remaining === 0 and bitDone is true."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-sub-remaining.one",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 787,
+  "oldSnippet": "`Te quedan ${remaining} ${remaining === 1 ? 'módulo' : 'módulos'} — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.`",
+  "newSnippet": "t(remaining === 1 ? 'ui.dash.panel-sesgos-sub-remaining.one' : 'ui.dash.panel-sesgos-sub-remaining.other', remaining === 1 ? 'Te queda {remaining} módulo — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.' : 'Te quedan {remaining} módulos — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.', { remaining })",
+  "params": [
+   "remaining"
+  ],
+  "notes": "Plural pair: .one when remaining===1, .other otherwise. Original has 'quedan'/'módulo' alternation — .one uses 'queda' + 'módulo', .other uses 'quedan' + 'módulos'."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-sub-remaining.other",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 787,
+  "oldSnippet": "`Te quedan ${remaining} ${remaining === 1 ? 'módulo' : 'módulos'} — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.`",
+  "newSnippet": "t(remaining === 1 ? 'ui.dash.panel-sesgos-sub-remaining.one' : 'ui.dash.panel-sesgos-sub-remaining.other', remaining === 1 ? 'Te queda {remaining} módulo — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.' : 'Te quedan {remaining} módulos — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.', { remaining })",
+  "params": [
+   "remaining"
+  ],
+  "notes": "Plural pair with ui.dash.panel-sesgos-sub-remaining.one."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-sub-locked",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 788,
+  "oldSnippet": "'Desbloquea esta etapa completando el Test BIT.'",
+  "newSnippet": "t('ui.dash.panel-sesgos-sub-locked', 'Desbloquea esta etapa completando el Test BIT.')",
+  "params": [],
+  "notes": "Shown when bitDone is false."
+ },
+ {
+  "key": "ui.dash.sesgo-group-cognitivo",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 791,
+  "oldSnippet": "label: 'Errores Cognitivos'",
+  "newSnippet": "label: t('ui.dash.sesgo-group-cognitivo', 'Errores Cognitivos')",
+  "params": [],
+  "notes": "Group header label for cognitive biases."
+ },
+ {
+  "key": "ui.dash.sesgo-group-emocional",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 792,
+  "oldSnippet": "label: 'Sesgos Emocionales'",
+  "newSnippet": "label: t('ui.dash.sesgo-group-emocional', 'Sesgos Emocionales')",
+  "params": [],
+  "notes": "Group header label for emotional biases."
+ },
+ {
+  "key": "ui.dash.sesgo-group-dual",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 793,
+  "oldSnippet": "label: 'Cognitivo + Emocional'",
+  "newSnippet": "label: t('ui.dash.sesgo-group-dual', 'Cognitivo + Emocional')",
+  "params": [],
+  "notes": "Group header label for dual cognitive+emotional biases."
+ },
+ {
+  "key": "ui.dash.sesgo-card-name-pending",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 819,
+  "oldSnippet": "'Módulo ' + num",
+  "newSnippet": "t('ui.dash.sesgo-card-name-pending', 'Módulo {num}', { num })",
+  "params": [
+   "num"
+  ],
+  "notes": "Card name displayed when the sesgo module is not yet completed (name hidden until done)."
+ },
+ {
+  "key": "ui.dash.sesgo-tipo-cognitivo",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 815,
+  "oldSnippet": "s.tipo === 'cognitivo' ? 'Error Cognitivo'",
+  "newSnippet": "s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional')",
+  "params": [],
+  "notes": "Tipo label on a completed sesgo card. Three-way ternary — all three values need wrapping."
+ },
+ {
+  "key": "ui.dash.sesgo-tipo-emocional",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 815,
+  "oldSnippet": "s.tipo === 'emocional' ? 'Sesgo Emocional'",
+  "newSnippet": "s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional')",
+  "params": [],
+  "notes": "Paired with ui.dash.sesgo-tipo-cognitivo and ui.dash.sesgo-tipo-dual in the same ternary."
+ },
+ {
+  "key": "ui.dash.sesgo-tipo-dual",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 815,
+  "oldSnippet": ": 'Cognitivo + Emocional'",
+  "newSnippet": "s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional')",
+  "params": [],
+  "notes": "Paired with the other two sesgo-tipo keys."
+ },
+ {
+  "key": "ui.dash.sesgo-clase",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 820,
+  "oldSnippet": "tipoLabel + ' · Clase ' + s.clase",
+  "newSnippet": "${t('ui.dash.sesgo-tipo-cognitivo|emocional|dual', tipoLabel)} · ${t('ui.dash.sesgo-clase', 'Clase {clase}', { clase: s.clase })}",
+  "params": [
+   "clase"
+  ],
+  "notes": "The 'Clase X' part rendered as part of the tipo+clase compound string on a done sesgo card."
+ },
+ {
+  "key": "ui.dash.sesgo-locked-hint",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 820,
+  "oldSnippet": "~5 min · se revela al completar",
+  "newSnippet": "${t('ui.dash.sesgo-locked-hint', '~5 min · se revela al completar')}",
+  "params": [],
+  "notes": "Hint shown on locked/undone sesgo cards inside the sesgo-tipo area."
+ },
+ {
+  "key": "ui.dash.panel-sesgos-tip",
+  "area": "dash",
+  "fn": "renderPanelSesgos",
+  "approxLine": 828,
+  "oldSnippet": "`💡 Te faltan ~${remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.`",
+  "newSnippet": "`💡 ${t('ui.dash.panel-sesgos-tip', 'Te faltan ~{remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.', { remMin })}`",
+  "params": [
+   "remMin"
+  ],
+  "notes": "Tip shown at bottom of Sesgos panel when there are remaining modules."
+ },
+ {
+  "key": "ui.dash.panel-informe-title",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 836,
+  "oldSnippet": "<div class=\"panel-title\">Etapa 3 · Informe Final</div>",
+  "newSnippet": "<div class=\"panel-title\">${t('ui.dash.panel-informe-title', 'Etapa 3 · Informe Final')}</div>",
+  "params": [],
+  "notes": "Panel title for Informe stage — appears in both the locked and unlocked branches."
+ },
+ {
+  "key": "ui.dash.panel-informe-time",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 837,
+  "oldSnippet": "<div class=\"panel-time\">⏱ ~10 min</div>",
+  "newSnippet": "<div class=\"panel-time\">⏱ ${t('ui.dash.panel-informe-time', '~10 min')}</div>",
+  "params": [],
+  "notes": "Time hint for Informe panel — same in both branches."
+ },
+ {
+  "key": "ui.dash.panel-informe-sub-locked",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 839,
+  "oldSnippet": "Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.",
+  "newSnippet": "${t('ui.dash.panel-informe-sub-locked', 'Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.')}",
+  "params": [],
+  "notes": "Subtitle when informe is locked."
+ },
+ {
+  "key": "ui.dash.panel-informe-locked-msg",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 840,
+  "oldSnippet": "🔒 Bloqueado hasta completar las dos etapas anteriores.",
+  "newSnippet": "🔒 ${t('ui.dash.panel-informe-locked-msg', 'Bloqueado hasta completar las dos etapas anteriores.')}",
+  "params": [],
+  "notes": "Locked state message in the panel-locked div."
+ },
+ {
+  "key": "ui.dash.panel-informe-sub-unlocked",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 848,
+  "oldSnippet": "Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.",
+  "newSnippet": "${t('ui.dash.panel-informe-sub-unlocked', 'Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.')}",
+  "params": [],
+  "notes": "Subtitle shown when informe is unlocked."
+ },
+ {
+  "key": "ui.dash.report-cta-title",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 851,
+  "oldSnippet": "<div class=\"dash-report-title\">¡Completaste todos los módulos!</div>",
+  "newSnippet": "<div class=\"dash-report-title\">${t('ui.dash.report-cta-title', '¡Completaste todos los módulos!')}</div>",
+  "params": [],
+  "notes": "CTA card title in the unlocked informe panel."
+ },
+ {
+  "key": "ui.dash.report-cta-sub",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 852,
+  "oldSnippet": "Recomendaciones personalizadas y acciones que puedes empezar mañana.",
+  "newSnippet": "${t('ui.dash.report-cta-sub', 'Recomendaciones personalizadas y acciones que puedes empezar mañana.')}",
+  "params": [],
+  "notes": "CTA card subtitle in the unlocked informe panel."
+ },
+ {
+  "key": "ui.dash.btn-report",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 853,
+  "oldSnippet": "<button class=\"btn-cta\" id=\"btn-report\">Ver mi Informe Final →</button>",
+  "newSnippet": "<button class=\"btn-cta\" id=\"btn-report\">${t('ui.dash.btn-report', 'Ver mi Informe Final →')}</button>",
+  "params": [],
+  "notes": "CTA button to open the final report."
+ },
+ {
+  "key": "ui.dash.panel-informe-tip",
+  "area": "dash",
+  "fn": "renderPanelInforme",
+  "approxLine": 854,
+  "oldSnippet": "💡 Puedes volver al informe cuando quieras — está siempre disponible aquí.",
+  "newSnippet": "💡 ${t('ui.dash.panel-informe-tip', 'Puedes volver al informe cuando quieras — está siempre disponible aquí.')}",
+  "params": [],
+  "notes": "Tip at the bottom of the unlocked informe panel."
+ },
+ {
+  "key": "ui.dash.panel-next-title",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 862,
+  "oldSnippet": "<div class=\"panel-title\">Etapa 4 · Próximos pasos</div>",
+  "newSnippet": "<div class=\"panel-title\">${t('ui.dash.panel-next-title', 'Etapa 4 · Próximos pasos')}</div>",
+  "params": [],
+  "notes": "Panel title for Próximos Pasos stage — appears in both locked and unlocked branches."
+ },
+ {
+  "key": "ui.dash.panel-next-time",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 863,
+  "oldSnippet": "<div class=\"panel-time\">⏱ ~3 min</div>",
+  "newSnippet": "<div class=\"panel-time\">⏱ ${t('ui.dash.panel-next-time', '~3 min')}</div>",
+  "params": [],
+  "notes": "Time hint for the Próximos Pasos panel."
+ },
+ {
+  "key": "ui.dash.panel-next-sub-locked",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 865,
+  "oldSnippet": "La última etapa: contarnos qué te gustaría hacer a partir de aquí.",
+  "newSnippet": "${t('ui.dash.panel-next-sub-locked', 'La última etapa: contarnos qué te gustaría hacer a partir de aquí.')}",
+  "params": [],
+  "notes": "Subtitle when the Próximos Pasos panel is locked."
+ },
+ {
+  "key": "ui.dash.panel-next-locked-msg",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 866,
+  "oldSnippet": "🔒 Disponible después de ver tu informe final.",
+  "newSnippet": "🔒 ${t('ui.dash.panel-next-locked-msg', 'Disponible después de ver tu informe final.')}",
+  "params": [],
+  "notes": "Locked state message for the next-steps panel."
+ },
+ {
+  "key": "ui.dash.panel-next-sub-done",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 875,
+  "oldSnippet": "'Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.'",
+  "newSnippet": "t('ui.dash.panel-next-sub-done', 'Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.')",
+  "params": [],
+  "notes": "Subtitle shown when next-steps are already done."
+ },
+ {
+  "key": "ui.dash.panel-next-sub-pending",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 877,
+  "oldSnippet": "'Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.'",
+  "newSnippet": "t('ui.dash.panel-next-sub-pending', 'Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.')",
+  "params": [],
+  "notes": "Subtitle shown when next-steps have not been completed."
+ },
+ {
+  "key": "ui.dash.next-cta-title-done",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 879,
+  "oldSnippet": "done ? 'Revisar mis respuestas' : '¿Qué sigue para ti?'",
+  "newSnippet": "done ? t('ui.dash.next-cta-title-done', 'Revisar mis respuestas') : t('ui.dash.next-cta-title-pending', '¿Qué sigue para ti?')",
+  "params": [],
+  "notes": "CTA card title in next-steps panel — two-state ternary."
+ },
+ {
+  "key": "ui.dash.next-cta-title-pending",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 879,
+  "oldSnippet": "done ? 'Revisar mis respuestas' : '¿Qué sigue para ti?'",
+  "newSnippet": "done ? t('ui.dash.next-cta-title-done', 'Revisar mis respuestas') : t('ui.dash.next-cta-title-pending', '¿Qué sigue para ti?')",
+  "params": [],
+  "notes": "Paired with ui.dash.next-cta-title-done."
+ },
+ {
+  "key": "ui.dash.next-cta-sub-done",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 881,
+  "oldSnippet": "'Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.'",
+  "newSnippet": "t('ui.dash.next-cta-sub-done', 'Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.')",
+  "params": [],
+  "notes": "CTA card subtitle when next-steps are done."
+ },
+ {
+  "key": "ui.dash.next-cta-sub-pending",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 883,
+  "oldSnippet": "'Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.'",
+  "newSnippet": "t('ui.dash.next-cta-sub-pending', 'Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.')",
+  "params": [],
+  "notes": "CTA card subtitle when next-steps are pending."
+ },
+ {
+  "key": "ui.dash.btn-next-done",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 883,
+  "oldSnippet": "done ? 'Ver mis respuestas →' : 'Continuar →'",
+  "newSnippet": "done ? t('ui.dash.btn-next-done', 'Ver mis respuestas →') : t('ui.dash.btn-next-pending', 'Continuar →')",
+  "params": [],
+  "notes": "Two-state CTA button on next-steps panel."
+ },
+ {
+  "key": "ui.dash.btn-next-pending",
+  "area": "dash",
+  "fn": "renderPanelNext",
+  "approxLine": 883,
+  "oldSnippet": "done ? 'Ver mis respuestas →' : 'Continuar →'",
+  "newSnippet": "done ? t('ui.dash.btn-next-done', 'Ver mis respuestas →') : t('ui.dash.btn-next-pending', 'Continuar →')",
+  "params": [],
+  "notes": "Paired with ui.dash.btn-next-done."
+ },
+ {
+  "key": "ui.dash.resend-sending",
+  "area": "dash",
+  "fn": "renderDashboard (event handler)",
+  "approxLine": 697,
+  "oldSnippet": "e.target.textContent = 'Enviando…'",
+  "newSnippet": "e.target.textContent = t('ui.dash.resend-sending', 'Enviando…')",
+  "params": [],
+  "notes": "Transient button text while the resend confirmation email request is in flight."
+ },
+ {
+  "key": "ui.dash.resend-sent",
+  "area": "dash",
+  "fn": "renderDashboard (event handler)",
+  "approxLine": 700,
+  "oldSnippet": "e.target.textContent = '✓ Enviado'",
+  "newSnippet": "e.target.textContent = t('ui.dash.resend-sent', '✓ Enviado')",
+  "params": [],
+  "notes": "Button text after successful resend. Checkmark glyph is part of the string, not a standalone emoji icon."
+ },
+ {
+  "key": "ui.dash.resend-error",
+  "area": "dash",
+  "fn": "renderDashboard (event handler)",
+  "approxLine": 702,
+  "oldSnippet": "e.target.textContent = 'Error'",
+  "newSnippet": "e.target.textContent = t('ui.dash.resend-error', 'Error')",
+  "params": [],
+  "notes": "Button text on resend failure. Uncertain — 'Error' is technically the same in Spanish and English, but included as a learner-visible state string."
+ },
+ {
+  "key": "ui.bit.quiz-label",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 932,
+  "oldSnippet": "<div class=\"quiz-label\">Test BIT · Perfil de Inversionista</div>",
+  "newSnippet": "<div class=\"quiz-label\">${t('ui.bit.quiz-label', 'Test BIT · Perfil de Inversionista')}</div>",
+  "params": [],
+  "notes": "Topbar label on the completion screen (bitIndex >= questions.length). Same label text also appears on the active quiz screen (line 959) — see ui.bit.quiz-label-with-hint."
+ },
+ {
+  "key": "ui.bit.test-completed-heading",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 938,
+  "oldSnippet": "<h2 style=\"font-family:var(--ff-display);font-size:1.8rem;margin-bottom:1rem\">¡Test completado!</h2>",
+  "newSnippet": "<h2 style=\"font-family:var(--ff-display);font-size:1.8rem;margin-bottom:1rem\">${t('ui.bit.test-completed-heading', '¡Test completado!')}</h2>",
+  "params": [],
+  "notes": "Heading shown on the intermediate 'all questions answered' card before calculating profile."
+ },
+ {
+  "key": "ui.bit.test-completed-body",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 939,
+  "oldSnippet": "Respondiste las ${questions.length} preguntas. Calcula tu perfil BIT.",
+  "newSnippet": "${t('ui.bit.test-completed-body', 'Respondiste las {total} preguntas. Calcula tu perfil BIT.', {total: questions.length})}",
+  "params": {
+   "total": "questions.length"
+  },
+  "notes": "Body text on the completion card. Has one interpolation: total number of questions."
+ },
+ {
+  "key": "ui.bit.btn-calculate",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 940,
+  "oldSnippet": "<button class=\"btn-nav-next\" id=\"btn-calculate\" style=\"margin:0 auto\">Calcular mi perfil →</button>",
+  "newSnippet": "<button class=\"btn-nav-next\" id=\"btn-calculate\" style=\"margin:0 auto\">${t('ui.bit.btn-calculate', 'Calcular mi perfil →')}</button>",
+  "params": [],
+  "notes": "CTA button on the all-done card to trigger profile calculation."
+ },
+ {
+  "key": "ui.bit.time-hint",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 959,
+  "oldSnippet": "⏱ ~${Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))} min restantes · puedes pausar cuando quieras",
+  "newSnippet": "${t('ui.bit.time-hint', '⏱ ~{minutes} min restantes · puedes pausar cuando quieras', {minutes: Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))})}",
+  "params": {
+   "minutes": "Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))"
+  },
+  "notes": "Time hint in the quiz topbar. Includes leading emoji (part of the idiom). {minutes} is a dynamic integer."
+ },
+ {
+  "key": "ui.bit.btn-exit",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 961,
+  "oldSnippet": "<button class=\"btn-exit\" id=\"btn-exit-bit\">✕ Salir</button>",
+  "newSnippet": "<button class=\"btn-exit\" id=\"btn-exit-bit\">${t('ui.bit.btn-exit', '✕ Salir')}</button>",
+  "params": [],
+  "notes": "Exit button in quiz topbar. ✕ is a UI glyph; included with the label."
+ },
+ {
+  "key": "ui.bit.rating-prompt-question",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 975,
+  "oldSnippet": "ratingWidget(state.bitRatings[state.bitIndex], '¿cómo calificarías esta pregunta?')",
+  "newSnippet": "ratingWidget(state.bitRatings[state.bitIndex], t('ui.bit.rating-prompt-question', '¿cómo calificarías esta pregunta?'))",
+  "params": [],
+  "notes": "Prompt string passed to the shared ratingWidget helper. Unique to the BIT quiz context."
+ },
+ {
+  "key": "ui.bit.btn-back",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 979,
+  "oldSnippet": "<button class=\"btn-nav-back\" id=\"btn-bit-back\" ${state.bitIndex === 0 ? 'disabled' : ''}>← Anterior</button>",
+  "newSnippet": "<button class=\"btn-nav-back\" id=\"btn-bit-back\" ${state.bitIndex === 0 ? 'disabled' : ''}>${t('ui.bit.btn-back', '← Anterior')}</button>",
+  "params": [],
+  "notes": "Back navigation button in the quiz footer."
+ },
+ {
+  "key": "ui.bit.btn-next-finish",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 981,
+  "oldSnippet": "${state.bitIndex === questions.length - 1 ? 'Finalizar →' : 'Siguiente →'}",
+  "newSnippet": "${state.bitIndex === questions.length - 1 ? t('ui.bit.btn-next-finish', 'Finalizar →') : t('ui.bit.btn-next', 'Siguiente →')}",
+  "params": [],
+  "notes": "Label of the Next button on the last question. Paired with ui.bit.btn-next (same conditional expression)."
+ },
+ {
+  "key": "ui.bit.btn-next",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 981,
+  "oldSnippet": "${state.bitIndex === questions.length - 1 ? 'Finalizar →' : 'Siguiente →'}",
+  "newSnippet": "${state.bitIndex === questions.length - 1 ? t('ui.bit.btn-next-finish', 'Finalizar →') : t('ui.bit.btn-next', 'Siguiente →')}",
+  "params": [],
+  "notes": "Label of the Next button on non-last questions. Shares the same conditional expression with ui.bit.btn-next-finish."
+ },
+ {
+  "key": "ui.bit.exit-confirm",
+  "area": "bit",
+  "fn": "renderBit",
+  "approxLine": 1008,
+  "oldSnippet": "if (confirm('¿Salir? Tu progreso del BIT se perderá.'))",
+  "newSnippet": "if (confirm(t('ui.bit.exit-confirm', '¿Salir? Tu progreso del BIT se perderá.')))",
+  "params": [],
+  "notes": "Browser confirm() dialog text. Must be a plain string, not HTML."
+ },
+ {
+  "key": "ui.bit.disclaimer-title",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1091,
+  "oldSnippet": "<div class=\"bit-disclaimer-title\">⚠ ¿Qué es — y qué no es — un perfil BIT?</div>",
+  "newSnippet": "<div class=\"bit-disclaimer-title\">⚠ ${t('ui.bit.disclaimer-title', '¿Qué es — y qué no es — un perfil BIT?')}</div>",
+  "params": [],
+  "notes": "Title of the BIT disclaimer box. The ⚠ emoji is decorative markup; kept outside the t() call so only the text is translated."
+ },
+ {
+  "key": "ui.bit.disclaimer-body-1",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1092,
+  "oldSnippet": "<p>Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.</p>",
+  "newSnippet": "<p>${t('ui.bit.disclaimer-body-1', 'Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.')}</p>",
+  "params": [],
+  "notes": "First paragraph of the disclaimer. Contains inline HTML <strong> tags — translation infrastructure must support HTML interpolation (innerHTML insertion)."
+ },
+ {
+  "key": "ui.bit.disclaimer-body-2",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1093,
+  "oldSnippet": "<p><strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.</p>",
+  "newSnippet": "<p>${t('ui.bit.disclaimer-body-2', '<strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.')}</p>",
+  "params": [],
+  "notes": "Second paragraph of the disclaimer. Contains inline HTML <strong> tag."
+ },
+ {
+  "key": "ui.bit.result-hero-tag",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1098,
+  "oldSnippet": "<div class=\"result-hero-tag\">Tu perfil conductual como inversionista</div>",
+  "newSnippet": "<div class=\"result-hero-tag\">${t('ui.bit.result-hero-tag', 'Tu perfil conductual como inversionista')}</div>",
+  "params": [],
+  "notes": "Eyebrow/supertitle tag above the profile name in the result hero section."
+ },
+ {
+  "key": "ui.bit.btn-share-profile",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1102,
+  "oldSnippet": "        📤 Compartir mi perfil\n      </button>",
+  "newSnippet": "        📤 ${t('ui.bit.btn-share-profile', 'Compartir mi perfil')}\n      </button>",
+  "params": [],
+  "notes": "Share button label. The 📤 emoji is decorative; translated text excludes it."
+ },
+ {
+  "key": "ui.bit.step-indicator-1",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1105,
+  "oldSnippet": "<span class=\"bit-step${step===1?' active':' done'}\">1 · Tu perfil</span>",
+  "newSnippet": "<span class=\"bit-step${step===1?' active':' done'}\">${t('ui.bit.step-indicator-1', '1 · Tu perfil')}</span>",
+  "params": [],
+  "notes": "Step indicator label for step 1 (Tu perfil)."
+ },
+ {
+  "key": "ui.bit.step-indicator-2",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1107,
+  "oldSnippet": "<span class=\"bit-step${step===2?' active':''}\">2 · Sesgos y plan</span>",
+  "newSnippet": "<span class=\"bit-step${step===2?' active':''}\">${t('ui.bit.step-indicator-2', '2 · Sesgos y plan')}</span>",
+  "params": [],
+  "notes": "Step indicator label for step 2 (Sesgos y plan)."
+ },
+ {
+  "key": "ui.bit.scores-card-title",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1116,
+  "oldSnippet": "<div class=\"result-card-title\">Puntuaciones por tipo</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.bit.scores-card-title', 'Puntuaciones por tipo')}</div>",
+  "params": [],
+  "notes": "Section card title for the score bars breakdown (step 1)."
+ },
+ {
+  "key": "ui.bit.profile-card-title",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1132,
+  "oldSnippet": "<div class=\"result-card-title\">Tu perfil principal</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.bit.profile-card-title', 'Tu perfil principal')}</div>",
+  "params": [],
+  "notes": "Card title for the primary profile detail section (step 1)."
+ },
+ {
+  "key": "ui.bit.secondary-profile-label",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1141,
+  "oldSnippet": "Perfil secundario: <strong>",
+  "newSnippet": "${t('ui.bit.secondary-profile-label', 'Perfil secundario:')} <strong>",
+  "params": [],
+  "notes": "Inline label before the secondary profile name (step 1)."
+ },
+ {
+  "key": "ui.bit.slider-identify-question",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1143,
+  "oldSnippet": "<div class=\"slider-question\">¿Qué tanto te identificas con este perfil? <span style=\"color:var(--danger,#B91C1C)\">*</span></div>",
+  "newSnippet": "<div class=\"slider-question\">${t('ui.bit.slider-identify-question', '¿Qué tanto te identificas con este perfil?')} <span style=\"color:var(--danger,#B91C1C)\">*</span></div>",
+  "params": [],
+  "notes": "Question label for the profile identification slider (step 1). The required asterisk span is excluded from the t() scope."
+ },
+ {
+  "key": "ui.bit.slider-end-none",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1145,
+  "oldSnippet": "<span class=\"slider-end-label\">Nada</span>\n            <input type=\"range\" id=\"slider-profile-fit\"",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.bit.slider-end-none', 'Nada')}</span>\n            <input type=\"range\" id=\"slider-profile-fit\"",
+  "params": [],
+  "notes": "Left end-label of the profile identification slider. Distinct from 'Nada útil' (reco slider) — separate key."
+ },
+ {
+  "key": "ui.bit.slider-end-totally",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1147,
+  "oldSnippet": "<span class=\"slider-end-label\">Totalmente</span>",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.bit.slider-end-totally', 'Totalmente')}</span>",
+  "params": [],
+  "notes": "Right end-label of the profile identification slider. Also appears as the last value in SLIDER_LABELS array (line 260)."
+ },
+ {
+  "key": "ui.bit.gate-hint-slide-to-continue",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1150,
+  "oldSnippet": "<div class=\"bit-gate-hint\" id=\"bit-gate-hint-1\">Mueve el deslizador para continuar</div>",
+  "newSnippet": "<div class=\"bit-gate-hint\" id=\"bit-gate-hint-1\">${t('ui.bit.gate-hint-slide-to-continue', 'Mueve el deslizador para continuar')}</div>",
+  "params": [],
+  "notes": "Gate hint below the profile identification slider (step 1)."
+ },
+ {
+  "key": "ui.bit.step-counter-1",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1154,
+  "oldSnippet": "<p style=\"font-size:.82rem;color:var(--ink-4);margin:0\">Paso 1 de 2</p>",
+  "newSnippet": "<p style=\"font-size:.82rem;color:var(--ink-4);margin:0\">${t('ui.bit.step-counter-1', 'Paso 1 de 2')}</p>",
+  "params": [],
+  "notes": "Step counter text at the bottom of the step-1 result view."
+ },
+ {
+  "key": "ui.bit.btn-next-result",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1155,
+  "oldSnippet": "<button class=\"btn-cta\" id=\"btn-bit-next\" disabled>Siguiente →</button>",
+  "newSnippet": "<button class=\"btn-cta\" id=\"btn-bit-next\" disabled>${t('ui.bit.btn-next-result', 'Siguiente →')}</button>",
+  "params": [],
+  "notes": "CTA button to proceed from step 1 to step 2 of the result view."
+ },
+ {
+  "key": "ui.bit.biases-card-title",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1160,
+  "oldSnippet": "<div class=\"result-card-title\">Sesgos predominantes en tu perfil</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.bit.biases-card-title', 'Sesgos predominantes en tu perfil')}</div>",
+  "params": [],
+  "notes": "Card title for the biases list section (step 2)."
+ },
+ {
+  "key": "ui.bit.recos-card-title",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1171,
+  "oldSnippet": "<div class=\"result-card-title\">Recomendaciones para tu perfil</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.bit.recos-card-title', 'Recomendaciones para tu perfil')}</div>",
+  "params": [],
+  "notes": "Card title for the recommendations list section (step 2)."
+ },
+ {
+  "key": "ui.bit.recos-rating-instruction",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1172,
+  "oldSnippet": "<p style=\"font-size:.82rem;color:var(--ink-4);margin-bottom:1rem\">Valora qué tan útil te parece cada recomendación <span style=\"color:#B91C1C\">*</span></p>",
+  "newSnippet": "<p style=\"font-size:.82rem;color:var(--ink-4);margin-bottom:1rem\">${t('ui.bit.recos-rating-instruction', 'Valora qué tan útil te parece cada recomendación')} <span style=\"color:#B91C1C\">*</span></p>",
+  "params": [],
+  "notes": "Instruction text above the recommendations rating sliders. Required asterisk span is excluded from t() scope."
+ },
+ {
+  "key": "ui.bit.reco-slider-end-useless",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1183,
+  "oldSnippet": "<span class=\"slider-end-label\">Nada útil</span>\n                      <input type=\"range\" class=\"fit-slider reco-slider\"",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.bit.reco-slider-end-useless', 'Nada útil')}</span>\n                      <input type=\"range\" class=\"fit-slider reco-slider\"",
+  "params": [],
+  "notes": "Left end-label of each recommendation rating slider."
+ },
+ {
+  "key": "ui.bit.reco-slider-end-very-useful",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1185,
+  "oldSnippet": "<span class=\"slider-end-label\">Muy útil</span>\n                    </div>\n                    <div class=\"slider-value-label reco-slider-val\"",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.bit.reco-slider-end-very-useful', 'Muy útil')}</span>\n                    </div>\n                    <div class=\"slider-value-label reco-slider-val\"",
+  "params": [],
+  "notes": "Right end-label of each recommendation rating slider."
+ },
+ {
+  "key": "ui.bit.reco-slider-move-hint",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1187,
+  "oldSnippet": "${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : 'Mueve el deslizador'}",
+  "newSnippet": "${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : t('ui.bit.reco-slider-move-hint', 'Mueve el deslizador')}",
+  "params": [],
+  "notes": "Initial placeholder text in the reco slider value label before the user interacts. Distinct from 'Mueve el deslizador para continuar' (gate hint)."
+ },
+ {
+  "key": "ui.bit.gate-hint-rate-recos",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1193,
+  "oldSnippet": "<div class=\"bit-gate-hint\" id=\"bit-gate-hint-2\">Valora las ${profile.recommendations.length} recomendaciones para continuar</div>",
+  "newSnippet": "<div class=\"bit-gate-hint\" id=\"bit-gate-hint-2\">${t('ui.bit.gate-hint-rate-recos', 'Valora las {total} recomendaciones para continuar', {total: profile.recommendations.length})}</div>",
+  "params": {
+   "total": "profile.recommendations.length"
+  },
+  "notes": "Gate hint below the recommendations list (step 2). Initial render; dynamically updated by checkUnlock() — see ui.bit.gate-hint-recos-remaining."
+ },
+ {
+  "key": "ui.bit.btn-back-result",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1196,
+  "oldSnippet": "<button class=\"btn-ghost\" id=\"btn-bit-back\">← Atrás</button>",
+  "newSnippet": "<button class=\"btn-ghost\" id=\"btn-bit-back\">${t('ui.bit.btn-back-result', '← Atrás')}</button>",
+  "params": [],
+  "notes": "Back button at the bottom of step 2, returns to step 1 of result view."
+ },
+ {
+  "key": "ui.bit.btn-go-dashboard",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1197,
+  "oldSnippet": "<button class=\"btn-cta\" id=\"btn-to-dash\" disabled>Ir al Dashboard →</button>",
+  "newSnippet": "<button class=\"btn-cta\" id=\"btn-to-dash\" disabled>${t('ui.bit.btn-go-dashboard', 'Ir al Dashboard →')}</button>",
+  "params": [],
+  "notes": "Final CTA button to exit the result view and return to the dashboard."
+ },
+ {
+  "key": "ui.bit.gate-hint-recos-remaining",
+  "area": "bit",
+  "fn": "renderBitResult",
+  "approxLine": 1246,
+  "oldSnippet": "hint.textContent = `Faltan ${total - answered} recomendación(es) por valorar`",
+  "newSnippet": "hint.textContent = t('ui.bit.gate-hint-recos-remaining', 'Faltan {remaining} recomendación(es) por valorar', {remaining: total - answered})",
+  "params": {
+   "remaining": "total - answered"
+  },
+  "notes": "Dynamic gate hint set via .textContent in checkUnlock(). Uses parenthetical plural hack '(es)' — consider splitting into .one/.other plurals in pt-BR phase but acceptable for es-MX."
+ },
+ {
+  "key": "ui.sesgo.quiz-step-label",
+  "area": "sesgo",
+  "fn": "renderSesgoQuiz",
+  "approxLine": 1322,
+  "oldSnippet": "¿Cómo decides tú? · ${state.sesgoIndex + 1} de ${total}",
+  "newSnippet": "${t('ui.sesgo.quiz-step-label', '¿Cómo decides tú? · {index} de {total}', { index: state.sesgoIndex + 1, total })}",
+  "params": {
+   "index": "state.sesgoIndex + 1",
+   "total": "total"
+  },
+  "notes": "Counter label in quiz topbar. The ⏱ time-hint that follows is inside the same div but in a separate <span class='quiz-time-hint'> — extract separately (see next record)."
+ },
+ {
+  "key": "ui.sesgo.btn-back",
+  "area": "sesgo",
+  "fn": "renderSesgoQuiz / renderSesgoFixation / renderSesgoSelfAssessment",
+  "approxLine": 1342,
+  "oldSnippet": "← Anterior",
+  "newSnippet": "${t('ui.sesgo.btn-back', '← Anterior')}",
+  "params": {},
+  "notes": "Shared nav button label used in quiz footer (line 1342), fixation footer (line 1524), and self-assessment footer (line 1597). Arrow is not an emoji — keep in source string."
+ },
+ {
+  "key": "ui.sesgo.btn-next",
+  "area": "sesgo",
+  "fn": "renderSesgoQuiz / renderSesgoFixation",
+  "approxLine": 1344,
+  "oldSnippet": "Siguiente →",
+  "newSnippet": "${t('ui.sesgo.btn-next', 'Siguiente →')}",
+  "params": {},
+  "notes": "Mid-sequence next button. Appears inside ternary: state.sesgoIndex === total - 1 ? 'Continuar →' : 'Siguiente →' and state.fixationIndex === total - 1 ? 'Ver mis resultados →' : 'Siguiente →'."
+ },
+ {
+  "key": "ui.sesgo.btn-continue",
+  "area": "sesgo",
+  "fn": "renderSesgoQuiz / renderSesgoLearn",
+  "approxLine": 1344,
+  "oldSnippet": "Continuar →",
+  "newSnippet": "${t('ui.sesgo.btn-continue', 'Continuar →')}",
+  "params": {},
+  "notes": "Last-question next button in quiz (ternary on line 1344) and non-last-block button in learn (ternary on line 1458)."
+ },
+ {
+  "key": "ui.sesgo.confirm-exit",
+  "area": "sesgo",
+  "fn": "renderSesgoQuiz / renderSesgoLearn / renderSesgoFixation / renderSesgoSelfAssessment",
+  "approxLine": 1381,
+  "oldSnippet": "confirm('¿Salir del módulo?')",
+  "newSnippet": "confirm(t('ui.sesgo.confirm-exit', '¿Salir del módulo?'))",
+  "params": {},
+  "notes": "Native browser confirm() dialog. Appears at lines 1381, 1466, 1562, 1629 — all identical string."
+ },
+ {
+  "key": "ui.learn.definicion.title",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1386,
+  "oldSnippet": "title: 'Definición'",
+  "newSnippet": "t('ui.learn.definicion.title', 'Definición')",
+  "params": {},
+  "notes": "LEARN_BLOCKS const array; .title is used at line 1435 in learn-breadcrumb: block.title. Replace at consumption site: '${t(\"ui.learn.\" + block.key + \".title\", block.title)}'."
+ },
+ {
+  "key": "ui.learn.definicion.label",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1386,
+  "oldSnippet": "label: '¿Qué es?'",
+  "newSnippet": "t('ui.learn.definicion.label', '¿Qué es?')",
+  "params": {},
+  "notes": "LEARN_BLOCKS .label used at line 1445 in learn-block-step-label: block.label. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.explicacion.title",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1387,
+  "oldSnippet": "title: 'Explicación'",
+  "newSnippet": "t('ui.learn.explicacion.title', 'Explicación')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='explicacion'. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.explicacion.label",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1387,
+  "oldSnippet": "label: '¿Cómo funciona?'",
+  "newSnippet": "t('ui.learn.explicacion.label', '¿Cómo funciona?')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='explicacion'. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.ejemplos.title",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1388,
+  "oldSnippet": "title: 'Ejemplos concretos'",
+  "newSnippet": "t('ui.learn.ejemplos.title', 'Ejemplos concretos')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='ejemplos'. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.ejemplos.label",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1388,
+  "oldSnippet": "label: 'En la práctica'",
+  "newSnippet": "t('ui.learn.ejemplos.label', 'En la práctica')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='ejemplos'. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.antidotos.title",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1389,
+  "oldSnippet": "title: 'Antídotos'",
+  "newSnippet": "t('ui.learn.antidotos.title', 'Antídotos')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='antidotos'. Replace at consumption site."
+ },
+ {
+  "key": "ui.learn.antidotos.label",
+  "area": "sesgo",
+  "fn": "LEARN_BLOCKS constant / renderSesgoLearn",
+  "approxLine": 1389,
+  "oldSnippet": "label: '¿Cómo mitigarlo?'",
+  "newSnippet": "t('ui.learn.antidotos.label', '¿Cómo mitigarlo?')",
+  "params": {},
+  "notes": "LEARN_BLOCKS entry key='antidotos'. Replace at consumption site."
+ },
+ {
+  "key": "ui.sesgo.trap-question-prefix",
+  "area": "sesgo",
+  "fn": "learnBlockContent",
+  "approxLine": 1400,
+  "oldSnippet": "<strong>La trampa del cuestionario:</strong>",
+  "newSnippet": "<strong>${t('ui.sesgo.trap-question-prefix', 'La trampa del cuestionario:')}</strong>",
+  "params": {},
+  "notes": "Static bold prefix in learn block step 1 (explicacion). Followed by t()-wrapped sesgo.{id}.trapQuestion content."
+ },
+ {
+  "key": "ui.sesgo.tipo-cognitivo",
+  "area": "sesgo",
+  "fn": "renderSesgoLearn",
+  "approxLine": 1428,
+  "oldSnippet": "s.tipo === 'cognitivo' ? 'Error Cognitivo'",
+  "newSnippet": "s.tipo === 'cognitivo' ? t('ui.sesgo.tipo-cognitivo', 'Error Cognitivo')",
+  "params": {},
+  "notes": "tipoLabel ternary at line 1428. Three branches; extract all three."
+ },
+ {
+  "key": "ui.sesgo.tipo-emocional",
+  "area": "sesgo",
+  "fn": "renderSesgoLearn",
+  "approxLine": 1428,
+  "oldSnippet": "s.tipo === 'emocional' ? 'Sesgo Emocional'",
+  "newSnippet": "s.tipo === 'emocional' ? t('ui.sesgo.tipo-emocional', 'Sesgo Emocional')",
+  "params": {},
+  "notes": "Middle branch of tipoLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.tipo-mixto",
+  "area": "sesgo",
+  "fn": "renderSesgoLearn",
+  "approxLine": 1428,
+  "oldSnippet": ": 'Error Cognitivo + Sesgo Emocional'",
+  "newSnippet": ": t('ui.sesgo.tipo-mixto', 'Error Cognitivo + Sesgo Emocional')",
+  "params": {},
+  "notes": "Fallback branch of tipoLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.learn-blocks-counter",
+  "area": "sesgo",
+  "fn": "renderSesgoLearn",
+  "approxLine": 1454,
+  "oldSnippet": "${step + 1} de ${LEARN_BLOCKS.length} bloques",
+  "newSnippet": "${t('ui.sesgo.learn-blocks-counter', '{step} de {total} bloques', { step: step + 1, total: LEARN_BLOCKS.length })}",
+  "params": {
+   "step": "step + 1",
+   "total": "LEARN_BLOCKS.length"
+  },
+  "notes": "learn-cta-hint label below the learn CTA button."
+ },
+ {
+  "key": "ui.sesgo.btn-learn-verify",
+  "area": "sesgo",
+  "fn": "renderSesgoLearn",
+  "approxLine": 1458,
+  "oldSnippet": "Preguntas de verificación →",
+  "newSnippet": "${t('ui.sesgo.btn-learn-verify', 'Preguntas de verificación →')}",
+  "params": {},
+  "notes": "CTA button label when isLast === true (last learn block). Ternary: isLast ? 'Preguntas de verificación →' : 'Continuar →'."
+ },
+ {
+  "key": "ui.sesgo.fixation-step-label",
+  "area": "sesgo",
+  "fn": "renderSesgoFixation",
+  "approxLine": 1504,
+  "oldSnippet": "Verificación · ${state.fixationIndex + 1} de ${total}",
+  "newSnippet": "${t('ui.sesgo.fixation-step-label', 'Verificación · {index} de {total}', { index: state.fixationIndex + 1, total })}",
+  "params": {
+   "index": "state.fixationIndex + 1",
+   "total": "total"
+  },
+  "notes": "Counter label in fixation topbar — parallel to quiz-step-label."
+ },
+ {
+  "key": "ui.sesgo.btn-fixation-last",
+  "area": "sesgo",
+  "fn": "renderSesgoFixation",
+  "approxLine": 1526,
+  "oldSnippet": "Ver mis resultados →",
+  "newSnippet": "${t('ui.sesgo.btn-fixation-last', 'Ver mis resultados →')}",
+  "params": {},
+  "notes": "Last-question next button in fixation quiz. Ternary: state.fixationIndex === total - 1 ? 'Ver mis resultados →' : 'Siguiente →'."
+ },
+ {
+  "key": "ui.sesgo.self-assess-label",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1577,
+  "oldSnippet": "<div class=\"quiz-label\">Autoevaluación</div>",
+  "newSnippet": "<div class=\"quiz-label\">${t('ui.sesgo.self-assess-label', 'Autoevaluación')}</div>",
+  "params": {},
+  "notes": "quiz-label in the self-assessment topbar."
+ },
+ {
+  "key": "ui.sesgo.self-assess-prompt",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1584,
+  "oldSnippet": "Antes de ver tus resultados: <strong>¿qué tanto crees que <span style=\"color:var(--ibero-orange,#DC6B19)\">${t(`sesgo.${s.id}.name`, s.name)}</span> te afecta?</strong>",
+  "newSnippet": "${t('ui.sesgo.self-assess-prompt', 'Antes de ver tus resultados: ¿qué tanto crees que {name} te afecta?', { name: t(`sesgo.${s.id}.name`, s.name) })}",
+  "params": {
+   "name": "t(`sesgo.${s.id}.name`, s.name)"
+  },
+  "notes": "UNCERTAIN: The sesgo name is currently rendered inside inline HTML with a colored <span>. If the t() call returns plain text, the orange highlight would be lost. Safer option: keep the outer chrome as two separate strings — 'Antes de ver tus resultados:' and '¿qué tanto crees que {name} te afecta?' — and reconstruct the span around the {name} interpolation at the consumption site."
+ },
+ {
+  "key": "ui.sesgo.self-assess-explanation",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1585,
+  "oldSnippet": "Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.",
+  "newSnippet": "${t('ui.sesgo.self-assess-explanation', 'Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.')}",
+  "params": {},
+  "notes": "Static explanatory paragraph below the self-assessment question."
+ },
+ {
+  "key": "ui.sesgo.slider-label-none",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1588,
+  "oldSnippet": "<span class=\"slider-end-label\">0% — nada</span>",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.sesgo.slider-label-none', '0% — nada')}</span>",
+  "params": {},
+  "notes": "Left end-label of the self-assessment range slider."
+ },
+ {
+  "key": "ui.sesgo.slider-label-much",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1590,
+  "oldSnippet": "<span class=\"slider-end-label\">100% — mucho</span>",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.sesgo.slider-label-much', '100% — mucho')}</span>",
+  "params": {},
+  "notes": "Right end-label of the self-assessment range slider."
+ },
+ {
+  "key": "ui.sesgo.slider-placeholder",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1592,
+  "oldSnippet": "Mueve el deslizador",
+  "newSnippet": "${touched ? val + '%' : t('ui.sesgo.slider-placeholder', 'Mueve el deslizador')}",
+  "params": {},
+  "notes": "Placeholder shown in self-assess-value div before the user touches the slider."
+ },
+ {
+  "key": "ui.sesgo.btn-see-results",
+  "area": "sesgo",
+  "fn": "renderSesgoSelfAssessment",
+  "approxLine": 1598,
+  "oldSnippet": "<button class=\"btn-nav-next\" id=\"btn-self-next\" ${!touched ? 'disabled' : ''}>Ver mis resultados →</button>",
+  "newSnippet": "<button class=\"btn-nav-next\" id=\"btn-self-next\" ${!touched ? 'disabled' : ''}>${t('ui.sesgo.btn-see-results', 'Ver mis resultados →')}</button>",
+  "params": {},
+  "notes": "Self-assessment next button. Note: same Spanish text as ui.sesgo.btn-fixation-last — could share one key. Kept separate here because they are in different screens and may diverge."
+ },
+ {
+  "key": "ui.sesgo.result-hero-name",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1713,
+  "oldSnippet": "<div class=\"result-hero-name\">Tu diagnóstico</div>",
+  "newSnippet": "<div class=\"result-hero-name\">${t('ui.sesgo.result-hero-name', 'Tu diagnóstico')}</div>",
+  "params": {},
+  "notes": "Main heading on the result screen."
+ },
+ {
+  "key": "ui.sesgo.result-hero-sub",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1714,
+  "oldSnippet": "<div class=\"result-hero-sub\">Tus decisiones vs. lo que haría el inversor racional</div>",
+  "newSnippet": "<div class=\"result-hero-sub\">${t('ui.sesgo.result-hero-sub', 'Tus decisiones vs. lo que haría el inversor racional')}</div>",
+  "params": {},
+  "notes": "Sub-heading below result hero."
+ },
+ {
+  "key": "ui.sesgo.result-intensity-no-detected",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1646,
+  "oldSnippet": "intensidad === 0 ? 'No detectado'",
+  "newSnippet": "intensidad === 0 ? t('ui.sesgo.result-intensity-no-detected', 'No detectado')",
+  "params": {},
+  "notes": "First branch of intensidadLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-intensity-leve",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1647,
+  "oldSnippet": "intensidad <= 0.34 ? 'Tendencia leve'",
+  "newSnippet": "intensidad <= 0.34 ? t('ui.sesgo.result-intensity-leve', 'Tendencia leve')",
+  "params": {},
+  "notes": "Second branch of intensidadLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-intensity-moderada",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1648,
+  "oldSnippet": "intensidad <= 0.67 ? 'Tendencia moderada'",
+  "newSnippet": "intensidad <= 0.67 ? t('ui.sesgo.result-intensity-moderada', 'Tendencia moderada')",
+  "params": {},
+  "notes": "Third branch of intensidadLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-intensity-dominante",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1649,
+  "oldSnippet": ": 'Sesgo dominante'",
+  "newSnippet": ": t('ui.sesgo.result-intensity-dominante', 'Sesgo dominante')",
+  "params": {},
+  "notes": "Fourth branch of intensidadLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-desc-no-detected",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1652,
+  "oldSnippet": "? 'En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.'",
+  "newSnippet": "? t('ui.sesgo.result-desc-no-detected', 'En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.')",
+  "params": {},
+  "notes": "First branch of intensidadDesc ternary chain."
+ },
+ {
+  "key": "ui.sesgo.result-desc-leve",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1654,
+  "oldSnippet": "? 'Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.'",
+  "newSnippet": "? t('ui.sesgo.result-desc-leve', 'Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.')",
+  "params": {},
+  "notes": "Second branch of intensidadDesc ternary chain."
+ },
+ {
+  "key": "ui.sesgo.result-desc-moderada",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1656,
+  "oldSnippet": "? 'Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.'",
+  "newSnippet": "? t('ui.sesgo.result-desc-moderada', 'Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.')",
+  "params": {},
+  "notes": "Third branch of intensidadDesc ternary chain."
+ },
+ {
+  "key": "ui.sesgo.result-desc-dominante",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1657,
+  "oldSnippet": ": 'Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.'",
+  "newSnippet": ": t('ui.sesgo.result-desc-dominante', 'Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.')",
+  "params": {},
+  "notes": "Fourth branch of intensidadDesc ternary chain."
+ },
+ {
+  "key": "ui.sesgo.result-biased-responses",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1725,
+  "oldSnippet": "<div style=\"font-size:.72rem;color:var(--ink-4)\">respuestas sesgadas</div>",
+  "newSnippet": "<div style=\"font-size:.72rem;color:var(--ink-4)\">${t('ui.sesgo.result-biased-responses', 'respuestas sesgadas')}</div>",
+  "params": {},
+  "notes": "Small label below the N/total score in the intensity card."
+ },
+ {
+  "key": "ui.sesgo.result-card-verification",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1735,
+  "oldSnippet": "<div class=\"result-card-title\">Verificación conceptual</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.sesgo.result-card-verification', 'Verificación conceptual')}</div>",
+  "params": {},
+  "notes": "Section heading in the result-card for the fixation score."
+ },
+ {
+  "key": "ui.sesgo.result-fix-perfect",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1663,
+  "oldSnippet": "fixScore === fixTotal ? '¡Perfecto!'",
+  "newSnippet": "fixScore === fixTotal ? t('ui.sesgo.result-fix-perfect', '¡Perfecto!')",
+  "params": {},
+  "notes": "First branch of fixLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-fix-good",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1663,
+  "oldSnippet": "fixScore >= fixTotal * 0.67 ? 'Bien'",
+  "newSnippet": "fixScore >= fixTotal * 0.67 ? t('ui.sesgo.result-fix-good', 'Bien')",
+  "params": {},
+  "notes": "Second branch of fixLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-fix-keep-practicing",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1663,
+  "oldSnippet": ": 'Sigue practicando'",
+  "newSnippet": ": t('ui.sesgo.result-fix-keep-practicing', 'Sigue practicando')",
+  "params": {},
+  "notes": "Third branch of fixLabel ternary."
+ },
+ {
+  "key": "ui.sesgo.result-correct-questions",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1740,
+  "oldSnippet": "<div style=\"font-size:.85rem;color:var(--ink-4)\">preguntas correctas</div>",
+  "newSnippet": "<div style=\"font-size:.85rem;color:var(--ink-4)\">${t('ui.sesgo.result-correct-questions', 'preguntas correctas')}</div>",
+  "params": {},
+  "notes": "Small label below fixLabel in the fixation score card."
+ },
+ {
+  "key": "ui.sesgo.result-card-review",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1746,
+  "oldSnippet": "<div class=\"result-card-title\">Revisión de tus respuestas</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.sesgo.result-card-review', 'Revisión de tus respuestas')}</div>",
+  "params": {},
+  "notes": "Section heading for the per-question answer review card."
+ },
+ {
+  "key": "ui.sesgo.result-situation",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1755,
+  "oldSnippet": "<div class=\"response-q\">Situación ${i + 1}</div>",
+  "newSnippet": "<div class=\"response-q\">${t('ui.sesgo.result-situation', 'Situación {n}', { n: i + 1 })}</div>",
+  "params": {
+   "n": "i + 1"
+  },
+  "notes": "Per-question label in the responses-grid. n is 1-based."
+ },
+ {
+  "key": "ui.sesgo.result-card-clarity",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1764,
+  "oldSnippet": "<div class=\"result-card-title\">¿Qué tan claro te quedó el concepto?</div>",
+  "newSnippet": "<div class=\"result-card-title\">${t('ui.sesgo.result-card-clarity', '¿Qué tan claro te quedó el concepto?')}</div>",
+  "params": {},
+  "notes": "Section heading for the post-result clarity rating card."
+ },
+ {
+  "key": "ui.sesgo.btn-back-dashboard",
+  "area": "sesgo",
+  "fn": "renderSesgoResult",
+  "approxLine": 1769,
+  "oldSnippet": "<button class=\"btn-cta\" id=\"btn-back-dash\" ${state.resultRating === null ? 'disabled' : ''}>Volver al Dashboard →</button>",
+  "newSnippet": "<button class=\"btn-cta\" id=\"btn-back-dash\" ${state.resultRating === null ? 'disabled' : ''}>${t('ui.sesgo.btn-back-dashboard', 'Volver al Dashboard →')}</button>",
+  "params": {},
+  "notes": "Final CTA at the bottom of the result screen."
+ },
+ {
+  "key": "ui.report.step1-label",
+  "area": "report",
+  "fn": "renderReportStep1_Profile",
+  "approxLine": 1856,
+  "oldSnippet": "Paso 1 · Tu perfil BIT",
+  "newSnippet": "${t('ui.report.step1-label', 'Paso 1 · Tu perfil BIT')}",
+  "params": [],
+  "notes": "Section label for step 1"
+ },
+ {
+  "key": "ui.report.step1-title",
+  "area": "report",
+  "fn": "renderReportStep1_Profile",
+  "approxLine": 1857,
+  "oldSnippet": "Así es como tomas decisiones financieras",
+  "newSnippet": "${t('ui.report.step1-title', 'Así es como tomas decisiones financieras')}",
+  "params": [],
+  "notes": "Section title for step 1"
+ },
+ {
+  "key": "ui.report.step1-disclaimer",
+  "area": "report",
+  "fn": "renderReportStep1_Profile",
+  "approxLine": 1869,
+  "oldSnippet": "<strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.",
+  "newSnippet": "${t('ui.report.step1-disclaimer', '<strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.')}",
+  "params": [],
+  "notes": "Disclaimer paragraph under profile card; contains <strong> HTML"
+ },
+ {
+  "key": "ui.report.step2-label",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1880,
+  "oldSnippet": "Paso 2 · Plan de acción",
+  "newSnippet": "${t('ui.report.step2-label', 'Paso 2 · Plan de acción')}",
+  "params": [],
+  "notes": "Section label for step 2"
+ },
+ {
+  "key": "ui.report.step2-title",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1881,
+  "oldSnippet": "Si solo haces UNA cosa, haz esta",
+  "newSnippet": "${t('ui.report.step2-title', 'Si solo haces UNA cosa, haz esta')}",
+  "params": [],
+  "notes": "Section title for step 2"
+ },
+ {
+  "key": "ui.report.step2-intro",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1882,
+  "oldSnippet": "Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil ${bitLabel(bitResult.primary)} con los sesgos que observamos en tus respuestas.",
+  "newSnippet": "${t('ui.report.step2-intro', `Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil ${bitLabel(bitResult.primary)} con los sesgos que observamos en tus respuestas.`, { profileLabel: bitLabel(bitResult.primary) })}",
+  "params": {
+   "profileLabel": "bitLabel(bitResult.primary)"
+  },
+  "notes": "Intro paragraph for step 2; contains <strong> HTML and profile label placeholder"
+ },
+ {
+  "key": "ui.report.antidoto-top1-badge",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1884,
+  "oldSnippet": "Tu antídoto #1",
+  "newSnippet": "${t('ui.report.antidoto-top1-badge', 'Tu antídoto #1')}",
+  "params": [],
+  "notes": "Badge label on the top-1 antidote card"
+ },
+ {
+  "key": "ui.report.antidoto-coverage",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1887,
+  "oldSnippet": "Cubre ${top1.coveragePct}% de tu peso sesgado",
+  "newSnippet": "${t('ui.report.antidoto-coverage', `Cubre ${top1.coveragePct}% de tu peso sesgado`, { pct: top1.coveragePct })}",
+  "params": {
+   "pct": "top1.coveragePct"
+  },
+  "notes": "Coverage % line under top-1 antidote; same template reused for top2/3 (see .other-cov)"
+ },
+ {
+  "key": "ui.report.antidoto-what-label",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1892,
+  "oldSnippet": "<div class=\"antidoto-label\">¿Qué es?</div>",
+  "newSnippet": "<div class=\"antidoto-label\">${t('ui.report.antidoto-what-label', '¿Qué es?')}</div>",
+  "params": [],
+  "notes": "Label above antidote 'what' text; appears twice (top1 and sm variant)"
+ },
+ {
+  "key": "ui.report.antidoto-how-label",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1896,
+  "oldSnippet": "<div class=\"antidoto-label\">¿Cómo se implementa?</div>",
+  "newSnippet": "<div class=\"antidoto-label\">${t('ui.report.antidoto-how-label', '¿Cómo se implementa?')}</div>",
+  "params": [],
+  "notes": "Label above antidote 'how' text; appears twice (top1 and sm variant)"
+ },
+ {
+  "key": "ui.report.antidoto-others-title",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1900,
+  "oldSnippet": "Tus otros 2 antídotos de mayor retorno:",
+  "newSnippet": "${t('ui.report.antidoto-others-title', 'Tus otros 2 antídotos de mayor retorno:')}",
+  "params": [],
+  "notes": "Title above the 2nd and 3rd antidote cards"
+ },
+ {
+  "key": "ui.report.antidoto-coverage-other",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1908,
+  "oldSnippet": "Cubre ${a.coveragePct}% de tu peso sesgado",
+  "newSnippet": "${t('ui.report.antidoto-coverage', `Cubre ${a.coveragePct}% de tu peso sesgado`, { pct: a.coveragePct })}",
+  "params": {
+   "pct": "a.coveragePct"
+  },
+  "notes": "Same key as ui.report.antidoto-coverage; reuse that key with a.coveragePct"
+ },
+ {
+  "key": "ui.report.antidoto-what-label-sm",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1915,
+  "oldSnippet": "<div class=\"antidoto-label-sm\">¿Qué es?</div>",
+  "newSnippet": "<div class=\"antidoto-label-sm\">${t('ui.report.antidoto-what-label', '¿Qué es?')}</div>",
+  "params": [],
+  "notes": "Sm variant uses same key as top-1 (ui.report.antidoto-what-label)"
+ },
+ {
+  "key": "ui.report.antidoto-how-label-sm",
+  "area": "report",
+  "fn": "renderReportStep2_Plan",
+  "approxLine": 1919,
+  "oldSnippet": "<div class=\"antidoto-label-sm\">¿Cómo se implementa?</div>",
+  "newSnippet": "<div class=\"antidoto-label-sm\">${t('ui.report.antidoto-how-label', '¿Cómo se implementa?')}</div>",
+  "params": [],
+  "notes": "Sm variant uses same key as top-1 (ui.report.antidoto-how-label)"
+ },
+ {
+  "key": "ui.report.step3-label",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1964,
+  "oldSnippet": "Paso 3 · Severidad por mecanismo",
+  "newSnippet": "${t('ui.report.step3-label', 'Paso 3 · Severidad por mecanismo')}",
+  "params": [],
+  "notes": "Section label for step 3"
+ },
+ {
+  "key": "ui.report.step3-title",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1965,
+  "oldSnippet": "Qué mecanismos te tuercen las decisiones",
+  "newSnippet": "${t('ui.report.step3-title', 'Qué mecanismos te tuercen las decisiones')}",
+  "params": [],
+  "notes": "Section title for step 3"
+ },
+ {
+  "key": "ui.report.step3-intro",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1966,
+  "oldSnippet": "Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.",
+  "newSnippet": "${t('ui.report.step3-intro', 'Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.')}",
+  "params": [],
+  "notes": "Intro paragraph for step 3; contains <strong> and <em> HTML"
+ },
+ {
+  "key": "ui.report.conclusion-label",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1970,
+  "oldSnippet": "<div class=\"mec-conclusion-label\">Conclusión</div>",
+  "newSnippet": "<div class=\"mec-conclusion-label\">${t('ui.report.conclusion-label', 'Conclusión')}</div>",
+  "params": [],
+  "notes": "Label above the conclusion block in step 3"
+ },
+ {
+  "key": "ui.report.conclusion-dominant-clear",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1954,
+  "oldSnippet": "Tu sistema cognitivo está <strong>claramente dominado por ${dominant.m.name}</strong> (${pct}%). Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.",
+  "newSnippet": "${t('ui.report.conclusion-dominant-clear', `Tu sistema cognitivo está <strong>claramente dominado por <strong>${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</strong> (${pct}%)</strong>. Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.`, { mech: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct })}",
+  "params": {
+   "mech": "t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)",
+   "pct": "pct"
+  },
+  "notes": "Conclusion phrase when dominant mechanism leads by ≥15 pp; mech name already translated via existing key"
+ },
+ {
+  "key": "ui.report.conclusion-dominant-moderate",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1957,
+  "oldSnippet": "<strong>${dominant.m.name}</strong> (${pct}%) es tu mecanismo más fuerte, seguido de cerca por <strong>${second.m.name}</strong> (${Math.round(second.avg * 100)}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.",
+  "newSnippet": "${t('ui.report.conclusion-dominant-moderate', `<strong>${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</strong> (${pct}%) es tu mecanismo más fuerte, seguido de cerca por <strong>${t(`report.mecanismo.${second.m.id}.name`, second.m.name)}</strong> (${Math.round(second.avg * 100)}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.`, { mech1: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct1: pct, mech2: t(`report.mecanismo.${second.m.id}.name`, second.m.name), pct2: Math.round(second.avg * 100) })}",
+  "params": {
+   "mech1": "t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)",
+   "pct1": "pct",
+   "mech2": "t(`report.mecanismo.${second.m.id}.name`, second.m.name)",
+   "pct2": "Math.round(second.avg * 100)"
+  },
+  "notes": "Conclusion phrase when dominant leads second by 6-14 pp; both mech names already translated"
+ },
+ {
+  "key": "ui.report.conclusion-tied",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1959,
+  "oldSnippet": "Tienes varios mecanismos en tensión parecida (${dominant.m.name} ${pct}% · ${second.m.name} ${Math.round(second.avg * 100)}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.",
+  "newSnippet": "${t('ui.report.conclusion-tied', `Tienes varios mecanismos en tensión parecida (${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)} ${pct}% · ${t(`report.mecanismo.${second.m.id}.name`, second.m.name)} ${Math.round(second.avg * 100)}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.`, { mech1: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct1: pct, mech2: t(`report.mecanismo.${second.m.id}.name`, second.m.name), pct2: Math.round(second.avg * 100) })}",
+  "params": {
+   "mech1": "t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)",
+   "pct1": "pct",
+   "mech2": "t(`report.mecanismo.${second.m.id}.name`, second.m.name)",
+   "pct2": "Math.round(second.avg * 100)"
+  },
+  "notes": "Conclusion phrase when gap < 6 pp (tied mechanisms)"
+ },
+ {
+  "key": "ui.report.conclusion-incomplete",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1960,
+  "oldSnippet": "'Aún no hay suficientes módulos completados para concluir.'",
+  "newSnippet": "t('ui.report.conclusion-incomplete', 'Aún no hay suficientes módulos completados para concluir.')",
+  "params": [],
+  "notes": "Fallback conclusion when no dominant mechanism can be computed; used as ternary value (no template literal wrapper)"
+ },
+ {
+  "key": "ui.report.sev-group-meta.one",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 1990,
+  "oldSnippet": "${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}",
+  "newSnippet": "${t(g.items.length === 1 ? 'ui.report.sev-group-meta.one' : 'ui.report.sev-group-meta.other', `${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}`, { count: g.items.length, level: severityLabel(mecPct) })}",
+  "params": {
+   "count": "g.items.length",
+   "level": "severityLabel(mecPct)"
+  },
+  "notes": "Plural: singular form"
+ },
+ {
+  "key": "ui.report.step3-footnote",
+  "area": "report",
+  "fn": "renderReportStep3_Severidad",
+  "approxLine": 2011,
+  "oldSnippet": "Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.",
+  "newSnippet": "${t('ui.report.step3-footnote', 'Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.')}",
+  "params": [],
+  "notes": "Footnote at bottom of step 3"
+ },
+ {
+  "key": "ui.report.step4-label",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2021,
+  "oldSnippet": "Paso 4 · Mecanismos",
+  "newSnippet": "${t('ui.report.step4-label', 'Paso 4 · Mecanismos')}",
+  "params": [],
+  "notes": "Section label for step 4"
+ },
+ {
+  "key": "ui.report.step4-title",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2022,
+  "oldSnippet": "Los 5 sistemas detrás de tus sesgos",
+  "newSnippet": "${t('ui.report.step4-title', 'Los 5 sistemas detrás de tus sesgos')}",
+  "params": [],
+  "notes": "Section title for step 4"
+ },
+ {
+  "key": "ui.report.step4-intro",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2023,
+  "oldSnippet": "Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.",
+  "newSnippet": "${t('ui.report.step4-intro', 'Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.')}",
+  "params": [],
+  "notes": "Intro paragraph for step 4; contains <strong> HTML"
+ },
+ {
+  "key": "ui.report.mec-dominant-label",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2025,
+  "oldSnippet": "<div class=\"mec-dominant-label\">Tu mecanismo dominante</div>",
+  "newSnippet": "<div class=\"mec-dominant-label\">${t('ui.report.mec-dominant-label', 'Tu mecanismo dominante')}</div>",
+  "params": [],
+  "notes": "Label above dominant mechanism name in step 4"
+ },
+ {
+  "key": "ui.report.mec-desc-what-label",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2047,
+  "oldSnippet": "<div class=\"mec-desc-label\">Qué es este mecanismo</div>",
+  "newSnippet": "<div class=\"mec-desc-label\">${t('ui.report.mec-desc-what-label', 'Qué es este mecanismo')}</div>",
+  "params": [],
+  "notes": "Label above mechanism 'desc' text in step 4"
+ },
+ {
+  "key": "ui.report.mec-desc-relation-label",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2051,
+  "oldSnippet": "<div class=\"mec-desc-label\">Cómo se relaciona con tus sesgos</div>",
+  "newSnippet": "<div class=\"mec-desc-label\">${t('ui.report.mec-desc-relation-label', 'Cómo se relaciona con tus sesgos')}</div>",
+  "params": [],
+  "notes": "Label above mechanism 'relation' text in step 4"
+ },
+ {
+  "key": "ui.report.mec-biases-label",
+  "area": "report",
+  "fn": "renderReportStep4_Mecanismos",
+  "approxLine": 2054,
+  "oldSnippet": "<div class=\"mec-biases-label\">Tus sesgos en este mecanismo:</div>",
+  "newSnippet": "<div class=\"mec-biases-label\">${t('ui.report.mec-biases-label', 'Tus sesgos en este mecanismo:')}</div>",
+  "params": [],
+  "notes": "Label above the list of biases per mechanism in step 4"
+ },
+ {
+  "key": "ui.report.step5-label",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2067,
+  "oldSnippet": "Paso 5 · Autoconciencia",
+  "newSnippet": "${t('ui.report.step5-label', 'Paso 5 · Autoconciencia')}",
+  "params": [],
+  "notes": "Section label for step 5 (appears in both empty and full branches)"
+ },
+ {
+  "key": "ui.report.step5-title-empty",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2068,
+  "oldSnippet": "Comparación entre tu autoevaluación y tus respuestas",
+  "newSnippet": "${t('ui.report.step5-title-empty', 'Comparación entre tu autoevaluación y tus respuestas')}",
+  "params": [],
+  "notes": "Title shown in the empty state (no self-assessment data yet)"
+ },
+ {
+  "key": "ui.report.step5-empty-body",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2069,
+  "oldSnippet": "Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.",
+  "newSnippet": "${t('ui.report.step5-empty-body', 'Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.')}",
+  "params": [],
+  "notes": "Empty-state paragraph for step 5"
+ },
+ {
+  "key": "ui.report.step5-title",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2083,
+  "oldSnippet": "¿Qué tan bien te conoces?",
+  "newSnippet": "${t('ui.report.step5-title', '¿Qué tan bien te conoces?')}",
+  "params": [],
+  "notes": "Section title for step 5 (non-empty branch)"
+ },
+ {
+  "key": "ui.report.step5-intro",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2084,
+  "oldSnippet": "Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.",
+  "newSnippet": "${t('ui.report.step5-intro', 'Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.')}",
+  "params": [],
+  "notes": "Intro paragraph for step 5; contains <strong> HTML"
+ },
+ {
+  "key": "ui.report.scatter-x-label",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2094,
+  "oldSnippet": ">Tu autoevaluación →</text>",
+  "newSnippet": ">${t('ui.report.scatter-x-label', 'Tu autoevaluación →')}</text>",
+  "params": [],
+  "notes": "SVG axis label for X axis on scatter chart"
+ },
+ {
+  "key": "ui.report.scatter-y-label",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2095,
+  "oldSnippet": ">← Observado</text>",
+  "newSnippet": ">${t('ui.report.scatter-y-label', '← Observado')}</text>",
+  "params": [],
+  "notes": "SVG axis label for Y axis on scatter chart"
+ },
+ {
+  "key": "ui.report.blind-spots-title",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2104,
+  "oldSnippet": "Puntos ciegos (${blind.length})",
+  "newSnippet": "${t('ui.report.blind-spots-title', `Puntos ciegos (${blind.length})`, { count: blind.length })}",
+  "params": {
+   "count": "blind.length"
+  },
+  "notes": "Title of the blind-spots card in step 5"
+ },
+ {
+  "key": "ui.report.blind-spots-sub",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2105,
+  "oldSnippet": "Te afectan más de lo que crees",
+  "newSnippet": "${t('ui.report.blind-spots-sub', 'Te afectan más de lo que crees')}",
+  "params": [],
+  "notes": "Subtitle under blind-spots card"
+ },
+ {
+  "key": "ui.report.scatter-item-label",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2098,
+  "oldSnippet": "auto ${it.self}% vs observado ${it.observed}%",
+  "newSnippet": "${t('ui.report.scatter-item-label', `auto ${it.self}% vs observado ${it.observed}%`, { self: it.self, observed: it.observed })}",
+  "params": {
+   "self": "it.self",
+   "observed": "it.observed"
+  },
+  "notes": "SVG tooltip text for each scatter point; also reused in aw-list items"
+ },
+ {
+  "key": "ui.report.blind-spots-empty",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2106,
+  "oldSnippet": "<p class=\"aw-empty\">Ninguno — buena calibración por el lado de la subestimación.</p>",
+  "newSnippet": "<p class=\"aw-empty\">${t('ui.report.blind-spots-empty', 'Ninguno — buena calibración por el lado de la subestimación.')}</p>",
+  "params": [],
+  "notes": "Empty state for blind-spots list"
+ },
+ {
+  "key": "ui.report.overestimated-title",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2109,
+  "oldSnippet": "Sobreestimados (${over.length})",
+  "newSnippet": "${t('ui.report.overestimated-title', `Sobreestimados (${over.length})`, { count: over.length })}",
+  "params": {
+   "count": "over.length"
+  },
+  "notes": "Title of the overestimated card in step 5"
+ },
+ {
+  "key": "ui.report.overestimated-sub",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2110,
+  "oldSnippet": "Crees que te afectan más de lo que realmente aparece",
+  "newSnippet": "${t('ui.report.overestimated-sub', 'Crees que te afectan más de lo que realmente aparece')}",
+  "params": [],
+  "notes": "Subtitle under overestimated card"
+ },
+ {
+  "key": "ui.report.overestimated-empty",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2111,
+  "oldSnippet": "<p class=\"aw-empty\">Ninguno.</p>",
+  "newSnippet": "<p class=\"aw-empty\">${t('ui.report.overestimated-empty', 'Ninguno.')}</p>",
+  "params": [],
+  "notes": "Empty state for overestimated list"
+ },
+ {
+  "key": "ui.report.calibrated-title",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2114,
+  "oldSnippet": "Bien calibrado (${calibrated.length})",
+  "newSnippet": "${t('ui.report.calibrated-title', `Bien calibrado (${calibrated.length})`, { count: calibrated.length })}",
+  "params": {
+   "count": "calibrated.length"
+  },
+  "notes": "Title of the calibrated card in step 5"
+ },
+ {
+  "key": "ui.report.calibrated-sub",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2115,
+  "oldSnippet": "Tu autoevaluación coincide con las respuestas (±15 pp)",
+  "newSnippet": "${t('ui.report.calibrated-sub', 'Tu autoevaluación coincide con las respuestas (±15 pp)')}",
+  "params": [],
+  "notes": "Subtitle under calibrated card; ±15 pp is a literal threshold value, not a variable"
+ },
+ {
+  "key": "ui.report.calibrated-empty",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2116,
+  "oldSnippet": "<p class=\"aw-empty\">Aún no tienes sesgos calibrados.</p>",
+  "newSnippet": "<p class=\"aw-empty\">${t('ui.report.calibrated-empty', 'Aún no tienes sesgos calibrados.')}</p>",
+  "params": [],
+  "notes": "Empty state for calibrated list"
+ },
+ {
+  "key": "ui.report.awareness-score",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2119,
+  "oldSnippet": "Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados",
+  "newSnippet": "${t('ui.report.awareness-score', `Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados`, { calibrated: calibrated.length, total: items.length })}",
+  "params": {
+   "calibrated": "calibrated.length",
+   "total": "items.length"
+  },
+  "notes": "Score summary line at bottom of step 5; contains <strong> HTML"
+ },
+ {
+  "key": "ui.report.aw-list-item-detail",
+  "area": "report",
+  "fn": "renderReportStep5_Autoconciencia",
+  "approxLine": 2106,
+  "oldSnippet": "<span>· auto ${x.self}% vs observado ${x.observed}%</span>",
+  "newSnippet": "<span>${t('ui.report.aw-list-item-detail', `· auto ${x.self}% vs observado ${x.observed}%`, { self: x.self, observed: x.observed })}</span>",
+  "params": {
+   "self": "x.self",
+   "observed": "x.observed"
+  },
+  "notes": "In-list span showing self vs observed %; appears in blind and overestimated lists"
+ },
+ {
+  "key": "ui.report.step6-label",
+  "area": "report",
+  "fn": "renderReportStep6_Matriz",
+  "approxLine": 2127,
+  "oldSnippet": "Paso 6 · Matriz de decisión",
+  "newSnippet": "${t('ui.report.step6-label', 'Paso 6 · Matriz de decisión')}",
+  "params": [],
+  "notes": "Section label for step 6"
+ },
+ {
+  "key": "ui.report.step6-title",
+  "area": "report",
+  "fn": "renderReportStep6_Matriz",
+  "approxLine": 2128,
+  "oldSnippet": "Situaciones reales: tu tendencia vs. lo racional",
+  "newSnippet": "${t('ui.report.step6-title', 'Situaciones reales: tu tendencia vs. lo racional')}",
+  "params": [],
+  "notes": "Section title for step 6"
+ },
+ {
+  "key": "ui.report.step6-intro",
+  "area": "report",
+  "fn": "renderReportStep6_Matriz",
+  "approxLine": 2129,
+  "oldSnippet": "Tres escenarios típicos donde tu perfil <strong>${bitLabel(bitResult.primary)}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.",
+  "newSnippet": "${t('ui.report.step6-intro', `Tres escenarios típicos donde tu perfil <strong>${bitLabel(bitResult.primary)}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.`, { profileLabel: bitLabel(bitResult.primary) })}",
+  "params": {
+   "profileLabel": "bitLabel(bitResult.primary)"
+  },
+  "notes": "Intro paragraph for step 6; contains <strong> HTML with profile label"
+ },
+ {
+  "key": "ui.report.matrix-tendency-label",
+  "area": "report",
+  "fn": "renderReportStep6_Matriz",
+  "approxLine": 2136,
+  "oldSnippet": "<div class=\"matriz-col-label\">Tu tendencia</div>",
+  "newSnippet": "<div class=\"matriz-col-label\">${t('ui.report.matrix-tendency-label', 'Tu tendencia')}</div>",
+  "params": [],
+  "notes": "Column label in the decision matrix table"
+ },
+ {
+  "key": "ui.report.matrix-rational-label",
+  "area": "report",
+  "fn": "renderReportStep6_Matriz",
+  "approxLine": 2140,
+  "oldSnippet": "<div class=\"matriz-col-label\">Respuesta racional</div>",
+  "newSnippet": "<div class=\"matriz-col-label\">${t('ui.report.matrix-rational-label', 'Respuesta racional')}</div>",
+  "params": [],
+  "notes": "Column label in the decision matrix table"
+ },
+ {
+  "key": "ui.report.nav-logo",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2206,
+  "oldSnippet": "<div class=\"dash-nav-logo\">Finanzas Conductuales</div>",
+  "newSnippet": "<div class=\"dash-nav-logo\">${t('ui.report.nav-logo', 'Finanzas Conductuales')}</div>",
+  "params": [],
+  "notes": "Nav bar logo text in report wizard"
+ },
+ {
+  "key": "ui.report.nav-back",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2207,
+  "oldSnippet": "id=\"btn-report-back\">← Dashboard</button>",
+  "newSnippet": "id=\"btn-report-back\">${t('ui.report.nav-back', '← Dashboard')}</button>",
+  "params": [],
+  "notes": "Back-to-dashboard button in report nav"
+ },
+ {
+  "key": "ui.report.header-logo",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2211,
+  "oldSnippet": "<div class=\"report-logo\">Informe Final</div>",
+  "newSnippet": "<div class=\"report-logo\">${t('ui.report.header-logo', 'Informe Final')}</div>",
+  "params": [],
+  "notes": "Report header logo/title text"
+ },
+ {
+  "key": "ui.report.header-title",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2212,
+  "oldSnippet": "<h1 class=\"report-title\">Tu perfil conductual como inversionista</h1>",
+  "newSnippet": "<h1 class=\"report-title\">${t('ui.report.header-title', 'Tu perfil conductual como inversionista')}</h1>",
+  "params": [],
+  "notes": "Main H1 of the report"
+ },
+ {
+  "key": "ui.report.time-hint",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2214,
+  "oldSnippet": "⏱ 6 pasos · ~${Math.max(2, (TOTAL - step + 1) * 2)} min restantes · puedes volver cuando quieras",
+  "newSnippet": "${t('ui.report.time-hint', `⏱ 6 pasos · ~${Math.max(2, (TOTAL - step + 1) * 2)} min restantes · puedes volver cuando quieras`, { min: Math.max(2, (TOTAL - step + 1) * 2) })}",
+  "params": {
+   "min": "Math.max(2, (TOTAL - step + 1) * 2)"
+  },
+  "notes": "Time hint shown in report header; emoji is literal in es string"
+ },
+ {
+  "key": "ui.report.feedback-title",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2186,
+  "oldSnippet": "¿Qué tan útil te pareció esta información?",
+  "newSnippet": "${t('ui.report.feedback-title', '¿Qué tan útil te pareció esta información?')}",
+  "params": [],
+  "notes": "Feedback card question label"
+ },
+ {
+  "key": "ui.report.slider-label-min",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2188,
+  "oldSnippet": "<span class=\"slider-end-label\">Nada útil</span>",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.report.slider-label-min', 'Nada útil')}</span>",
+  "params": [],
+  "notes": "Left end label on the usefulness slider"
+ },
+ {
+  "key": "ui.report.slider-label-max",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2190,
+  "oldSnippet": "<span class=\"slider-end-label\">Muy útil</span>",
+  "newSnippet": "<span class=\"slider-end-label\">${t('ui.report.slider-label-max', 'Muy útil')}</span>",
+  "params": [],
+  "notes": "Right end label on the usefulness slider"
+ },
+ {
+  "key": "ui.report.slider-move-hint",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2192,
+  "oldSnippet": "'Mueve el deslizador para continuar'",
+  "newSnippet": "t('ui.report.slider-move-hint', 'Mueve el deslizador para continuar')",
+  "params": [],
+  "notes": "Placeholder text shown before slider is moved; used as ternary value"
+ },
+ {
+  "key": "ui.report.nav-prev",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2197,
+  "oldSnippet": ">← Anterior</button>",
+  "newSnippet": ">${t('ui.report.nav-prev', '← Anterior')}</button>",
+  "params": [],
+  "notes": "Previous step button"
+ },
+ {
+  "key": "ui.report.nav-step-of",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2198,
+  "oldSnippet": "Paso ${step} de ${TOTAL}",
+  "newSnippet": "${t('ui.report.nav-step-of', `Paso ${step} de ${TOTAL}`, { step, total: TOTAL })}",
+  "params": {
+   "step": "step",
+   "total": "TOTAL"
+  },
+  "notes": "Step counter in nav bar"
+ },
+ {
+  "key": "ui.report.nav-next",
+  "area": "report",
+  "fn": "renderReport",
+  "approxLine": 2199,
+  "oldSnippet": "'Volver al Dashboard →' : 'Siguiente →'",
+  "newSnippet": "isLast ? t('ui.report.nav-finish', 'Volver al Dashboard →') : t('ui.report.nav-next', 'Siguiente →')",
+  "params": [],
+  "notes": "Next step button label (non-last step)"
+ },
+ {
+  "key": "ui.next.loading",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2485,
+  "oldSnippet": "Cargando…",
+  "newSnippet": "${t('ui.next.loading', 'Cargando…')}",
+  "params": [],
+  "notes": "Loading placeholder shown while next-steps data is fetched."
+ },
+ {
+  "key": "ui.next.nav_back",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2501,
+  "oldSnippet": "← Dashboard",
+  "newSnippet": "${t('ui.next.nav_back', '← Dashboard')}",
+  "params": [],
+  "notes": "Back-to-dashboard nav button label. Arrow is part of the design convention."
+ },
+ {
+  "key": "ui.next.nav_logout",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2502,
+  "oldSnippet": "<button class=\"btn-link\" id=\"btn-logout\">Salir</button>",
+  "newSnippet": "<button class=\"btn-link\" id=\"btn-logout\">${t('ui.next.nav_logout', 'Salir')}</button>",
+  "params": [],
+  "notes": "Logout button in nav bar (also appears on dashboard; may share a common key in a future pass)."
+ },
+ {
+  "key": "ui.next.time_badge",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2507,
+  "oldSnippet": "⏱ ~3 min · última etapa",
+  "newSnippet": "${t('ui.next.time_badge', '⏱ ~3 min · última etapa')}",
+  "params": [],
+  "notes": "Time estimate badge. Emoji is part of the visible chrome. '~3 min' is a fixed estimate, not dynamic."
+ },
+ {
+  "key": "ui.next.title",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2508,
+  "oldSnippet": "Próximos pasos",
+  "newSnippet": "${t('ui.next.title', 'Próximos pasos')}",
+  "params": [],
+  "notes": "Main h1 heading for the next-steps screen."
+ },
+ {
+  "key": "ui.next.intro",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2509,
+  "oldSnippet": "Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.",
+  "newSnippet": "${t('ui.next.intro', 'Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.')}",
+  "params": [],
+  "notes": "Intro paragraph below the h1."
+ },
+ {
+  "key": "ui.next.card_interests_title",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2513,
+  "oldSnippet": "Lo que me interesa",
+  "newSnippet": "${t('ui.next.card_interests_title', 'Lo que me interesa')}",
+  "params": [],
+  "notes": "Section heading for the interests checkbox card."
+ },
+ {
+  "key": "ui.next.other_label",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2526,
+  "oldSnippet": "Otros · lo que quieras contarme",
+  "newSnippet": "${t('ui.next.other_label', 'Otros · lo que quieras contarme')}",
+  "params": [],
+  "notes": "Label for the free-text 'other' textarea."
+ },
+ {
+  "key": "ui.next.other_placeholder",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2527,
+  "oldSnippet": "placeholder=\"Ideas, sugerencias, temas que te interesan…\"",
+  "newSnippet": "placeholder=\"${t('ui.next.other_placeholder', 'Ideas, sugerencias, temas que te interesan…')}\"",
+  "params": [],
+  "notes": "Placeholder text for the free-text textarea."
+ },
+ {
+  "key": "ui.next.btn_update",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2531,
+  "oldSnippet": "Actualizar respuestas",
+  "newSnippet": "${t('ui.next.btn_update', 'Actualizar respuestas')}",
+  "params": [],
+  "notes": "Save button label when the student has already saved once (saved=true)."
+ },
+ {
+  "key": "ui.next.btn_save",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2531,
+  "oldSnippet": "Guardar y ver resultados →",
+  "newSnippet": "${t('ui.next.btn_save', 'Guardar y ver resultados →')}",
+  "params": [],
+  "notes": "Primary CTA button label for first save. Arrow is part of the design convention."
+ },
+ {
+  "key": "ui.next.card_others_title",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2538,
+  "oldSnippet": "Qué eligen los demás participantes",
+  "newSnippet": "${t('ui.next.card_others_title', 'Qué eligen los demás participantes')}",
+  "params": [],
+  "notes": "Heading for the results/stats card shown after saving."
+ },
+ {
+  "key": "ui.next.card_others_sub",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2539,
+  "oldSnippet": "Respuestas consolidadas — así ves dónde se concentra el interés del grupo.",
+  "newSnippet": "${t('ui.next.card_others_sub', 'Respuestas consolidadas — así ves dónde se concentra el interés del grupo.')}",
+  "params": [],
+  "notes": "Subtext inside the group-results card."
+ },
+ {
+  "key": "ui.next.calendly_title",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2555,
+  "oldSnippet": "Un pedido sincero",
+  "newSnippet": "${t('ui.next.calendly_title', 'Un pedido sincero')}",
+  "params": [],
+  "notes": "Title of the Calendly/interview invitation card."
+ },
+ {
+  "key": "ui.next.calendly_body1",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2556,
+  "oldSnippet": "No hay nada más importante en esta etapa que esos 15 minutos.",
+  "newSnippet": "${t('ui.next.calendly_body1', 'No hay nada más importante en esta etapa que esos 15 minutos. Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.')}",
+  "params": [],
+  "notes": "First paragraph of the Calendly persuasion card. Contains <strong> wrap around the first sentence in the template — translator must preserve that markup or it will be handled separately."
+ },
+ {
+  "key": "ui.next.calendly_body2",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2557,
+  "oldSnippet": "Si puedes regalarme ese rato, estaría muy agradecido.",
+  "newSnippet": "${t('ui.next.calendly_body2', 'Si puedes regalarme ese rato, estaría muy agradecido.')}",
+  "params": [],
+  "notes": "Second (closing) paragraph of the Calendly card."
+ },
+ {
+  "key": "ui.next.calendly_cta",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2558,
+  "oldSnippet": "Agendar 30 min con Rodrigo →",
+  "newSnippet": "${t('ui.next.calendly_cta', 'Agendar 30 min con Rodrigo →')}",
+  "params": [],
+  "notes": "CTA link/button to open Calendly. Arrow is design convention. 'Rodrigo' is a proper name — keep as-is."
+ },
+ {
+  "key": "ui.next.calendly_sub",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2559,
+  "oldSnippet": "Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min",
+  "newSnippet": "${t('ui.next.calendly_sub', 'Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min')}",
+  "params": [],
+  "notes": "Caption below Calendly CTA. URL is part of the string (informational, not a live href here). Uncertain inclusion — it contains a literal URL; translator should keep the URL unchanged."
+ },
+ {
+  "key": "ui.next.btn_saving",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2594,
+  "oldSnippet": "btn.textContent = 'Guardando…'",
+  "newSnippet": "btn.textContent = t('ui.next.btn_saving', 'Guardando…')",
+  "params": [],
+  "notes": "Transient button label while save is in-flight. JS assignment — no template literal."
+ },
+ {
+  "key": "ui.next.btn_retry",
+  "area": "next",
+  "fn": "renderNextSteps",
+  "approxLine": 2607,
+  "oldSnippet": "btn.textContent = 'Reintentar'",
+  "newSnippet": "btn.textContent = t('ui.next.btn_retry', 'Reintentar')",
+  "params": [],
+  "notes": "Button label set on save error."
+ },
+ {
+  "key": "ui.bug.fab_title",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2625,
+  "oldSnippet": "title=\"Reportar un problema\" aria-label=\"Reportar un problema\"",
+  "newSnippet": "title=\"${t('ui.bug.fab_title', 'Reportar un problema')}\" aria-label=\"${t('ui.bug.fab_title', 'Reportar un problema')}\"",
+  "params": [],
+  "notes": "FAB tooltip (title attr) and aria-label. Both use the same string so they share a key."
+ },
+ {
+  "key": "ui.bug.fab_label",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2626,
+  "oldSnippet": "Clic aquí para reportar un problema",
+  "newSnippet": "${t('ui.bug.fab_label', 'Clic aquí para reportar un problema')}",
+  "params": [],
+  "notes": "Visible text label on the floating action button (shown next to the wrench icon)."
+ },
+ {
+  "key": "ui.bug.modal_title",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2632,
+  "oldSnippet": "<div id=\"bug-modal-title\" class=\"bug-modal-title\">Reportar un problema</div>",
+  "newSnippet": "<div id=\"bug-modal-title\" class=\"bug-modal-title\">${t('ui.bug.modal_title', 'Reportar un problema')}</div>",
+  "params": [],
+  "notes": "Modal dialog heading. Different DOM context from the FAB title so kept as a distinct key for flexibility."
+ },
+ {
+  "key": "ui.bug.modal_sub",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2635,
+  "oldSnippet": "Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.",
+  "newSnippet": "${t('ui.bug.modal_sub', 'Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.')}",
+  "params": [],
+  "notes": "Sub-paragraph inside the bug report modal explaining purpose."
+ },
+ {
+  "key": "ui.bug.field_title_label",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2636,
+  "oldSnippet": "<label class=\"bug-field-label\">Título</label>",
+  "newSnippet": "<label class=\"bug-field-label\">${t('ui.bug.field_title_label', 'Título')}</label>",
+  "params": [],
+  "notes": "Form field label for the title input."
+ },
+ {
+  "key": "ui.bug.field_title_placeholder",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2637,
+  "oldSnippet": "placeholder=\"ej. El botón no responde\"",
+  "newSnippet": "placeholder=\"${t('ui.bug.field_title_placeholder', 'ej. El botón no responde')}\"",
+  "params": [],
+  "notes": "Placeholder in the title input."
+ },
+ {
+  "key": "ui.bug.field_desc_label",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2638,
+  "oldSnippet": "<label class=\"bug-field-label\">Descripción</label>",
+  "newSnippet": "<label class=\"bug-field-label\">${t('ui.bug.field_desc_label', 'Descripción')}</label>",
+  "params": [],
+  "notes": "Form field label for the description textarea."
+ },
+ {
+  "key": "ui.bug.field_desc_placeholder",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2639,
+  "oldSnippet": "placeholder=\"¿Qué esperabas? ¿Qué pasó en vez?\"",
+  "newSnippet": "placeholder=\"${t('ui.bug.field_desc_placeholder', '¿Qué esperabas? ¿Qué pasó en vez?')}\"",
+  "params": [],
+  "notes": "Placeholder in the description textarea."
+ },
+ {
+  "key": "ui.bug.btn_cancel",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2641,
+  "oldSnippet": "<button class=\"btn-link\" id=\"bug-cancel\">Cancelar</button>",
+  "newSnippet": "<button class=\"btn-link\" id=\"bug-cancel\">${t('ui.bug.btn_cancel', 'Cancelar')}</button>",
+  "params": [],
+  "notes": "Cancel button in the bug report modal."
+ },
+ {
+  "key": "ui.bug.btn_send",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2642,
+  "oldSnippet": "<button class=\"btn-cta\" id=\"bug-send\" disabled>Enviar</button>",
+  "newSnippet": "<button class=\"btn-cta\" id=\"bug-send\" disabled>${t('ui.bug.btn_send', 'Enviar')}</button>",
+  "params": [],
+  "notes": "Send button initial label. Also re-set after send via JS assignment (same key reused)."
+ },
+ {
+  "key": "ui.bug.btn_sending",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2671,
+  "oldSnippet": "send.textContent = 'Enviando…'",
+  "newSnippet": "send.textContent = t('ui.bug.btn_sending', 'Enviando…')",
+  "params": [],
+  "notes": "Transient button label while the bug report request is in-flight."
+ },
+ {
+  "key": "ui.bug.status_ok",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2679,
+  "oldSnippet": "status.textContent = '✓ Reporte enviado. Gracias.'",
+  "newSnippet": "status.textContent = t('ui.bug.status_ok', '✓ Reporte enviado. Gracias.')",
+  "params": [],
+  "notes": "Success status message. The ✓ symbol is part of the visible string."
+ },
+ {
+  "key": "ui.bug.status_err",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2683,
+  "oldSnippet": "status.textContent = 'No se pudo enviar. Intenta de nuevo.'",
+  "newSnippet": "status.textContent = t('ui.bug.status_err', 'No se pudo enviar. Intenta de nuevo.')",
+  "params": [],
+  "notes": "Error status message shown when the bug report POST fails."
+ },
+ {
+  "key": "ui.bug.btn_send_reset",
+  "area": "next",
+  "fn": "mountBugReportWidget",
+  "approxLine": 2687,
+  "oldSnippet": "send.textContent = 'Enviar'",
+  "newSnippet": "send.textContent = t('ui.bug.btn_send', 'Enviar')",
+  "params": [],
+  "notes": "Button text reset to 'Enviar' after send attempt (success or error). Reuses ui.bug.btn_send key — this record documents the second JS assignment site so implementers know both lines need the same t() call."
+ },
+ {
+  "key": "ui.toast.window_error",
+  "area": "next",
+  "fn": "window.addEventListener('error')",
+  "approxLine": 2722,
+  "oldSnippet": "showToast('Ocurrió un problema técnico. Ya recibimos el reporte.', 'error')",
+  "newSnippet": "showToast(t('ui.toast.window_error', 'Ocurrió un problema técnico. Ya recibimos el reporte.'), 'error')",
+  "params": [],
+  "notes": "Toast shown on uncaught JS errors (window error event). Learner-facing error notification."
+ },
+ {
+  "key": "ui.toast.unhandled_rejection",
+  "area": "next",
+  "fn": "window.addEventListener('unhandledrejection')",
+  "approxLine": 2730,
+  "oldSnippet": "showToast('Algo no salió bien. Vuelve a intentarlo en unos segundos.', 'error')",
+  "newSnippet": "showToast(t('ui.toast.unhandled_rejection', 'Algo no salió bien. Vuelve a intentarlo en unos segundos.'), 'error')",
+  "params": [],
+  "notes": "Toast shown on unhandled promise rejections (non-silent errors)."
+ },
+ {
+  "key": "ui.toast.share_ok",
+  "area": "next",
+  "fn": "shareBitProfile",
+  "approxLine": 2750,
+  "oldSnippet": "showToast('Enlace copiado al portapapeles.', 'ok')",
+  "newSnippet": "showToast(t('ui.toast.share_ok', 'Enlace copiado al portapapeles.'), 'ok')",
+  "params": [],
+  "notes": "Success toast when the share URL is copied to clipboard (Web Share API fallback)."
+ },
+ {
+  "key": "ui.toast.share_err",
+  "area": "next",
+  "fn": "shareBitProfile",
+  "approxLine": 2752,
+  "oldSnippet": "showToast('No se pudo copiar. Copia manualmente: ' + url, 'error')",
+  "newSnippet": "showToast(t('ui.toast.share_err', 'No se pudo copiar. Copia manualmente: {url}', { url }), 'error')",
+  "params": [
+   "url"
+  ],
+  "notes": "Error toast when clipboard copy also fails. Contains the app URL as a dynamic parameter."
+ }
+]
