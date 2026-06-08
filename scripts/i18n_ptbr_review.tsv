@@ -1,7 +1,7 @@
 key	domain	es_mx	pt_br
 question.1.prompt	question	Recibes tu mesada del mes. Después de cubrir gastos fijos, te sobran $2,000 MXN.	Você recebe sua mesada do mês. Depois de cobrir os gastos fixos, sobram R$ 600.
 question.1.opt.A.text	question	Lo meto a algo que pueda dar buen rendimiento aunque sea arriesgado	Coloco em algo que possa render bem, mesmo que seja arriscado
-question.1.opt.B.text	question	Investigo en internet opciones como Cetesdirecto o fondos antes de decidir	Pesquiso na internet opções como Cetesdirecto ou fundos antes de decidir
+question.1.opt.B.text	question	Investigo en internet opciones como Cetesdirecto o fondos antes de decidir	Pesquiso na internet opções como o Tesouro Direto ou fundos antes de decidir
 question.1.opt.C.text	question	Lo guardo en mi cuenta y no lo toco, prefiero tenerlo seguro	Guardo na minha conta e não mexo, prefiro ter o dinheiro seguro
 question.1.opt.D.text	question	Le pregunto a alguien que sepa de dinero qué me conviene	Pergunto para alguém que entende de dinheiro o que me convém
 question.2.prompt	question	Tu mejor amigo te propone ser socio en un negocio. Necesitas poner $5,000 MXN. Varios del grupo ya dijeron que sí.	Seu melhor amigo propõe que você seja sócio em um negócio. Você precisa colocar R$ 1.500. Vários do grupo já disseram que sim.
@@ -38,7 +38,7 @@ question.8.prompt	question	Recibes tu primer aguinaldo de unas prácticas profes
 question.8.opt.A.text	question	Lo meto todo a algo agresivo — acciones, cripto — total es dinero extra	Coloco tudo em algo agressivo — ações, cripto — afinal é dinheiro extra
 question.8.opt.B.text	question	Lo dejo en mi cuenta de ahorro, así sé que está seguro	Deixo na minha conta poupança, assim sei que está seguro
 question.8.opt.C.text	question	Pregunto en casa o a un profe de finanzas qué sería lo más inteligente	Pergunto em casa ou a um professor de finanças o que seria mais inteligente
-question.8.opt.D.text	question	Comparo rendimientos de Cetesdirecto, SOFIPOS y fondos	Comparo rendimentos de Cetesdirecto, SOFIPOS e fundos
+question.8.opt.D.text	question	Comparo rendimientos de Cetesdirecto, SOFIPOS y fondos	Comparo rendimentos do Tesouro Direto, CDBs e fundos
 question.9.prompt	question	Estás por graduarte. Tienes una oferta de trabajo estable con buen sueldo, pero también una idea de negocio que te apasiona.	Você está prestes a se formar. Tem uma oferta de emprego estável com bom salário, mas também uma ideia de negócio que te apaixona.
 question.9.opt.A.text	question	Analizo ambas opciones a fondo: proyecciones, costos, mercado, y decido con datos	Analiso as duas opções a fundo: projeções, custos, mercado, e decido com dados
 question.9.opt.B.text	question	Le entro al negocio, la vida es una y no quiero arrepentirme de no intentarlo	Entro no negócio, a vida é uma só e não quero me arrepender de não tentar
@@ -98,7 +98,7 @@ question.20.prompt	question	Simulador de inversión en clase: te dan $100,000 vi
 question.20.opt.A.text	question	Diseño un portafolio diversificado con fundamentals, como si fuera dinero real	Monto um portfólio diversificado com fundamentals, como se fosse dinheiro real
 question.20.opt.B.text	question	Le meto la mayor parte a las acciones más volátiles, es simulado y quiero ganar	Coloco a maior parte nas ações mais voláteis, é simulado e quero ganhar
 question.20.opt.C.text	question	Copio la estrategia de algún fondo reconocido o de lo que el profesor sugirió	Copio a estratégia de algum fundo reconhecido ou do que o professor sugeriu
-question.20.opt.D.text	question	Pongo casi todo en instrumentos seguros como Cetes, no quiero ver números rojos	Coloco quase tudo em instrumentos seguros como Cetes, não quero ver números no vermelho
+question.20.opt.D.text	question	Pongo casi todo en instrumentos seguros como Cetes, no quiero ver números rojos	Coloco quase tudo em instrumentos seguros como o Tesouro Direto, não quero ver números no vermelho
 sesgo.contabilidad-mental.name	sesgo	Contabilidad Mental	Contabilidade Mental
 sesgo.contabilidad-mental.definition	sesgo	Tratamos sumas de dinero de manera diferente dependiendo de su origen o uso previsto, ignorando que el dinero es fungible.	Tratamos quantias de dinheiro de forma diferente dependendo de sua origem ou uso previsto, ignorando que o dinheiro é fungível.
 sesgo.contabilidad-mental.description	sesgo	La Contabilidad Mental es un sesgo cognitivo descrito por Richard Thaler (Premio Nobel) en el que creamos "cuentas mentales" separadas para el dinero según su fuente o destino previsto. Esto nos lleva a tomar decisiones irracionales porque ignoramos el principio de fungibilidad: un peso es un peso, sin importar de dónde venga.	A Contabilidade Mental é um viés cognitivo descrito por Richard Thaler (Prêmio Nobel) no qual criamos "contas mentais" separadas para o dinheiro conforme sua fonte ou destino previsto. Isso nos leva a tomar decisões irracionais porque ignoramos o princípio da fungibilidade: um real é um real, independentemente de onde venha.
@@ -740,7 +740,7 @@ profile.PP.bias.1.desc	profile	Prefieres mantener las cosas como están, incluso
 profile.PP.bias.2.name	profile	Efecto dotación	Efeito dotação
 profile.PP.bias.2.desc	profile	Sobrevaloras lo que ya posees simplemente porque es tuyo, lo que te hace resistente a vender o intercambiar.	Você supervaloriza o que já possui simplesmente porque é seu, o que te torna resistente a vender ou trocar.
 profile.PP.recommendation.0	profile	Entiende que la inflación es un riesgo silencioso: no invertir también es arriesgar.	Entenda que a inflação é um risco silencioso: não investir também é arriscar.
-profile.PP.recommendation.1	profile	Empieza con instrumentos de bajo riesgo pero con rendimiento real (Cetesdirecto, SOFIPOS).	Comece com instrumentos de baixo risco mas com rendimento real (Cetesdirecto, SOFIPOS).
+profile.PP.recommendation.1	profile	Empieza con instrumentos de bajo riesgo pero con rendimiento real (Cetesdirecto, SOFIPOS).	Comece com instrumentos de baixo risco mas com rendimento real (Tesouro Direto, CDBs).
 profile.PP.recommendation.2	profile	Establece reglas claras antes de invertir para que las emociones no dominen.	Estabeleça regras claras antes de investir para que as emoções não dominem.
 profile.PP.recommendation.3	profile	Diversifica gradualmente — no necesitas hacer cambios drásticos, pero sí moverte.	Diversifique gradualmente — você não precisa fazer mudanças drásticas, mas precisa se movimentar.
 profile.FK.name	profile	Friendly Follower	Friendly Follower
