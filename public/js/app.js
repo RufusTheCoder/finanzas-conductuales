@@ -257,9 +257,9 @@ const GOOGLE_SVG = `<svg width="18" height="18" viewBox="0 0 18 18"><path fill="
 const FACEBOOK_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.88 11.85v-8.38H7.08V12h3.04V9.36c0-3 1.79-4.67 4.53-4.67 1.31 0 2.68.23 2.68.23v2.95h-1.51c-1.49 0-1.95.92-1.95 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12z"/></svg>`;
 const APPLE_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.88-3.08.41-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.41C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.32-.89 3.51-.84 1.54.07 2.7.64 3.44 1.77-3.14 1.88-2.29 5.13.57 6.26-.65 1.7-1.51 3.38-2.6 4.98zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>`;
 
-const SLIDER_LABELS = ['Nada', t('ui.rating.slider.1','Muy poco'), t('ui.rating.slider.2','Algo'), t('ui.rating.slider.3','Bastante'), t('ui.rating.slider.4','Mucho'), t('ui.rating.slider.5','Totalmente')];
+const SLIDER_LABELS = ['Nada', 'Muy poco', 'Algo', 'Bastante', 'Mucho', 'Totalmente'];
 const RATING_EMOJIS = ['😵', '😕', '😐', '😊', '🤩'];
-const RATING_LABELS = ['muy baja', t('ui.rating.level.1','baja'), t('ui.rating.level.2','regular'), t('ui.rating.level.3','alta'), t('ui.rating.level.4','muy alta')];
+const RATING_LABELS = ['muy baja', 'baja', 'regular', 'alta', 'muy alta'];
 
 function ratingWidget(current, prompt) {
   return `
@@ -608,10 +608,10 @@ function isDevUser() {
 
 // ── DASHBOARD · journey tabs ────────────────────
 const JOURNEY_STAGES = [
-  { key: 'bit',     num: 1, label: t('ui.journey.bit.label', 'Test BIT'),     short: t('ui.journey.bit.short', 'BIT') },
-  { key: 'sesgos',  num: 2, label: t('ui.journey.sesgos.label', 'Sesgos'),       short: t('ui.journey.sesgos.short', 'Sesgos') },
-  { key: 'informe', num: 3, label: t('ui.journey.informe.label', 'Informe'),      short: t('ui.journey.informe.short', 'Informe') },
-  { key: 'next',    num: 4, label: t('ui.journey.next.label', 'Próximos pasos'), short: t('ui.journey.next.short', 'Próximos') },
+  { key: 'bit',     num: 1, label: 'Test BIT',     short: 'BIT' },
+  { key: 'sesgos',  num: 2, label: 'Sesgos',       short: 'Sesgos' },
+  { key: 'informe', num: 3, label: 'Informe',      short: 'Informe' },
+  { key: 'next',    num: 4, label: 'Próximos pasos', short: 'Próximos' },
 ];
 
 function autoJourneyTab() {
@@ -676,7 +676,7 @@ function renderDashboard() {
             <button class="journey-tab ${activeTab === stage.key ? 'active' : ''} ${stageState}"
               data-tab="${stage.key}" ${locked ? 'disabled' : ''} role="tab">
               <span class="journey-tab-num">${stageState === 'done' ? '✓' : stage.num}</span>
-              <span class="journey-tab-label">${stage.label}</span>
+              <span class="journey-tab-label">${t(`ui.journey.${stage.key}.label`, stage.label)}</span>
             </button>
           `;
         }).join('')}
@@ -1383,10 +1383,10 @@ function renderSesgoQuiz() {
 }
 
 const LEARN_BLOCKS = [
-  { key: 'definicion',  t('ui.learn.definicion.title', 'Definición'),        icon: '📖', t('ui.learn.definicion.label', '¿Qué es?') },
-  { key: 'explicacion', t('ui.learn.explicacion.title', 'Explicación'),        icon: '🧠', t('ui.learn.explicacion.label', '¿Cómo funciona?') },
-  { key: 'ejemplos',    t('ui.learn.ejemplos.title', 'Ejemplos concretos'), icon: '💡', t('ui.learn.ejemplos.label', 'En la práctica') },
-  { key: 'antidotos',   t('ui.learn.antidotos.title', 'Antídotos'),          icon: '🛡️', t('ui.learn.antidotos.label', '¿Cómo mitigarlo?') },
+  { key: 'definicion',  title: 'Definición',        icon: '📖', label: '¿Qué es?' },
+  { key: 'explicacion', title: 'Explicación',        icon: '🧠', label: '¿Cómo funciona?' },
+  { key: 'ejemplos',    title: 'Ejemplos concretos', icon: '💡', label: 'En la práctica' },
+  { key: 'antidotos',   title: 'Antídotos',          icon: '🛡️', label: '¿Cómo mitigarlo?' },
 ];
 
 function learnBlockContent(s, step) {
@@ -1432,7 +1432,7 @@ function renderSesgoLearn() {
   c.innerHTML = `
     <div class="learn-topbar">
       <div class="learn-topbar-left">
-        <div class="learn-breadcrumb"><strong>${t(`sesgo.${s.id}.name`, s.name)}</strong> · ${block.icon} ${block.title}</div>
+        <div class="learn-breadcrumb"><strong>${t(`sesgo.${s.id}.name`, s.name)}</strong> · ${block.icon} ${t(`ui.learn.${block.key}.title`, block.title)}</div>
         <div class="learn-step-progress">
           ${LEARN_BLOCKS.map((_, i) => `<div class="learn-step-dot ${i === step ? 'active' : i < step ? 'done' : ''}"></div>`).join('')}
         </div>
@@ -1442,7 +1442,7 @@ function renderSesgoLearn() {
     <div class="learn-body">
       <div class="learn-hero">
         <div class="learn-block-tag ${s.tipo}">${tipoLabel}</div>
-        <div class="learn-block-step-label">${block.icon} ${block.label}</div>
+        <div class="learn-block-step-label">${block.icon} ${t(`ui.learn.${block.key}.label`, block.label)}</div>
         <h1 class="learn-title">${t(`sesgo.${s.id}.name`, s.name)}</h1>
       </div>
       <div class="learn-section">
@@ -2196,7 +2196,7 @@ function renderReport() {
     <div class="report-nav">
       <button class="btn-ghost" id="btn-rep-prev" ${step === 1 ? 'disabled' : ''}>${t('ui.report.nav-prev', '← Anterior')}</button>
       <span style="font-size:.82rem;color:var(--ink-4)">${t('ui.report.nav-step-of', `Paso ${step} de ${TOTAL}`, { step, total: TOTAL })}</span>
-      <button class="btn-cta" id="btn-rep-next" ${!touched ? 'disabled' : ''}>${isLast ? isLast ? t('ui.report.nav-finish', 'Volver al Dashboard →') : t('ui.report.nav-next', 'Siguiente →')}</button>
+      <button class="btn-cta" id="btn-rep-next" ${!touched ? 'disabled' : ''}>${isLast ? t('ui.report.nav-finish', 'Volver al Dashboard →') : t('ui.report.nav-next', 'Siguiente →')}</button>
     </div>`;
 
   const c = document.createElement('div');
