@@ -268,13 +268,13 @@ function ratingWidget(current, prompt) {
       <div class="rating-options">
         ${RATING_EMOJIS.map((e, i) => `
           <button class="rating-btn ${current === i + 1 ? 'selected' : ''}"
-            data-rating="${i + 1}" title="${RATING_LABELS[i]}">
+            data-rating="${i + 1}" title="${t(`ui.rating.level.${i}`, RATING_LABELS[i])}">
             <span class="rating-emoji">${e}</span>
             <span class="rating-num">${i + 1}</span>
           </button>
         `).join('')}
         <div class="rating-feedback-text ${current ? 'has-rating' : ''}">
-          ${current ? RATING_LABELS[current - 1] : t('ui.auth.rate-to-continue','califica para continuar')}
+          ${current ? t(`ui.rating.level.${current - 1}`, RATING_LABELS[current - 1]) : t('ui.auth.rate-to-continue','califica para continuar')}
         </div>
       </div>
     </div>
@@ -406,7 +406,7 @@ function renderAuthLogin() {
       <button class="btn-google" id="btn-google">${GOOGLE_SVG} ${t('ui.auth.btn-google','Continuar con Google')}</button>
       <div class="auth-divider"><span>${t('ui.auth.divider-or','o')}</span></div>
       <form id="auth-form" class="auth-form">
-        <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required>
+        <input type="email" name="email" placeholder="${t('ui.auth.placeholder-email','Correo electrónico')}" autocomplete="email" required>
         <input type="password" name="password" placeholder="${t('ui.auth.placeholder-password','Contraseña')}" autocomplete="current-password" required>
         <button class="btn-primary" type="submit">${t('ui.auth.btn-login','Entrar')}</button>
       </form>
@@ -424,7 +424,7 @@ function renderAuthLogin() {
 
 function renderAuthSignup() {
   authShell(`
-    <div class="auth-context">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>
+    <div class="auth-context">${t('ui.auth.login-context','Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques')}</div>
     <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">${t('ui.auth.signup-headline','Crear cuenta')}</h1>
     <p class="auth-sub">${t('ui.auth.signup-sub','Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.')}</p>
     ${authErrHtml()}
@@ -436,7 +436,7 @@ function renderAuthSignup() {
         <input type="checkbox" name="consent" required>
         <span>${t('ui.auth.consent-label','Acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.')}</span>
       </label>
-      <button class="btn-primary" type="submit">Crear cuenta</button>
+      <button class="btn-primary" type="submit">${t('ui.auth.btn-signup','Crear cuenta')}</button>
     </form>
     <div style="text-align:center;margin-top:.75rem">
       <button id="btn-to-login" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">${t('ui.auth.btn-to-login','¿Ya tienes cuenta? Inicia sesión')}</button>
@@ -496,7 +496,7 @@ function renderAuthMsg(type) {
   if (c.resend) {
     document.getElementById('btn-resend').addEventListener('click', async (btn) => {
       const el = document.getElementById('btn-resend');
-      el.disabled = true; el.textContent = 'Enviando…';
+      el.disabled = true; el.textContent = t('ui.auth.resend-sending','Enviando…');
       try {
         await resendConfirmation(state.pendingEmail);
         el.textContent = t('ui.auth.resend-done','✓ Correo enviado');
@@ -538,7 +538,7 @@ async function handleLoginSubmit(e) {
 async function handleSignupSubmit(e) {
   e.preventDefault();
   if (e.target.password.value !== e.target.password2.value) {
-    state.authError = 'Las contraseñas no coinciden.';
+    state.authError = t('ui.auth.passwords-mismatch','Las contraseñas no coinciden.');
     render();
     return;
   }
@@ -565,7 +565,7 @@ async function handleForgotSubmit(e) {
   e.preventDefault();
   const email = e.target.email.value.trim();
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Enviando…';
+  btn.disabled = true; btn.textContent = t('ui.auth.forgot-loading','Enviando…');
   try {
     await requestPasswordReset(email);
     state.pendingEmail = email;
@@ -581,7 +581,7 @@ async function handleForgotSubmit(e) {
 async function handleNewPasswordSubmit(e) {
   e.preventDefault();
   if (e.target.password.value !== e.target.password2.value) {
-    state.authError = 'Las contraseñas no coinciden.';
+    state.authError = t('ui.auth.passwords-mismatch','Las contraseñas no coinciden.');
     render();
     return;
   }
@@ -812,12 +812,12 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
                 const done = sesgos[s.id]?.done;
                 const locked = !bitDone;
                 const cls = done ? 'done' : locked ? 'locked' : 'active';
-                const tipoLabel = s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional') : s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional') s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional');
+                const tipoLabel = s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional');
                 return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
                   <div class="sesgo-num">${num}</div>
                   <div class="sesgo-info">
                     <div class="sesgo-name">${done ? t(`sesgo.${s.id}.name`, s.name) : t('ui.dash.sesgo-card-name-pending', 'Módulo {num}', { num })}</div>
-                    <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">${t('ui.dash.sesgo-locked-hint', '~5 min · se revela al completar')}</span>'}</div>
+                    <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · ${t('ui.dash.sesgo-clase', 'Clase {clase}', { clase: s.clase })}` : `<span class="sesgo-locked-hint">${t('ui.dash.sesgo-locked-hint', '~5 min · se revela al completar')}</span>`}</div>
                   </div>
                 </div>`;
               }).join('')}
@@ -825,7 +825,7 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
           </div>`;
       }).join('');
     })()}
-    ${bitDone && remaining > 0 ? `<div class="panel-tip">💡 Te faltan ~${remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.</div>` : ''}
+    ${bitDone && remaining > 0 ? `<div class="panel-tip">💡 ${t('ui.dash.panel-sesgos-tip', 'Te faltan ~{remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.', { remMin })}</div>` : ''}
   `;
 }
 
@@ -1099,7 +1099,7 @@ function renderBitResult() {
       <div class="result-hero-name" style="color:${profile.color}">${t(`profile.${result.primary}.name`, profile.name)}</div>
       <div class="result-hero-sub">${t(`profile.${result.primary}.tagline`, profile.tagline)}</div>
       <button class="btn-share-profile" id="btn-share-profile" title="Compartir mi perfil">
-        📤 Compartir mi perfil
+        📤 ${t('ui.bit.btn-share-profile', 'Compartir mi perfil')}
       </button>
       <div class="bit-step-indicator">
         <span class="bit-step${step===1?' active':' done'}">${t('ui.bit.step-indicator-1', '1 · Tu perfil')}</span>
@@ -1142,11 +1142,11 @@ function renderBitResult() {
         <div class="profile-id-slider" style="margin-top:1.25rem">
           <div class="slider-question">${t('ui.bit.slider-identify-question', '¿Qué tanto te identificas con este perfil?')} <span style="color:var(--danger,#B91C1C)">*</span></div>
           <div class="slider-row">
-            <span class="slider-end-label">Nada</span>
+            <span class="slider-end-label">${t('ui.bit.slider-end-none', 'Nada')}</span>
             <input type="range" id="slider-profile-fit" class="fit-slider" min="0" max="5" step="1" value="${state.bitProfileRating ?? 3}" style="accent-color:${profile.color}">
             <span class="slider-end-label">${t('ui.bit.slider-end-totally', 'Totalmente')}</span>
           </div>
-          <div class="slider-value-label" id="slider-fit-val">${SLIDER_LABELS[state.bitProfileRating ?? 3]}</div>
+          <div class="slider-value-label" id="slider-fit-val">${t(`ui.rating.slider.${state.bitProfileRating ?? 3}`, SLIDER_LABELS[state.bitProfileRating ?? 3])}</div>
           <div class="bit-gate-hint" id="bit-gate-hint-1">${t('ui.bit.gate-hint-slide-to-continue', 'Mueve el deslizador para continuar')}</div>
         </div>
       </div>
@@ -1180,11 +1180,11 @@ function renderBitResult() {
                   <div class="reco-text">${t(`profile.${result.primary}.recommendation.${i}`, r)}</div>
                   <div class="reco-rating-slider" data-idx="${i}">
                     <div class="slider-row">
-                      <span class="slider-end-label">Nada útil</span>
+                      <span class="slider-end-label">${t('ui.bit.reco-slider-end-useless', 'Nada útil')}</span>
                       <input type="range" class="fit-slider reco-slider" data-idx="${i}" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
-                      <span class="slider-end-label">Muy útil</span>
+                      <span class="slider-end-label">${t('ui.bit.reco-slider-end-very-useful', 'Muy útil')}</span>
                     </div>
-                    <div class="slider-value-label reco-slider-val" data-idx="${i}">${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : t('ui.bit.reco-slider-move-hint', 'Mueve el deslizador')}</div>
+                    <div class="slider-value-label reco-slider-val" data-idx="${i}">${state.bitRecoTouched[i] ? t(`ui.rating.slider.${val}`, SLIDER_LABELS[val]) : t('ui.bit.reco-slider-move-hint', 'Mueve el deslizador')}</div>
                   </div>
                 </div>
               </div>`;
@@ -1221,7 +1221,7 @@ function renderBitResult() {
     if (state.bitProfileRatingTouched) unlock();
     slider.addEventListener('input', () => {
       state.bitProfileRating = parseInt(slider.value);
-      sliderVal.textContent = SLIDER_LABELS[state.bitProfileRating];
+      sliderVal.textContent = t(`ui.rating.slider.${state.bitProfileRating}`, SLIDER_LABELS[state.bitProfileRating]);
       unlock();
     });
     nextBtn.addEventListener('click', () => {
@@ -1254,7 +1254,7 @@ function renderBitResult() {
         state.bitRecoRatings[idx] = v;
         state.bitRecoTouched[idx] = true;
         const lbl = document.querySelector(`.reco-slider-val[data-idx="${idx}"]`);
-        if (lbl) lbl.textContent = SLIDER_LABELS[v];
+        if (lbl) lbl.textContent = t(`ui.rating.slider.${v}`, SLIDER_LABELS[v]);
         checkUnlock();
       });
     });
@@ -1776,7 +1776,7 @@ async function renderSesgoResult() {
       state.resultRating = parseInt(btn.dataset.rating);
       document.querySelectorAll('#result-clarity-card .rating-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.rating) === state.resultRating));
       const txt = document.querySelector('#result-clarity-card .rating-feedback-text');
-      if (txt) { txt.textContent = RATING_LABELS[state.resultRating - 1]; txt.classList.add('has-rating'); }
+      if (txt) { txt.textContent = t(`ui.rating.level.${state.resultRating - 1}`, RATING_LABELS[state.resultRating - 1]); txt.classList.add('has-rating'); }
       document.getElementById('btn-back-dash').disabled = false;
       logQuestionFeedback([{ email: state.user.email, q_type: 'module_clarity', question_id: `${s.id}_clarity`, sesgo_id: s.id, rating: state.resultRating }]).catch(() => {});
     });
@@ -2095,7 +2095,7 @@ function renderReportStep5_Autoconciencia(sesgos) {
           <text x="12" y="${H/2}" font-size="11" fill="var(--ink-3)" transform="rotate(-90 12 ${H/2})" text-anchor="middle">${t('ui.report.scatter-y-label', '← Observado')}</text>
           ${items.map(it => {
             const color = it.category === 'calibrated' ? '#059669' : it.category === 'blind' ? '#DC2626' : '#D97706';
-            return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${t(`sesgo.${it.sesgo.id}.name`, it.sesgo.name)}: auto ${it.self}% / observado ${it.observed}%</title></circle>`;
+            return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${t(`sesgo.${it.sesgo.id}.name`, it.sesgo.name)}: ${t('ui.report.scatter-item-label', `auto ${it.self}% vs observado ${it.observed}%`, { self: it.self, observed: it.observed })}</title></circle>`;
           }).join('')}
         </svg>
       </div>
@@ -2189,7 +2189,7 @@ function renderReport() {
         <input type="range" id="rep-step-slider" class="fit-slider" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
         <span class="slider-end-label">${t('ui.report.slider-label-max', 'Muy útil')}</span>
       </div>
-      <div class="slider-value-label" id="rep-step-val">${touched ? SLIDER_LABELS[val] : t('ui.report.slider-move-hint', 'Mueve el deslizador para continuar')}</div>
+      <div class="slider-value-label" id="rep-step-val">${touched ? t(`ui.rating.slider.${val}`, SLIDER_LABELS[val]) : t('ui.report.slider-move-hint', 'Mueve el deslizador para continuar')}</div>
     </div>`;
 
   const navCard = `
@@ -2228,7 +2228,7 @@ function renderReport() {
     const v = parseInt(slider.value);
     state.reportStepRatings[step] = v;
     state.reportStepTouched[step] = true;
-    lbl.textContent = SLIDER_LABELS[v];
+    lbl.textContent = t(`ui.rating.slider.${v}`, SLIDER_LABELS[v]);
     nextBtn.disabled = false;
   });
 
@@ -2386,10 +2386,10 @@ function renderOnboarding() {
         <div class="onboarding-time-title">${t('ui.auth.onboarding-time-title','⏱ Alrededor de 2 horas en total')}</div>
         <div class="onboarding-time-body">${t('ui.auth.onboarding-time-body','No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.')}</div>
         <div class="onboarding-time-grid">
-          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-bit-lbl','Test BIT · perfil inversionista')}</span></div>
-          <div class="time-pill"><span class="time-pill-num">~5 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-sesgo-lbl','Cada módulo de sesgo (×15)')}</span></div>
-          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-informe-lbl','Informe final · 6 pasos')}</span></div>
-          <div class="time-pill"><span class="time-pill-num">~3 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-next-lbl','Próximos pasos')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">${t('ui.auth.onboarding-pill-bit-num','~10 min')}</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-bit-lbl','Test BIT · perfil inversionista')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">${t('ui.auth.onboarding-pill-sesgo-num','~5 min')}</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-sesgo-lbl','Cada módulo de sesgo (×15)')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">${t('ui.auth.onboarding-pill-informe-num','~10 min')}</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-informe-lbl','Informe final · 6 pasos')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">${t('ui.auth.onboarding-pill-next-num','~3 min')}</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-next-lbl','Próximos pasos')}</span></div>
         </div>
       </div>
 
@@ -2410,7 +2410,7 @@ function renderOnboarding() {
   app.appendChild(c);
   document.getElementById('btn-start-journey').addEventListener('click', async () => {
     const btn = document.getElementById('btn-start-journey');
-    btn.disabled = true; btn.textContent = 'Entrando…';
+    btn.disabled = true; btn.textContent = t('ui.auth.onboarding-btn-start-loading','Entrando…');
     try { await markOnboardingSeen(state.user.email); } catch(e) {}
     state.onboardingSeen = true;
     state.screen = 'dashboard';
