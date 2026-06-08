@@ -14,6 +14,18 @@ descartada**. Lo más reciente arriba.
 
 ---
 
+## 2026-06-07 — i18n Fase 1b deployada + diseño Fase 2 (pt-BR contenido)
+
+**Contexto:** Fase 1b verificada en navegador (Playwright headless, es-MX idéntico, 0 errores) y **deployada a prod** (master `684db4d`, merge ff que incluyó Fase 0+1a sin pushear). Luego arrancó el diseño de Fase 2 (pt-BR). Rama `feat/i18n-fase2`.
+
+- **Decisión:** Fase 2 traduce **solo el contenido** (880 filas ya cableadas); el UI chrome se difiere a **Fase 2b**. — **Por qué:** entregar pt-BR usable rápido; el chrome es superficie grande (~200 cadenas) y otra pasada. — **En vez de:** pt-BR completo (contenido+UI) de una (mucho más grande). Gap conocido: alumno pt-BR ve chrome en español (fallback evita vacíos).
+- **Decisión:** Traducciones generadas por Claude → **TSV `key|es-MX|pt-BR`** → Rodrigo (nativo) revisa/edita → siembra. — **Por qué:** es→pt es fuerte del LLM + revisión nativa rápida = calidad sin lentitud; human-in-the-loop antes de prod. — **En vez de:** sembrar sin revisión, o traducción profesional (más lenta).
+- **Decisión:** Selector **ES/PT en dashboard + login**; **auto-detect** navegador pt→pt-BR en 1ª visita (default es-MX); persiste en `localStorage 'fc_lang'` + `users.lang` (nueva `setUserLang`). — **Por qué:** audiencia = alumnos brasileños reales, necesitan auto-elegir fácil y que su elección los siga. — **En vez de:** selector solo en dashboard / sin auto-detect.
+
+**Artefactos:** spec [`docs/superpowers/specs/2026-06-07-i18n-fase2-design.md`](superpowers/specs/2026-06-07-i18n-fase2-design.md) · rama `feat/i18n-fase2`.
+
+---
+
 ## 2026-06-06 — Diseño i18n Fase 1b
 
 **Contexto:** Conectar la app a la tabla `translations` (ya sembrada en es-MX en Fase 1a)
