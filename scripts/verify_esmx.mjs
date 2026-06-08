@@ -21,6 +21,9 @@ await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const page = await browser.newPage({ viewport: { width: 1280, height: 1900 } });
+if (process.env.FORCE_LANG) {
+  await page.addInitScript((lang) => { try { localStorage.setItem('fc_lang', lang); } catch (_) {} }, process.env.FORCE_LANG);
+}
 const consoleErrors = [], pageErrors = [];
 page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
 page.on('pageerror', e => pageErrors.push(String(e.message || e)));
