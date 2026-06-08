@@ -292,6 +292,7 @@ function authShell(body) {
       </div>
       ${body}
       <div class="auth-footer">
+        ${langToggleHtml()}
         <a href="privacy.html" target="_blank" rel="noopener">Aviso de Privacidad</a>
       </div>
     </div>
