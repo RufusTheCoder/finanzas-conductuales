@@ -1,0 +1,338 @@
+key	es	pt
+ui.rating.slider.0	Nada	Nada
+ui.rating.slider.1	Muy poco	Muito pouco
+ui.rating.slider.2	Algo	Um pouco
+ui.rating.slider.3	Bastante	Bastante
+ui.rating.slider.4	Mucho	Muito
+ui.rating.slider.5	Totalmente	Totalmente
+ui.rating.level.0	muy baja	muito baixa
+ui.rating.level.1	baja	baixa
+ui.rating.level.2	regular	regular
+ui.rating.level.3	alta	alta
+ui.rating.level.4	muy alta	muito alta
+ui.auth.rate-to-continue	califica para continuar	avalie para continuar
+ui.auth.privacy-link	Aviso de Privacidad	Aviso de Privacidade
+ui.auth.error-bad-credentials	Correo o contraseña incorrectos.	E-mail ou senha incorretos.
+ui.auth.error-email-not-confirmed	Confirma tu correo electrónico antes de iniciar sesión.	Confirme seu e-mail antes de entrar.
+ui.auth.error-already-registered	Ya existe una cuenta con este correo. Inicia sesión.	Já existe uma conta com esse e-mail. Faça login.
+ui.auth.error-password-too-short	La contraseña debe tener al menos 6 caracteres.	A senha deve ter pelo menos 6 caracteres.
+ui.auth.error-rate-limit	Espera unos segundos antes de intentarlo de nuevo.	Aguarde alguns segundos antes de tentar novamente.
+ui.auth.error-unknown	Error desconocido. Intenta de nuevo.	Erro desconhecido. Tente novamente.
+ui.auth.login-context	Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques	Compilação do curso de Finanças Comportamentais · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques
+ui.auth.login-headline	Conoce tu mente<br><em>de inversionista</em>	Conheça sua mente<br><em>de investidor</em>
+ui.auth.login-sub	Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.	Explore 15 vieses que afetam suas decisões financeiras. Descubra seu perfil BIT e receba um relatório personalizado.
+ui.auth.btn-google	Continuar con Google	Continuar com o Google
+ui.auth.divider-or	o	ou
+ui.auth.placeholder-email	Correo electrónico	E-mail
+ui.auth.placeholder-password	Contraseña	Senha
+ui.auth.btn-login	Entrar	Entrar
+ui.auth.btn-forgot-password	¿Olvidaste tu contraseña?	Esqueceu sua senha?
+ui.auth.btn-to-signup	Crear cuenta →	Criar conta →
+ui.auth.signup-headline	Crear cuenta	Criar conta
+ui.auth.signup-sub	Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.	Acesse os 15 módulos de vieses e o seu perfil BIT personalizado.
+ui.auth.placeholder-new-password	Contraseña (mín. 6 caracteres)	Senha (mín. 6 caracteres)
+ui.auth.placeholder-confirm-password	Confirmar contraseña	Confirmar senha
+ui.auth.consent-label	Acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.	Aceito a <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidade</a> e o tratamento dos meus dados para fins educativos.
+ui.auth.btn-signup	Crear cuenta	Criar conta
+ui.auth.btn-to-login	¿Ya tienes cuenta? Inicia sesión	Já tem conta? Entrar
+ui.auth.forgot-headline	Recuperar contraseña	Recuperar senha
+ui.auth.forgot-sub	Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.	Digite seu e-mail e enviaremos um link para criar uma nova senha.
+ui.auth.btn-send-instructions	Enviar instrucciones	Enviar instruções
+ui.auth.btn-back	← Volver	← Voltar
+ui.auth.reset-sent-title	Revisa tu correo	Verifique seu e-mail
+ui.auth.reset-sent-body	Enviamos las instrucciones a <strong>{email}</strong>. Haz clic en el enlace del correo para crear tu nueva contraseña.	Enviamos as instruções para <strong>{email}</strong>. Clique no link do e-mail para criar sua nova senha.
+ui.auth.reset-sent-hint	No lo encuentras? Revisa la carpeta de spam.	Não encontrou? Verifique a pasta de spam.
+ui.auth.check-email-title	Confirma tu correo	Confirme seu e-mail
+ui.auth.check-email-body	Enviamos un enlace de confirmación a <strong>{email}</strong>. Haz clic en el enlace para activar tu cuenta y luego inicia sesión.	Enviamos um link de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta e depois entre.
+ui.auth.check-email-hint	No lo encuentras? Revisa spam o reenvía el correo.	Não encontrou? Verifique o spam ou reenvie o e-mail.
+ui.auth.btn-resend-confirmation	Reenviar correo de confirmación	Reenviar e-mail de confirmação
+ui.auth.btn-back-to-login	← Volver al inicio de sesión	← Voltar para o login
+ui.auth.resend-sending	Enviando…	Enviando…
+ui.auth.resend-done	✓ Correo enviado	✓ E-mail enviado
+ui.auth.resend-error	Error al reenviar	Erro ao reenviar
+ui.auth.new-password-headline	Nueva contraseña	Nova senha
+ui.auth.new-password-sub	Elige una nueva contraseña para tu cuenta.	Escolha uma nova senha para a sua conta.
+ui.auth.placeholder-new-password-set	Nueva contraseña (mín. 6 caracteres)	Nova senha (mín. 6 caracteres)
+ui.auth.btn-save-password	Guardar contraseña	Salvar senha
+ui.auth.login-loading	Entrando…	Entrando…
+ui.auth.passwords-mismatch	Las contraseñas no coinciden.	As senhas não coincidem.
+ui.auth.signup-loading	Creando cuenta…	Criando conta…
+ui.auth.forgot-loading	Enviando…	Enviando…
+ui.auth.new-password-loading	Guardando…	Salvando…
+ui.auth.signup-context	Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques	Compilação do curso de Finanças Comportamentais · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques
+ui.auth.onboarding-welcome-mark	Bienvenido	Bem-vindo
+ui.auth.onboarding-title	10 años compilados en una jornada de autoconocimiento	10 anos compilados em uma jornada de autoconhecimento
+ui.auth.onboarding-lead	Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.	Esta plataforma é uma versão interativa de 10 anos de estudo, observação e aplicação de finanças comportamentais — compilados em uma jornada de autoconhecimento para tomar decisões mais racionais.
+ui.auth.onboarding-time-title	⏱ Alrededor de 2 horas en total	⏱ Cerca de 2 horas no total
+ui.auth.onboarding-time-body	No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.	Você não precisa fazer tudo de uma vez. Todo o seu progresso é salvo automaticamente — pode pausar quando quiser e retomar depois, na mesma tela.
+ui.auth.onboarding-pill-bit-num	~10 min	~10 min
+ui.auth.onboarding-pill-bit-lbl	Test BIT · perfil inversionista	Test BIT · perfil de investidor
+ui.auth.onboarding-pill-sesgo-num	~5 min	~5 min
+ui.auth.onboarding-pill-sesgo-lbl	Cada módulo de sesgo (×15)	Cada módulo de viés (×15)
+ui.auth.onboarding-pill-informe-num	~10 min	~10 min
+ui.auth.onboarding-pill-informe-lbl	Informe final · 6 pasos	Relatório final · 6 etapas
+ui.auth.onboarding-pill-next-num	~3 min	~3 min
+ui.auth.onboarding-pill-next-lbl	Próximos pasos	Próximos passos
+ui.auth.onboarding-advice-title	Un consejo antes de empezar	Um conselho antes de começar
+ui.auth.onboarding-advice-body	Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.	Faça cada parte com calma e responda de forma consciente. Se sentir que não está concentrado, feche o aplicativo e continue depois — seu progresso estará intacto. Vale mais responder 3 perguntas bem do que 20 no automático.
+ui.auth.onboarding-feedback-note	<strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.	<strong>Esta é uma versão de testes.</strong> Você vai encontrar perguntas curtas de feedback — um slider, uma ou duas por tela. Pedimos desculpas pela insistência: cada resposta sua melhora a versão que os próximos participantes vão encontrar.
+ui.auth.onboarding-thanks	Gracias por prestar tu atención.	Obrigado pela sua atenção.
+ui.auth.onboarding-btn-start	Comenzar la jornada →	Começar a jornada →
+ui.auth.onboarding-btn-start-loading	Entrando…	Entrando…
+ui.journey.bit.label	Test BIT	Test BIT
+ui.journey.bit.short	BIT	BIT
+ui.journey.sesgos.label	Sesgos	Vieses
+ui.journey.sesgos.short	Sesgos	Vieses
+ui.journey.informe.label	Informe	Relatório
+ui.journey.informe.short	Informe	Relatório
+ui.journey.next.label	Próximos pasos	Próximos passos
+ui.journey.next.short	Próximos	Próximos
+ui.dash.nav-logo	Finanzas Conductuales	Finanças Comportamentais
+ui.dash.dark-mode-tooltip	Cambiar modo claro/oscuro	Alternar modo claro/escuro
+ui.dash.btn-logout	Salir	Sair
+ui.dash.email-verify-banner	Confirma tu correo electrónico para proteger el acceso a tu cuenta.	Confirme seu e-mail para proteger o acesso à sua conta.
+ui.dash.btn-resend	Reenviar →	Reenviar →
+ui.dash.hero-title	Hola, {name}	Olá, {name}
+ui.dash.hero-sub	Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.	Uma jornada em 4 etapas. Avance no seu ritmo — todo o progresso é salvo automaticamente.
+ui.dash.panel-bit-title	Etapa 1 · Test BIT	Etapa 1 · Teste BIT
+ui.dash.panel-bit-time	~10 min	~10 min
+ui.dash.panel-bit-sub	Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.	Descubra seu perfil como investidor (PP, FF, II ou AA) a partir de 20 perguntas sobre como você reage diante do dinheiro.
+ui.dash.bit-card-title	Behavioral Investor Type (BIT)	Behavioral Investor Type (BIT)
+ui.dash.bit-card-desc-pending	Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.	Identifique se você é Preservador, Seguidor Amigável, Independente ou Acumulador.
+ui.dash.bit-card-meta-questions	20 preguntas	20 perguntas
+ui.dash.bit-card-meta-time	~10 min	~10 min
+ui.dash.btn-bit-done	Ver resultado →	Ver resultado →
+ui.dash.btn-bit-start	Comenzar →	Começar →
+ui.dash.panel-bit-tip	Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.	Você pode pausar quando quiser — suas respostas são salvas ao avançar para a próxima.
+ui.dash.panel-sesgos-title	Etapa 2 · Sesgos	Etapa 2 · Vieses
+ui.dash.panel-sesgos-time	~5 min por módulo	~5 min por módulo
+ui.dash.panel-sesgos-sub-all-done	¡Los 15 módulos completados!	Os 15 módulos concluídos!
+ui.dash.panel-sesgos-sub-remaining.one	Te queda {remaining} módulo — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.	Falta {remaining} módulo — costumam levar ~5 min cada. Você pode fazê-los em sessões curtas.
+ui.dash.panel-sesgos-sub-remaining.other	Te quedan {remaining} módulos — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.	Faltam {remaining} módulos — costumam levar ~5 min cada. Você pode fazê-los em sessões curtas.
+ui.dash.panel-sesgos-sub-locked	Desbloquea esta etapa completando el Test BIT.	Desbloqueie esta etapa completando o Test BIT.
+ui.dash.sesgo-group-cognitivo	Errores Cognitivos	Erros Cognitivos
+ui.dash.sesgo-group-emocional	Sesgos Emocionales	Vieses Emocionais
+ui.dash.sesgo-group-dual	Cognitivo + Emocional	Cognitivo + Emocional
+ui.dash.sesgo-card-name-pending	Módulo {num}	Módulo {num}
+ui.dash.sesgo-tipo-cognitivo	Error Cognitivo	Erro Cognitivo
+ui.dash.sesgo-tipo-emocional	Sesgo Emocional	Viés Emocional
+ui.dash.sesgo-tipo-dual	Cognitivo + Emocional	Cognitivo + Emocional
+ui.dash.sesgo-clase	Clase {clase}	Aula {clase}
+ui.dash.sesgo-locked-hint	~5 min · se revela al completar	~5 min · revelado ao concluir
+ui.dash.panel-sesgos-tip	Te faltan ~{remMin} min en total. Un módulo por sesión basta — el progreso se guarda solo.	Faltam ~{remMin} min no total. Um módulo por sessão é suficiente — o progresso é salvo automaticamente.
+ui.dash.panel-informe-title	Etapa 3 · Informe Final	Etapa 3 · Relatório Final
+ui.dash.panel-informe-time	~10 min	~10 min
+ui.dash.panel-informe-sub-locked	Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.	Você desbloqueia o relatório ao concluir o Test BIT e os 15 módulos de vieses.
+ui.dash.panel-informe-locked-msg	Bloqueado hasta completar las dos etapas anteriores.	Bloqueado até completar as duas etapas anteriores.
+ui.dash.panel-informe-sub-unlocked	Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.	Seu perfil BIT cruzado com os resultados viés a viés. 6 etapas — mecanismos, severidade, autoconsciência e matriz de decisão.
+ui.dash.report-cta-title	¡Completaste todos los módulos!	Você completou todos os módulos!
+ui.dash.report-cta-sub	Recomendaciones personalizadas y acciones que puedes empezar mañana.	Recomendações personalizadas e ações que você pode começar amanhã.
+ui.dash.btn-report	Ver mi Informe Final →	Ver meu Relatório Final →
+ui.dash.panel-informe-tip	Puedes volver al informe cuando quieras — está siempre disponible aquí.	Você pode voltar ao relatório quando quiser — está sempre disponível aqui.
+ui.dash.panel-next-title	Etapa 4 · Próximos pasos	Etapa 4 · Próximos passos
+ui.dash.panel-next-time	~3 min	~3 min
+ui.dash.panel-next-sub-locked	La última etapa: contarnos qué te gustaría hacer a partir de aquí.	A última etapa: nos contar o que você gostaria de fazer a partir daqui.
+ui.dash.panel-next-locked-msg	Disponible después de ver tu informe final.	Disponível após ver seu relatório final.
+ui.dash.panel-next-sub-done	Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.	Você já nos contou o que te interessa — obrigado. Pode revisar ou atualizar sua seleção.
+ui.dash.panel-next-sub-pending	Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.	Conte o que você gostaria de fazer a partir daqui. 8 opções, marque todas as que se aplicam.
+ui.dash.next-cta-title-done	Revisar mis respuestas	Revisar minhas respostas
+ui.dash.next-cta-title-pending	¿Qué sigue para ti?	O que vem a seguir para você?
+ui.dash.next-cta-sub-done	Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.	Ver estatísticas consolidadas do que os outros participantes escolheram e agendar comigo.
+ui.dash.next-cta-sub-pending	Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.	Marque o que te interessa, adicione suas próprias ideias e agende 15 min comigo se puder.
+ui.dash.btn-next-done	Ver mis respuestas →	Ver minhas respostas →
+ui.dash.btn-next-pending	Continuar →	Continuar →
+ui.dash.resend-sending	Enviando…	Enviando…
+ui.dash.resend-sent	✓ Enviado	✓ Enviado
+ui.dash.resend-error	Error	Erro
+ui.bit.quiz-label	Test BIT · Perfil de Inversionista	Test BIT · Perfil de Investidor
+ui.bit.test-completed-heading	¡Test completado!	Test concluído!
+ui.bit.test-completed-body	Respondiste las {total} preguntas. Calcula tu perfil BIT.	Você respondeu as {total} perguntas. Calcule seu perfil BIT.
+ui.bit.btn-calculate	Calcular mi perfil →	Calcular meu perfil →
+ui.bit.time-hint	⏱ ~{minutes} min restantes · puedes pausar cuando quieras	⏱ ~{minutes} min restantes · você pode pausar quando quiser
+ui.bit.btn-exit	✕ Salir	✕ Sair
+ui.bit.rating-prompt-question	¿cómo calificarías esta pregunta?	como você avaliaria esta pergunta?
+ui.bit.btn-back	← Anterior	← Anterior
+ui.bit.btn-next-finish	Finalizar →	Finalizar →
+ui.bit.btn-next	Siguiente →	Próxima →
+ui.bit.exit-confirm	¿Salir? Tu progreso del BIT se perderá.	Sair? Seu progresso no BIT será perdido.
+ui.bit.disclaimer-title	¿Qué es — y qué no es — un perfil BIT?	O que é — e o que não é — um perfil BIT?
+ui.bit.disclaimer-body-1	Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.	Seu perfil é uma <strong>tendência dominante</strong>, não um rótulo fixo. É a combinação de mecanismos que mais provavelmente distorce suas decisões financeiras — mas todas as pessoas têm um pouco dos 4 perfis.
+ui.bit.disclaimer-body-2	<strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.	<strong>Limitações:</strong> o BIT captura padrões com base nas suas respostas a ~20 perguntas. Não prevê resultados de investimento nem substitui assessoria. Seu perfil pode mudar com experiência, idade ou contexto.
+ui.bit.result-hero-tag	Tu perfil conductual como inversionista	Seu perfil comportamental como investidor
+ui.bit.btn-share-profile	Compartir mi perfil	Compartilhar meu perfil
+ui.bit.step-indicator-1	1 · Tu perfil	1 · Seu perfil
+ui.bit.step-indicator-2	2 · Sesgos y plan	2 · Vieses e plano
+ui.bit.scores-card-title	Puntuaciones por tipo	Pontuações por tipo
+ui.bit.profile-card-title	Tu perfil principal	Seu perfil principal
+ui.bit.secondary-profile-label	Perfil secundario:	Perfil secundário:
+ui.bit.slider-identify-question	¿Qué tanto te identificas con este perfil?	O quanto você se identifica com este perfil?
+ui.bit.slider-end-none	Nada	Nada
+ui.bit.slider-end-totally	Totalmente	Totalmente
+ui.bit.gate-hint-slide-to-continue	Mueve el deslizador para continuar	Mova o controle para continuar
+ui.bit.step-counter-1	Paso 1 de 2	Passo 1 de 2
+ui.bit.btn-next-result	Siguiente →	Próximo →
+ui.bit.biases-card-title	Sesgos predominantes en tu perfil	Vieses predominantes no seu perfil
+ui.bit.recos-card-title	Recomendaciones para tu perfil	Recomendações para o seu perfil
+ui.bit.recos-rating-instruction	Valora qué tan útil te parece cada recomendación	Avalie o quanto cada recomendação é útil para você
+ui.bit.reco-slider-end-useless	Nada útil	Nada útil
+ui.bit.reco-slider-end-very-useful	Muy útil	Muito útil
+ui.bit.reco-slider-move-hint	Mueve el deslizador	Mova o controle deslizante
+ui.bit.gate-hint-rate-recos	Valora las {total} recomendaciones para continuar	Avalie as {total} recomendações para continuar
+ui.bit.btn-back-result	← Atrás	← Voltar
+ui.bit.btn-go-dashboard	Ir al Dashboard →	Ir ao Dashboard →
+ui.bit.gate-hint-recos-remaining	Faltan {remaining} recomendación(es) por valorar	Faltam {remaining} recomendação(ões) para avaliar
+ui.sesgo.quiz-step-label	¿Cómo decides tú? · {index} de {total}	Como você decide? · {index} de {total}
+ui.sesgo.btn-back	← Anterior	← Anterior
+ui.sesgo.btn-next	Siguiente →	Próxima →
+ui.sesgo.btn-continue	Continuar →	Continuar →
+ui.sesgo.confirm-exit	¿Salir del módulo?	Sair do módulo?
+ui.learn.definicion.title	Definición	Definição
+ui.learn.definicion.label	¿Qué es?	O que é?
+ui.learn.explicacion.title	Explicación	Explicação
+ui.learn.explicacion.label	¿Cómo funciona?	Como funciona?
+ui.learn.ejemplos.title	Ejemplos concretos	Exemplos concretos
+ui.learn.ejemplos.label	En la práctica	Na prática
+ui.learn.antidotos.title	Antídotos	Antídotos
+ui.learn.antidotos.label	¿Cómo mitigarlo?	Como mitigar?
+ui.sesgo.trap-question-prefix	La trampa del cuestionario:	A armadilha do questionário:
+ui.sesgo.tipo-cognitivo	Error Cognitivo	Erro Cognitivo
+ui.sesgo.tipo-emocional	Sesgo Emocional	Viés Emocional
+ui.sesgo.tipo-mixto	Error Cognitivo + Sesgo Emocional	Erro Cognitivo + Viés Emocional
+ui.sesgo.learn-blocks-counter	{step} de {total} bloques	{step} de {total} blocos
+ui.sesgo.btn-learn-verify	Preguntas de verificación →	Perguntas de verificação →
+ui.sesgo.fixation-step-label	Verificación · {index} de {total}	Verificação · {index} de {total}
+ui.sesgo.btn-fixation-last	Ver mis resultados →	Ver meus resultados →
+ui.sesgo.self-assess-label	Autoevaluación	Autoavaliação
+ui.sesgo.self-assess-prompt	Antes de ver tus resultados: ¿qué tanto crees que {name} te afecta?	Antes de ver seus resultados: o quanto você acha que {name} te afeta?
+ui.sesgo.self-assess-explanation	Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.	Sua resposta será comparada com o que suas respostas anteriores sugerem. Não existe resposta certa — o objetivo é calibrar sua autoconsciência.
+ui.sesgo.slider-label-none	0% — nada	0% — nada
+ui.sesgo.slider-label-much	100% — mucho	100% — muito
+ui.sesgo.slider-placeholder	Mueve el deslizador	Mova o slider
+ui.sesgo.btn-see-results	Ver mis resultados →	Ver meus resultados →
+ui.sesgo.result-hero-name	Tu diagnóstico	Seu diagnóstico
+ui.sesgo.result-hero-sub	Tus decisiones vs. lo que haría el inversor racional	Suas decisões vs. o que faria o investidor racional
+ui.sesgo.result-intensity-no-detected	No detectado	Não detectado
+ui.sesgo.result-intensity-leve	Tendencia leve	Tendência leve
+ui.sesgo.result-intensity-moderada	Tendencia moderada	Tendência moderada
+ui.sesgo.result-intensity-dominante	Sesgo dominante	Viés dominante
+ui.sesgo.result-desc-no-detected	En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.	Nos cenários, você tomou as decisões mais racionais. Este viés não parece dominante em você.
+ui.sesgo.result-desc-leve	Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.	Aparece em situações específicas. Fique atento quando estiver sob pressão ou incerteza.
+ui.sesgo.result-desc-moderada	Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.	Presente em vários dos seus cenários. Vale a pena trabalhar ativamente nisso.
+ui.sesgo.result-desc-dominante	Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.	Apareceu de forma consistente nas suas decisões. É um dos seus pontos cegos mais importantes.
+ui.sesgo.result-biased-responses	respuestas sesgadas	respostas enviesadas
+ui.sesgo.result-card-verification	Verificación conceptual	Verificação conceitual
+ui.sesgo.result-fix-perfect	¡Perfecto!	Perfeito!
+ui.sesgo.result-fix-good	Bien	Bom
+ui.sesgo.result-fix-keep-practicing	Sigue practicando	Continue praticando
+ui.sesgo.result-correct-questions	preguntas correctas	perguntas corretas
+ui.sesgo.result-card-review	Revisión de tus respuestas	Revisão das suas respostas
+ui.sesgo.result-situation	Situación {n}	Situação {n}
+ui.sesgo.result-card-clarity	¿Qué tan claro te quedó el concepto?	O quanto o conceito ficou claro para você?
+ui.sesgo.btn-back-dashboard	Volver al Dashboard →	Voltar ao Dashboard →
+ui.report.step1-label	Paso 1 · Tu perfil BIT	Passo 1 · Seu perfil BIT
+ui.report.step1-title	Así es como tomas decisiones financieras	É assim que você toma decisões financeiras
+ui.report.step1-disclaimer	<strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.	<strong>Um perfil é uma tendência, não uma sentença.</strong> Resume padrões nas suas respostas — mas todos mostramos traços de vários perfis em momentos distintos. Use-o como mapa, não como rótulo.
+ui.report.step2-label	Paso 2 · Plan de acción	Passo 2 · Plano de ação
+ui.report.step2-title	Si solo haces UNA cosa, haz esta	Se você fizer APENAS UMA coisa, faça esta
+ui.report.step2-intro	Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil {profileLabel} con los sesgos que observamos en tus respuestas.	Esses antídotos estão classificados por cobertura dos <strong>seus mecanismos de maior risco</strong>, combinando seu perfil {profileLabel} com os vieses que observamos nas suas respostas.
+ui.report.antidoto-top1-badge	Tu antídoto #1	Seu antídoto #1
+ui.report.antidoto-coverage	Cubre {pct}% de tu peso sesgado	Cobre {pct}% do seu peso enviesado
+ui.report.antidoto-what-label	¿Qué es?	O que é?
+ui.report.antidoto-how-label	¿Cómo se implementa?	Como se implementa?
+ui.report.antidoto-others-title	Tus otros 2 antídotos de mayor retorno:	Seus outros 2 antídotos de maior retorno:
+ui.report.antidoto-coverage-other	Cubre {pct}% de tu peso sesgado	Cobre {pct}% do seu peso enviesado
+ui.report.antidoto-what-label-sm	¿Qué es?	O que é?
+ui.report.antidoto-how-label-sm	¿Cómo se implementa?	Como se implementa?
+ui.report.step3-label	Paso 3 · Severidad por mecanismo	Passo 3 · Severidade por mecanismo
+ui.report.step3-title	Qué mecanismos te tuercen las decisiones	Quais mecanismos distorcem suas decisões
+ui.report.step3-intro	Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.	Seus 15 vieses agrupados pelos 5 mecanismos cerebrais que os geram. A intensidade de cada mecanismo é a <strong>média dos seus vieses</strong>. O ranking mostra <em>onde</em> atacar, não só <em>o quê</em>.
+ui.report.conclusion-label	Conclusión	Conclusão
+ui.report.conclusion-dominant-clear	Tu sistema cognitivo está <strong>claramente dominado por <strong>{mech}</strong> ({pct}%)</strong>. Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.	Seu sistema cognitivo está <strong>claramente dominado por <strong>{mech}</strong> ({pct}%)</strong>. É aí onde suas decisões se distorcem com mais consistência — e onde os antídotos do Passo 2 rendem mais.
+ui.report.conclusion-dominant-moderate	<strong>{mech1}</strong> ({pct1}%) es tu mecanismo más fuerte, seguido de cerca por <strong>{mech2}</strong> ({pct2}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.	<strong>{mech1}</strong> ({pct1}%) é seu mecanismo mais forte, seguido de perto por <strong>{mech2}</strong> ({pct2}%). Os dois se reforçam mutuamente — trabalhá-los juntos multiplica o efeito.
+ui.report.conclusion-tied	Tienes varios mecanismos en tensión parecida ({mech1} {pct1}% · {mech2} {pct2}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.	Você tem vários mecanismos em tensão parecida ({mech1} {pct1}% · {mech2} {pct2}%). Não há um único ponto cego — as decisões se distorcem por várias frentes, então convém um portfólio de antídotos em vez de um só.
+ui.report.conclusion-incomplete	Aún no hay suficientes módulos completados para concluir.	Ainda não há módulos suficientes concluídos para chegar a uma conclusão.
+ui.report.sev-group-meta.one	{count} sesgo de este mecanismo · nivel {level}	{count} viés deste mecanismo · nível {level}
+ui.report.sev-group-meta.other	{count} sesgos de este mecanismo · nivel {level}	{count} vieses deste mecanismo · nível {level}
+ui.report.step3-footnote	Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.	Cada % é a proporção de respostas enviesadas naquele módulo. O mecanismo é a média simples dos seus vieses com dados.
+ui.report.step4-label	Paso 4 · Mecanismos	Passo 4 · Mecanismos
+ui.report.step4-title	Los 5 sistemas detrás de tus sesgos	Os 5 sistemas por trás dos seus vieses
+ui.report.step4-intro	Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.	Cada viés nasce de 1 de 5 mecanismos cerebrais. Agrupando <strong>seus 15 vieses por mecanismo</strong>, você vê qual sistema cognitivo domina você.
+ui.report.mec-dominant-label	Tu mecanismo dominante	Seu mecanismo dominante
+ui.report.mec-desc-what-label	Qué es este mecanismo	O que é este mecanismo
+ui.report.mec-desc-relation-label	Cómo se relaciona con tus sesgos	Como se relaciona com seus vieses
+ui.report.mec-biases-label	Tus sesgos en este mecanismo:	Seus vieses neste mecanismo:
+ui.report.step5-label	Paso 5 · Autoconciencia	Passo 5 · Autoconsciência
+ui.report.step5-title-empty	Comparación entre tu autoevaluación y tus respuestas	Comparação entre sua autoavaliação e suas respostas
+ui.report.step5-empty-body	Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.	Você ainda não tem autoavaliações salvas nos seus módulos. Esta seção é ativada quando você conclui os módulos incluindo a pergunta final de autoavaliação.
+ui.report.step5-title	¿Qué tan bien te conoces?	O quanto você se conhece?
+ui.report.step5-intro	Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.	Comparamos <strong>o que você disse que te afeta</strong> (eixo X) com <strong>o que suas respostas mostram</strong> (eixo Y). A diagonal é a calibração perfeita. Pontos acima = você se subestima. Pontos abaixo = você se superestima.
+ui.report.scatter-x-label	Tu autoevaluación →	Sua autoavaliação →
+ui.report.scatter-y-label	← Observado	← Observado
+ui.report.blind-spots-title	Puntos ciegos ({count})	Pontos cegos ({count})
+ui.report.blind-spots-sub	Te afectan más de lo que crees	Te afetam mais do que você imagina
+ui.report.scatter-item-label	auto {self}% vs observado {observed}%	auto {self}% vs observado {observed}%
+ui.report.blind-spots-empty	Ninguno — buena calibración por el lado de la subestimación.	Nenhum — boa calibração pelo lado da subestimação.
+ui.report.overestimated-title	Sobreestimados ({count})	Superestimados ({count})
+ui.report.overestimated-sub	Crees que te afectan más de lo que realmente aparece	Você acha que te afetam mais do que realmente aparece
+ui.report.overestimated-empty	Ninguno.	Nenhum.
+ui.report.calibrated-title	Bien calibrado ({count})	Bem calibrado ({count})
+ui.report.calibrated-sub	Tu autoevaluación coincide con las respuestas (±15 pp)	Sua autoavaliação coincide com as respostas (±15 pp)
+ui.report.calibrated-empty	Aún no tienes sesgos calibrados.	Você ainda não tem vieses calibrados.
+ui.report.awareness-score	Score de autoconciencia: <strong>{calibrated}/{total}</strong> sesgos bien calibrados	Score de autoconsciência: <strong>{calibrated}/{total}</strong> vieses bem calibrados
+ui.report.aw-list-item-detail	· auto {self}% vs observado {observed}%	· auto {self}% vs observado {observed}%
+ui.report.step6-label	Paso 6 · Matriz de decisión	Passo 6 · Matriz de decisão
+ui.report.step6-title	Situaciones reales: tu tendencia vs. lo racional	Situações reais: sua tendência vs. o racional
+ui.report.step6-intro	Tres escenarios típicos donde tu perfil <strong>{profileLabel}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.	Três cenários típicos onde seu perfil <strong>{profileLabel}</strong> reage de um jeito — e como seria a resposta racional. Use como checklist quando a situação aparecer.
+ui.report.matrix-tendency-label	Tu tendencia	Sua tendência
+ui.report.matrix-rational-label	Respuesta racional	Resposta racional
+ui.report.nav-logo	Finanzas Conductuales	Finanças Comportamentais
+ui.report.nav-back	← Dashboard	← Dashboard
+ui.report.header-logo	Informe Final	Relatório Final
+ui.report.header-title	Tu perfil conductual como inversionista	Seu perfil comportamental como investidor
+ui.report.time-hint	⏱ 6 pasos · ~{min} min restantes · puedes volver cuando quieras	⏱ 6 passos · ~{min} min restantes · você pode voltar quando quiser
+ui.report.feedback-title	¿Qué tan útil te pareció esta información?	Quão útil você achou essa informação?
+ui.report.slider-label-min	Nada útil	Nada útil
+ui.report.slider-label-max	Muy útil	Muito útil
+ui.report.slider-move-hint	Mueve el deslizador para continuar	Mova o controle para continuar
+ui.report.nav-prev	← Anterior	← Anterior
+ui.report.nav-step-of	Paso {step} de {total}	Passo {step} de {total}
+ui.report.nav-next	Siguiente →	Próximo →
+ui.report.nav-finish	Volver al Dashboard →	Voltar ao Dashboard →
+ui.next.loading	Cargando…	Carregando…
+ui.next.nav_back	← Dashboard	← Dashboard
+ui.next.nav_logout	Salir	Sair
+ui.next.time_badge	⏱ ~3 min · última etapa	⏱ ~3 min · última etapa
+ui.next.title	Próximos pasos	Próximos passos
+ui.next.intro	Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.	Você concluiu a jornada completa. Me conte o que gostaria de fazer a partir daqui — marque tudo o que se aplica.
+ui.next.card_interests_title	Lo que me interesa	O que me interessa
+ui.next.other_label	Otros · lo que quieras contarme	Outros · o que você quiser me contar
+ui.next.other_placeholder	Ideas, sugerencias, temas que te interesan…	Ideias, sugestões, temas que te interessam…
+ui.next.btn_update	Actualizar respuestas	Atualizar respostas
+ui.next.btn_save	Guardar y ver resultados →	Salvar e ver resultados →
+ui.next.card_others_title	Qué eligen los demás participantes	O que os outros participantes escolhem
+ui.next.card_others_sub	Respuestas consolidadas — así ves dónde se concentra el interés del grupo.	Respostas consolidadas — veja onde se concentra o interesse do grupo.
+ui.next.calendly_title	Un pedido sincero	Um pedido sincero
+ui.next.calendly_body1	No hay nada más importante en esta etapa que esos 15 minutos. Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.	Não há nada mais importante nesta etapa do que esses 15 minutos. Preciso ouvir como foi para você, o que funcionou, o que atrapalhou, o que faltou. Sua experiência direta é a única forma de saber o que precisa melhorar.
+ui.next.calendly_body2	Si puedes regalarme ese rato, estaría muy agradecido.	Se você puder me dar esse tempo, ficaria muito agradecido.
+ui.next.calendly_cta	Agendar 30 min con Rodrigo →	Agendar 30 min com Rodrigo →
+ui.next.calendly_sub	Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min	Abre em uma nova janela · calendly.com/rodrigo-pandava/30min
+ui.next.btn_saving	Guardando…	Salvando…
+ui.next.btn_retry	Reintentar	Tentar novamente
+ui.bug.fab_title	Reportar un problema	Reportar um problema
+ui.bug.fab_label	Clic aquí para reportar un problema	Clique aqui para reportar um problema
+ui.bug.modal_title	Reportar un problema	Reportar um problema
+ui.bug.modal_sub	Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.	Me conte brevemente o que você viu. Vai direto para mim — obrigado por me ajudar a aprimorar a plataforma.
+ui.bug.field_title_label	Título	Título
+ui.bug.field_title_placeholder	ej. El botón no responde	ex.: O botão não responde
+ui.bug.field_desc_label	Descripción	Descrição
+ui.bug.field_desc_placeholder	¿Qué esperabas? ¿Qué pasó en vez?	O que você esperava? O que aconteceu em vez disso?
+ui.bug.btn_cancel	Cancelar	Cancelar
+ui.bug.btn_send	Enviar	Enviar
+ui.bug.btn_sending	Enviando…	Enviando…
+ui.bug.status_ok	✓ Reporte enviado. Gracias.	✓ Reporte enviado. Obrigado.
+ui.bug.status_err	No se pudo enviar. Intenta de nuevo.	Não foi possível enviar. Tente novamente.
+ui.bug.btn_send_reset	Enviar	Enviar
+ui.toast.window_error	Ocurrió un problema técnico. Ya recibimos el reporte.	Ocorreu um problema técnico. Já recebemos o relatório.
+ui.toast.unhandled_rejection	Algo no salió bien. Vuelve a intentarlo en unos segundos.	Algo não saiu como esperado. Tente novamente em alguns segundos.
+ui.toast.share_ok	Enlace copiado al portapapeles.	Link copiado para a área de transferência.
+ui.toast.share_err	No se pudo copiar. Copia manualmente: {url}	Não foi possível copiar. Copie manualmente: {url}
