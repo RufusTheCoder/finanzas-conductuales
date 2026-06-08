@@ -14,6 +14,19 @@ descartada**. Lo más reciente arriba.
 
 ---
 
+## 2026-06-07 — Fase 2 (pt-BR) deployada + diseño Fase 2b (UI chrome)
+
+**Contexto:** Fase 2 (contenido pt-BR) deployada a prod (`9ab132a..fa7df78`, live `?v=20260607a`, 880 linhas pt-BR, verificada). Durante la ejecución surgieron 2 correcciones de localización del usuario; luego se diseñó Fase 2b (chrome). Rama `feat/i18n-fase2b`.
+
+- **Decisión (Fase 2, ejecución):** valores en **pesos → reais** (câmbio 0,29, redondeado limpio; abstractos como precios de acción mantienen dígitos; Madoff = US$ 65 bi histórico) e **instrumentos MX → BR** (Cetesdirecto/Cetes/SOFIPOS → **Tesouro Direto/CDBs**). — **Por qué:** localización real para alumnos brasileños, no solo traducción literal. — **En vez de:** dejar pesos/instrumentos mexicanos (incoherente para BR).
+- **Decisión (siembra):** 880 filas no entran como SQL literal en el MCP → **política RLS temporal acotada** (`anon INSERT WHERE lang='pt-BR'`) + REST batch por script + DROP. — **Por qué:** evita transcribir ~220 KB (error-prone); el script envía bytes exactos. — **En vez de:** pegar SQL gigante (riesgo de corrupción silenciosa de texto).
+- **Decisión (Fase 2b):** interpolación vía **placeholders `{nombre}`** extendiendo `t()` (Opción A), para traducir chrome dinámico (contadores, "Paso N de M", frases del informe). — **Por qué:** la mayoría del chrome lleva variables; sin esto, B dejaría medio chrome en español. — **En vez de:** traducir solo strings 100% estáticos.
+- **Decisión (Fase 2b):** alcance = **todo el chrome del alumno** (`app.js`); dominio `ui.*`. FUERA: `admin.js`, `privacy.html`. — **Por qué:** pt-BR completo para el alumno; admin es solo del dueño.
+
+**Artefactos:** spec [`docs/superpowers/specs/2026-06-07-i18n-fase2b-design.md`](superpowers/specs/2026-06-07-i18n-fase2b-design.md) · ramas `feat/i18n-fase2` (mergeada), `feat/i18n-fase2b`.
+
+---
+
 ## 2026-06-07 — i18n Fase 1b deployada + diseño Fase 2 (pt-BR contenido)
 
 **Contexto:** Fase 1b verificada en navegador (Playwright headless, es-MX idéntico, 0 errores) y **deployada a prod** (master `684db4d`, merge ff que incluyó Fase 0+1a sin pushear). Luego arrancó el diseño de Fase 2 (pt-BR). Rama `feat/i18n-fase2`.
