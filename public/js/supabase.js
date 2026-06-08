@@ -242,11 +242,22 @@ export async function getUserProfile(email) {
 
 // ── i18n ────────────────────────────────
 // translations has a public-read RLS policy, so the anon key suffices.
+// PostgREST caps each response at 1000 rows, but a language now has >1000 rows
+// (content + ui.*), so we page through with limit/offset until exhausted.
+// Explicit order keeps the paging stable (no skipped/duplicated rows).
 export async function fetchTranslations(lang) {
-  return request(
-    `/rest/v1/translations?lang=eq.${encodeURIComponent(lang)}&select=key,text`,
-    'GET', null, {}, 'fetchTranslations'
-  );
+  const PAGE = 1000;
+  const all = [];
+  for (let offset = 0; ; offset += PAGE) {
+    const page = await request(
+      `/rest/v1/translations?lang=eq.${encodeURIComponent(lang)}&select=key,text&order=key.asc&limit=${PAGE}&offset=${offset}`,
+      'GET', null, {}, 'fetchTranslations'
+    );
+    if (!Array.isArray(page) || page.length === 0) break;
+    all.push(...page);
+    if (page.length < PAGE) break;
+  }
+  return all;
 }
 
 // ── Next Steps ──────────────────────────
