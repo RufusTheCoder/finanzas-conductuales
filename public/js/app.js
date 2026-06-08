@@ -257,9 +257,9 @@ const GOOGLE_SVG = `<svg width="18" height="18" viewBox="0 0 18 18"><path fill="
 const FACEBOOK_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.88 11.85v-8.38H7.08V12h3.04V9.36c0-3 1.79-4.67 4.53-4.67 1.31 0 2.68.23 2.68.23v2.95h-1.51c-1.49 0-1.95.92-1.95 1.87V12h3.33l-.53 3.47h-2.8v8.38A12 12 0 0 0 24 12z"/></svg>`;
 const APPLE_SVG = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.88-3.08.41-1.09-.47-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.41C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.32-.89 3.51-.84 1.54.07 2.7.64 3.44 1.77-3.14 1.88-2.29 5.13.57 6.26-.65 1.7-1.51 3.38-2.6 4.98zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>`;
 
-const SLIDER_LABELS = ['Nada', 'Muy poco', 'Algo', 'Bastante', 'Mucho', 'Totalmente'];
+const SLIDER_LABELS = ['Nada', t('ui.rating.slider.1','Muy poco'), t('ui.rating.slider.2','Algo'), t('ui.rating.slider.3','Bastante'), t('ui.rating.slider.4','Mucho'), t('ui.rating.slider.5','Totalmente')];
 const RATING_EMOJIS = ['😵', '😕', '😐', '😊', '🤩'];
-const RATING_LABELS = ['muy baja', 'baja', 'regular', 'alta', 'muy alta'];
+const RATING_LABELS = ['muy baja', t('ui.rating.level.1','baja'), t('ui.rating.level.2','regular'), t('ui.rating.level.3','alta'), t('ui.rating.level.4','muy alta')];
 
 function ratingWidget(current, prompt) {
   return `
@@ -274,7 +274,7 @@ function ratingWidget(current, prompt) {
           </button>
         `).join('')}
         <div class="rating-feedback-text ${current ? 'has-rating' : ''}">
-          ${current ? RATING_LABELS[current - 1] : 'califica para continuar'}
+          ${current ? RATING_LABELS[current - 1] : t('ui.auth.rate-to-continue','califica para continuar')}
         </div>
       </div>
     </div>
@@ -293,7 +293,7 @@ function authShell(body) {
       ${body}
       <div class="auth-footer">
         ${langToggleHtml()}
-        <a href="privacy.html" target="_blank" rel="noopener">Aviso de Privacidad</a>
+        <a href="privacy.html" target="_blank" rel="noopener">${t('ui.auth.privacy-link','Aviso de Privacidad')}</a>
       </div>
     </div>
   `;
@@ -306,12 +306,12 @@ function authErrHtml() {
 }
 
 function mapAuthError(msg = '') {
-  if (msg.includes('Invalid login credentials'))          return 'Correo o contraseña incorrectos.';
-  if (msg.includes('Email not confirmed'))                return 'Confirma tu correo electrónico antes de iniciar sesión.';
-  if (msg.includes('User already registered'))            return 'Ya existe una cuenta con este correo. Inicia sesión.';
-  if (msg.includes('Password should be at least'))        return 'La contraseña debe tener al menos 6 caracteres.';
-  if (msg.includes('For security purposes'))              return 'Espera unos segundos antes de intentarlo de nuevo.';
-  return msg || 'Error desconocido. Intenta de nuevo.';
+  if (msg.includes('Invalid login credentials'))          return t('ui.auth.error-bad-credentials','Correo o contraseña incorrectos.');
+  if (msg.includes('Email not confirmed'))                return t('ui.auth.error-email-not-confirmed','Confirma tu correo electrónico antes de iniciar sesión.');
+  if (msg.includes('User already registered'))            return t('ui.auth.error-already-registered','Ya existe una cuenta con este correo. Inicia sesión.');
+  if (msg.includes('Password should be at least'))        return t('ui.auth.error-password-too-short','La contraseña debe tener al menos 6 caracteres.');
+  if (msg.includes('For security purposes'))              return t('ui.auth.error-rate-limit','Espera unos segundos antes de intentarlo de nuevo.');
+  return msg || t('ui.auth.error-unknown','Error desconocido. Intenta de nuevo.');
 }
 
 async function afterAuth(auth) {
@@ -398,21 +398,21 @@ function renderAuth() {
 
 function renderAuthLogin() {
   authShell(`
-    <div class="auth-context">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>
-    <h1 class="auth-headline">Conoce tu mente<br><em>de inversionista</em></h1>
-    <p class="auth-sub">Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.</p>
+    <div class="auth-context">${t('ui.auth.login-context','Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques')}</div>
+    <h1 class="auth-headline">${t('ui.auth.login-headline','Conoce tu mente<br><em>de inversionista</em>')}</h1>
+    <p class="auth-sub">${t('ui.auth.login-sub','Explora 15 sesgos que afectan tus decisiones financieras. Descubre tu perfil BIT y recibe un informe personalizado.')}</p>
     ${authErrHtml()}
     <div class="auth-methods">
-      <button class="btn-google" id="btn-google">${GOOGLE_SVG} Continuar con Google</button>
-      <div class="auth-divider"><span>o</span></div>
+      <button class="btn-google" id="btn-google">${GOOGLE_SVG} ${t('ui.auth.btn-google','Continuar con Google')}</button>
+      <div class="auth-divider"><span>${t('ui.auth.divider-or','o')}</span></div>
       <form id="auth-form" class="auth-form">
         <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required>
-        <input type="password" name="password" placeholder="Contraseña" autocomplete="current-password" required>
-        <button class="btn-primary" type="submit">Entrar</button>
+        <input type="password" name="password" placeholder="${t('ui.auth.placeholder-password','Contraseña')}" autocomplete="current-password" required>
+        <button class="btn-primary" type="submit">${t('ui.auth.btn-login','Entrar')}</button>
       </form>
       <div style="display:flex;justify-content:space-between;margin-top:.75rem">
-        <button id="btn-forgot" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">¿Olvidaste tu contraseña?</button>
-        <button id="btn-to-signup" class="btn-link" style="font-size:.82rem">Crear cuenta →</button>
+        <button id="btn-forgot" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">${t('ui.auth.btn-forgot-password','¿Olvidaste tu contraseña?')}</button>
+        <button id="btn-to-signup" class="btn-link" style="font-size:.82rem">${t('ui.auth.btn-to-signup','Crear cuenta →')}</button>
       </div>
     </div>
   `);
@@ -425,21 +425,21 @@ function renderAuthLogin() {
 function renderAuthSignup() {
   authShell(`
     <div class="auth-context">Compilación del curso de Finanzas Conductuales · Universidad Iberoamericana CDMX · Prof. Rodrigo Marques</div>
-    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">Crear cuenta</h1>
-    <p class="auth-sub">Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.</p>
+    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">${t('ui.auth.signup-headline','Crear cuenta')}</h1>
+    <p class="auth-sub">${t('ui.auth.signup-sub','Accede a los 15 módulos de sesgos y tu perfil BIT personalizado.')}</p>
     ${authErrHtml()}
     <form id="signup-form" class="auth-form">
       <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required>
-      <input type="password" name="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="new-password" minlength="6" required>
-      <input type="password" name="password2" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+      <input type="password" name="password" placeholder="${t('ui.auth.placeholder-new-password','Contraseña (mín. 6 caracteres)')}" autocomplete="new-password" minlength="6" required>
+      <input type="password" name="password2" placeholder="${t('ui.auth.placeholder-confirm-password','Confirmar contraseña')}" autocomplete="new-password" required>
       <label class="auth-consent">
         <input type="checkbox" name="consent" required>
-        <span>Acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.</span>
+        <span>${t('ui.auth.consent-label','Acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de Privacidad</a> y el tratamiento de mis datos para fines educativos.')}</span>
       </label>
       <button class="btn-primary" type="submit">Crear cuenta</button>
     </form>
     <div style="text-align:center;margin-top:.75rem">
-      <button id="btn-to-login" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">¿Ya tienes cuenta? Inicia sesión</button>
+      <button id="btn-to-login" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">${t('ui.auth.btn-to-login','¿Ya tienes cuenta? Inicia sesión')}</button>
     </div>
   `);
   document.getElementById('signup-form').addEventListener('submit', handleSignupSubmit);
@@ -448,16 +448,16 @@ function renderAuthSignup() {
 
 function renderAuthForgot() {
   authShell(`
-    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">Recuperar contraseña</h1>
-    <p class="auth-sub">Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.</p>
+    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">${t('ui.auth.forgot-headline','Recuperar contraseña')}</h1>
+    <p class="auth-sub">${t('ui.auth.forgot-sub','Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.')}</p>
     ${authErrHtml()}
     <form id="forgot-form" class="auth-form">
       <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required
              value="${state.pendingEmail || ''}">
-      <button class="btn-primary" type="submit">Enviar instrucciones</button>
+      <button class="btn-primary" type="submit">${t('ui.auth.btn-send-instructions','Enviar instrucciones')}</button>
     </form>
     <div style="text-align:center;margin-top:.75rem">
-      <button id="btn-to-login" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">← Volver</button>
+      <button id="btn-to-login" class="btn-link" style="font-size:.82rem;color:var(--ink-4)">${t('ui.auth.btn-back','← Volver')}</button>
     </div>
   `);
   document.getElementById('forgot-form').addEventListener('submit', handleForgotSubmit);
@@ -468,16 +468,16 @@ function renderAuthMsg(type) {
   const cfg = {
     'reset-sent': {
       icon: '📧',
-      title: 'Revisa tu correo',
-      body: `Enviamos las instrucciones a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace del correo para crear tu nueva contraseña.`,
-      hint: 'No lo encuentras? Revisa la carpeta de spam.',
+      title: t('ui.auth.reset-sent-title','Revisa tu correo'),
+      body: t('ui.auth.reset-sent-body',`Enviamos las instrucciones a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace del correo para crear tu nueva contraseña.`, { email: state.pendingEmail }),
+      hint: t('ui.auth.reset-sent-hint','No lo encuentras? Revisa la carpeta de spam.'),
       resend: false,
     },
     'check-email': {
       icon: '✉️',
-      title: 'Confirma tu correo',
-      body: `Enviamos un enlace de confirmación a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace para activar tu cuenta y luego inicia sesión.`,
-      hint: 'No lo encuentras? Revisa spam o reenvía el correo.',
+      title: t('ui.auth.check-email-title','Confirma tu correo'),
+      body: t('ui.auth.check-email-body',`Enviamos un enlace de confirmación a <strong>${state.pendingEmail}</strong>. Haz clic en el enlace para activar tu cuenta y luego inicia sesión.`, { email: state.pendingEmail }),
+      hint: t('ui.auth.check-email-hint','No lo encuentras? Revisa spam o reenvía el correo.'),
       resend: true,
     },
   };
@@ -488,8 +488,8 @@ function renderAuthMsg(type) {
       <h1 class="auth-headline" style="font-size:1.4rem;margin-bottom:.75rem">${c.title}</h1>
       <p class="auth-sub" style="margin-bottom:.25rem">${c.body}</p>
       <p style="font-size:.78rem;color:var(--ink-4);margin-bottom:1.75rem">${c.hint}</p>
-      ${c.resend ? `<button id="btn-resend" class="btn-primary" style="margin-bottom:.75rem;width:100%">Reenviar correo de confirmación</button>` : ''}
-      <button id="btn-back" class="btn-link" style="font-size:.82rem;color:var(--ink-4);display:block;margin:0 auto">← Volver al inicio de sesión</button>
+      ${c.resend ? `<button id="btn-resend" class="btn-primary" style="margin-bottom:.75rem;width:100%">${t('ui.auth.btn-resend-confirmation','Reenviar correo de confirmación')}</button>` : ''}
+      <button id="btn-back" class="btn-link" style="font-size:.82rem;color:var(--ink-4);display:block;margin:0 auto">${t('ui.auth.btn-back-to-login','← Volver al inicio de sesión')}</button>
     </div>
   `);
   document.getElementById('btn-back').addEventListener('click', () => { state.authMode = 'login'; state.authError = null; render(); });
@@ -499,9 +499,9 @@ function renderAuthMsg(type) {
       el.disabled = true; el.textContent = 'Enviando…';
       try {
         await resendConfirmation(state.pendingEmail);
-        el.textContent = '✓ Correo enviado';
+        el.textContent = t('ui.auth.resend-done','✓ Correo enviado');
       } catch(err) {
-        el.textContent = 'Error al reenviar';
+        el.textContent = t('ui.auth.resend-error','Error al reenviar');
         el.disabled = false;
       }
     });
@@ -510,13 +510,13 @@ function renderAuthMsg(type) {
 
 function renderAuthNewPassword() {
   authShell(`
-    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">Nueva contraseña</h1>
-    <p class="auth-sub">Elige una nueva contraseña para tu cuenta.</p>
+    <h1 class="auth-headline" style="font-size:1.5rem;margin-bottom:.5rem">${t('ui.auth.new-password-headline','Nueva contraseña')}</h1>
+    <p class="auth-sub">${t('ui.auth.new-password-sub','Elige una nueva contraseña para tu cuenta.')}</p>
     ${authErrHtml()}
     <form id="new-pwd-form" class="auth-form">
-      <input type="password" name="password" placeholder="Nueva contraseña (mín. 6 caracteres)" autocomplete="new-password" minlength="6" required>
+      <input type="password" name="password" placeholder="${t('ui.auth.placeholder-new-password-set','Nueva contraseña (mín. 6 caracteres)')}" autocomplete="new-password" minlength="6" required>
       <input type="password" name="password2" placeholder="Confirmar contraseña" autocomplete="new-password" required>
-      <button class="btn-primary" type="submit">Guardar contraseña</button>
+      <button class="btn-primary" type="submit">${t('ui.auth.btn-save-password','Guardar contraseña')}</button>
     </form>
   `);
   document.getElementById('new-pwd-form').addEventListener('submit', handleNewPasswordSubmit);
@@ -525,7 +525,7 @@ function renderAuthNewPassword() {
 async function handleLoginSubmit(e) {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Entrando…';
+  btn.disabled = true; btn.textContent = t('ui.auth.login-loading','Entrando…');
   try {
     const auth = await signIn(e.target.email.value.trim(), e.target.password.value);
     await afterAuth(auth);
@@ -543,7 +543,7 @@ async function handleSignupSubmit(e) {
     return;
   }
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Creando cuenta…';
+  btn.disabled = true; btn.textContent = t('ui.auth.signup-loading','Creando cuenta…');
   const email = e.target.email.value.trim();
   try {
     const signup = await signUp(email, e.target.password.value);
@@ -586,7 +586,7 @@ async function handleNewPasswordSubmit(e) {
     return;
   }
   const btn = e.target.querySelector('button[type=submit]');
-  btn.disabled = true; btn.textContent = 'Guardando…';
+  btn.disabled = true; btn.textContent = t('ui.auth.new-password-loading','Guardando…');
   try {
     await updatePassword(state.recoveryToken, e.target.password.value);
     const user = await getUser(state.recoveryToken);
@@ -608,10 +608,10 @@ function isDevUser() {
 
 // ── DASHBOARD · journey tabs ────────────────────
 const JOURNEY_STAGES = [
-  { key: 'bit',     num: 1, label: 'Test BIT',     short: 'BIT' },
-  { key: 'sesgos',  num: 2, label: 'Sesgos',       short: 'Sesgos' },
-  { key: 'informe', num: 3, label: 'Informe',      short: 'Informe' },
-  { key: 'next',    num: 4, label: 'Próximos pasos', short: 'Próximos' },
+  { key: 'bit',     num: 1, label: t('ui.journey.bit.label', 'Test BIT'),     short: t('ui.journey.bit.short', 'BIT') },
+  { key: 'sesgos',  num: 2, label: t('ui.journey.sesgos.label', 'Sesgos'),       short: t('ui.journey.sesgos.short', 'Sesgos') },
+  { key: 'informe', num: 3, label: t('ui.journey.informe.label', 'Informe'),      short: t('ui.journey.informe.short', 'Informe') },
+  { key: 'next',    num: 4, label: t('ui.journey.next.label', 'Próximos pasos'), short: t('ui.journey.next.short', 'Próximos') },
 ];
 
 function autoJourneyTab() {
@@ -643,26 +643,26 @@ function renderDashboard() {
   c.className = 'dash-wrap';
   c.innerHTML = `
     <nav class="dash-nav">
-      <div class="dash-nav-logo">Finanzas Conductuales</div>
+      <div class="dash-nav-logo">${t('ui.dash.nav-logo', 'Finanzas Conductuales')}</div>
       <div class="dash-nav-right">
         ${langToggleHtml()}
         <span class="dash-user">${state.user.email}</span>
-        <button class="btn-icon" id="btn-dark-mode" title="Cambiar modo claro/oscuro">${document.body.classList.contains('dark') ? '☀️' : '🌙'}</button>
+        <button class="btn-icon" id="btn-dark-mode" title="${t('ui.dash.dark-mode-tooltip', 'Cambiar modo claro/oscuro')}">${document.body.classList.contains('dark') ? '☀️' : '🌙'}</button>
         ${isDevUser() ? `
         <button class="btn-link" id="btn-dev-fill" style="font-size:.72rem;color:var(--ink-4);opacity:.5" title="Rellenar todo aleatoriamente">⚡ dev</button>
         <button class="btn-link" id="btn-dev-clear" style="font-size:.72rem;color:#DC2626;opacity:.5" title="Borrar todo el progreso">🗑 clear</button>` : ''}
-        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">Salir</button>`}
+        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">${t('ui.dash.btn-logout', 'Salir')}</button>`}
       </div>
     </nav>
     ${state.user?.emailConfirmed === false ? `
     <div class="email-verify-banner" id="email-verify-banner">
-      <span>📧 Confirma tu correo electrónico para proteger el acceso a tu cuenta.</span>
-      <button id="btn-resend-dash" style="background:none;border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 12px;color:white;font-size:.78rem;font-family:var(--ff-body);cursor:pointer;white-space:nowrap">Reenviar →</button>
+      <span>📧 ${t('ui.dash.email-verify-banner', 'Confirma tu correo electrónico para proteger el acceso a tu cuenta.')}</span>
+      <button id="btn-resend-dash" style="background:none;border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 12px;color:white;font-size:.78rem;font-family:var(--ff-body);cursor:pointer;white-space:nowrap">${t('ui.dash.btn-resend', 'Reenviar →')}</button>
     </div>` : ''}
     <div class="dash-body">
       <div class="journey-hero">
-        <h1 class="journey-hero-title">Hola, ${state.user.email.split('@')[0]}</h1>
-        <p class="journey-hero-sub">Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.</p>
+        <h1 class="journey-hero-title">${t('ui.dash.hero-title', 'Hola, {name}', { name: state.user.email.split('@')[0] })}</h1>
+        <p class="journey-hero-sub">${t('ui.dash.hero-sub', 'Una jornada en 4 etapas. Avanza a tu ritmo — todo el progreso se guarda solo.')}</p>
         <div class="journey-progress-bar">
           <div class="journey-progress-fill" style="width:${journeyPercent(bitDone, completedSesgos, totalSesgos)}%"></div>
         </div>
@@ -694,12 +694,12 @@ function renderDashboard() {
   document.getElementById('btn-dev-clear')?.addEventListener('click', devClearAll);
   document.getElementById('btn-dark-mode')?.addEventListener('click', () => { toggleDarkMode(); render(); });
   document.getElementById('btn-resend-dash')?.addEventListener('click', async (e) => {
-    e.target.disabled = true; e.target.textContent = 'Enviando…';
+    e.target.disabled = true; e.target.textContent = t('ui.dash.resend-sending', 'Enviando…');
     try {
       await resendConfirmation(state.user.email);
-      e.target.textContent = '✓ Enviado';
+      e.target.textContent = t('ui.dash.resend-sent', '✓ Enviado');
     } catch(err) {
-      e.target.textContent = 'Error'; e.target.disabled = false;
+      e.target.textContent = t('ui.dash.resend-error', 'Error'); e.target.disabled = false;
     }
   });
 
@@ -751,25 +751,25 @@ function renderPanelBit({ bitDone, bitProfile }) {
   const bitCode = state.progress?.bit_result?.primary;
   return `
     <div class="panel-header">
-      <div class="panel-title">Etapa 1 · Test BIT</div>
-      <div class="panel-time">⏱ ~10 min</div>
+      <div class="panel-title">${t('ui.dash.panel-bit-title', 'Etapa 1 · Test BIT')}</div>
+      <div class="panel-time">⏱ ${t('ui.dash.panel-bit-time', '~10 min')}</div>
     </div>
-    <p class="panel-sub">Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.</p>
+    <p class="panel-sub">${t('ui.dash.panel-bit-sub', 'Descubre tu perfil como inversionista (PP, FF, II o AA) a partir de 20 preguntas sobre cómo reaccionas ante el dinero.')}</p>
     <div class="bit-card ${bitDone ? 'done' : ''}" id="bit-card">
       <div class="bit-card-banner" style="${bitProfile ? 'background:linear-gradient(90deg,' + bitProfile.color + '22,' + bitProfile.color + '44)' : ''}"></div>
       <div class="bit-card-body">
         <div class="bit-card-icon">🧠</div>
         <div class="bit-card-info">
-          <div class="bit-card-title">Behavioral Investor Type (BIT)</div>
+          <div class="bit-card-title">${t('ui.dash.bit-card-title', 'Behavioral Investor Type (BIT)')}</div>
           <div class="bit-card-desc">${bitDone && bitProfile
             ? t(`profile.${bitCode}.name`, bitProfile.name) + ' · ' + t(`profile.${bitCode}.tagline`, bitProfile.tagline)
-            : 'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.'}</div>
-          <div class="bit-card-meta"><span>📋 20 preguntas</span><span>⏱ ~10 min</span></div>
+            : t('ui.dash.bit-card-desc-pending', 'Identifica si eres Preservador, Seguidor Amigable, Independiente o Acumulador.')}</div>
+          <div class="bit-card-meta"><span>📋 ${t('ui.dash.bit-card-meta-questions', '20 preguntas')}</span><span>⏱ ${t('ui.dash.bit-card-meta-time', '~10 min')}</span></div>
         </div>
-        <button class="btn-cta" id="btn-bit">${bitDone ? 'Ver resultado →' : 'Comenzar →'}</button>
+        <button class="btn-cta" id="btn-bit">${bitDone ? t('ui.dash.btn-bit-done', 'Ver resultado →') : t('ui.dash.btn-bit-start', 'Comenzar →')}</button>
       </div>
     </div>
-    <div class="panel-tip">💡 Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.</div>
+    <div class="panel-tip">💡 ${t('ui.dash.panel-bit-tip', 'Puedes pausar cuando quieras — tus respuestas se guardan al pasar a la siguiente.')}</div>
   `;
 }
 
@@ -778,19 +778,19 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
   const remMin = remaining * 5;
   return `
     <div class="panel-header">
-      <div class="panel-title">Etapa 2 · Sesgos <span class="panel-count">${completedSesgos}/${totalSesgos}</span></div>
-      <div class="panel-time">⏱ ~5 min por módulo</div>
+      <div class="panel-title">${t('ui.dash.panel-sesgos-title', 'Etapa 2 · Sesgos')} <span class="panel-count">${completedSesgos}/${totalSesgos}</span></div>
+      <div class="panel-time">⏱ ${t('ui.dash.panel-sesgos-time', '~5 min por módulo')}</div>
     </div>
     <p class="panel-sub">${bitDone
       ? (remaining === 0
-          ? '¡Los 15 módulos completados!'
-          : `Te quedan ${remaining} ${remaining === 1 ? 'módulo' : 'módulos'} — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.`)
-      : 'Desbloquea esta etapa completando el Test BIT.'}</p>
+          ? t('ui.dash.panel-sesgos-sub-all-done', '¡Los 15 módulos completados!')
+          : t(remaining === 1 ? 'ui.dash.panel-sesgos-sub-remaining.one' : 'ui.dash.panel-sesgos-sub-remaining.other', remaining === 1 ? 'Te queda {remaining} módulo — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.' : 'Te quedan {remaining} módulos — suelen tomar ~5 min cada uno. Puedes hacerlos en sesiones cortas.', { remaining }))
+      : t('ui.dash.panel-sesgos-sub-locked', 'Desbloquea esta etapa completando el Test BIT.')}</p>
     ${(() => {
       const grupos = [
-        { key: 'cognitivo', label: 'Errores Cognitivos', color: '#2563EB' },
-        { key: 'emocional', label: 'Sesgos Emocionales', color: '#DC2626' },
-        { key: 'dual',      label: 'Cognitivo + Emocional', color: '#7C3AED' },
+        { key: 'cognitivo', label: t('ui.dash.sesgo-group-cognitivo', 'Errores Cognitivos'), color: '#2563EB' },
+        { key: 'emocional', label: t('ui.dash.sesgo-group-emocional', 'Sesgos Emocionales'), color: '#DC2626' },
+        { key: 'dual',      label: t('ui.dash.sesgo-group-dual', 'Cognitivo + Emocional'), color: '#7C3AED' },
       ];
       const displayOrder = [];
       grupos.forEach(g => SESGOS.filter(s => s.tipo === g.key).forEach(s => displayOrder.push(s.id)));
@@ -812,12 +812,12 @@ function renderPanelSesgos({ bitDone, sesgos, completedSesgos, totalSesgos }) {
                 const done = sesgos[s.id]?.done;
                 const locked = !bitDone;
                 const cls = done ? 'done' : locked ? 'locked' : 'active';
-                const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Cognitivo + Emocional';
+                const tipoLabel = s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional') : s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional') s.tipo === 'cognitivo' ? t('ui.dash.sesgo-tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.dash.sesgo-tipo-emocional', 'Sesgo Emocional') : t('ui.dash.sesgo-tipo-dual', 'Cognitivo + Emocional');
                 return `<div class="sesgo-card ${cls}" data-sesgo-id="${s.id}">
                   <div class="sesgo-num">${num}</div>
                   <div class="sesgo-info">
-                    <div class="sesgo-name">${done ? t(`sesgo.${s.id}.name`, s.name) : 'Módulo ' + num}</div>
-                    <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">~5 min · se revela al completar</span>'}</div>
+                    <div class="sesgo-name">${done ? t(`sesgo.${s.id}.name`, s.name) : t('ui.dash.sesgo-card-name-pending', 'Módulo {num}', { num })}</div>
+                    <div class="sesgo-tipo">${done ? `<span class="tipo-dot ${s.tipo}"></span>${tipoLabel} · Clase ${s.clase}` : '<span class="sesgo-locked-hint">${t('ui.dash.sesgo-locked-hint', '~5 min · se revela al completar')}</span>'}</div>
                   </div>
                 </div>`;
               }).join('')}
@@ -833,11 +833,11 @@ function renderPanelInforme({ allDone }) {
   if (!allDone) {
     return `
       <div class="panel-header">
-        <div class="panel-title">Etapa 3 · Informe Final</div>
-        <div class="panel-time">⏱ ~10 min</div>
+        <div class="panel-title">${t('ui.dash.panel-informe-title', 'Etapa 3 · Informe Final')}</div>
+        <div class="panel-time">⏱ ${t('ui.dash.panel-informe-time', '~10 min')}</div>
       </div>
-      <p class="panel-sub">Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.</p>
-      <div class="panel-locked">🔒 Bloqueado hasta completar las dos etapas anteriores.</div>
+      <p class="panel-sub">${t('ui.dash.panel-informe-sub-locked', 'Desbloqueas el informe al terminar el Test BIT y los 15 módulos de sesgos.')}</p>
+      <div class="panel-locked">🔒 ${t('ui.dash.panel-informe-locked-msg', 'Bloqueado hasta completar las dos etapas anteriores.')}</div>
     `;
   }
   return `
@@ -845,13 +845,13 @@ function renderPanelInforme({ allDone }) {
       <div class="panel-title">Etapa 3 · Informe Final</div>
       <div class="panel-time">⏱ ~10 min</div>
     </div>
-    <p class="panel-sub">Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.</p>
+    <p class="panel-sub">${t('ui.dash.panel-informe-sub-unlocked', 'Tu perfil BIT cruzado con los resultados sesgo a sesgo. 6 pasos — mecanismos, severidad, auto-consciencia y matriz de decisión.')}</p>
     <div class="dash-report-cta">
-      <div class="dash-report-title">¡Completaste todos los módulos!</div>
-      <p class="dash-report-sub">Recomendaciones personalizadas y acciones que puedes empezar mañana.</p>
-      <button class="btn-cta" id="btn-report">Ver mi Informe Final →</button>
+      <div class="dash-report-title">${t('ui.dash.report-cta-title', '¡Completaste todos los módulos!')}</div>
+      <p class="dash-report-sub">${t('ui.dash.report-cta-sub', 'Recomendaciones personalizadas y acciones que puedes empezar mañana.')}</p>
+      <button class="btn-cta" id="btn-report">${t('ui.dash.btn-report', 'Ver mi Informe Final →')}</button>
     </div>
-    <div class="panel-tip">💡 Puedes volver al informe cuando quieras — está siempre disponible aquí.</div>
+    <div class="panel-tip">💡 ${t('ui.dash.panel-informe-tip', 'Puedes volver al informe cuando quieras — está siempre disponible aquí.')}</div>
   `;
 }
 
@@ -859,11 +859,11 @@ function renderPanelNext({ nextUnlocked }) {
   if (!nextUnlocked) {
     return `
       <div class="panel-header">
-        <div class="panel-title">Etapa 4 · Próximos pasos</div>
-        <div class="panel-time">⏱ ~3 min</div>
+        <div class="panel-title">${t('ui.dash.panel-next-title', 'Etapa 4 · Próximos pasos')}</div>
+        <div class="panel-time">⏱ ${t('ui.dash.panel-next-time', '~3 min')}</div>
       </div>
-      <p class="panel-sub">La última etapa: contarnos qué te gustaría hacer a partir de aquí.</p>
-      <div class="panel-locked">🔒 Disponible después de ver tu informe final.</div>
+      <p class="panel-sub">${t('ui.dash.panel-next-sub-locked', 'La última etapa: contarnos qué te gustaría hacer a partir de aquí.')}</p>
+      <div class="panel-locked">🔒 ${t('ui.dash.panel-next-locked-msg', 'Disponible después de ver tu informe final.')}</div>
     `;
   }
   const done = state.progress?.next_steps_done;
@@ -873,14 +873,14 @@ function renderPanelNext({ nextUnlocked }) {
       <div class="panel-time">⏱ ~3 min</div>
     </div>
     <p class="panel-sub">${done
-      ? 'Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.'
-      : 'Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.'}</p>
+      ? t('ui.dash.panel-next-sub-done', 'Ya nos contaste qué te interesa — gracias. Puedes revisar o actualizar tu selección.')
+      : t('ui.dash.panel-next-sub-pending', 'Cuéntanos qué te gustaría hacer a partir de aquí. 8 opciones, marca todas las que apliquen.')}</p>
     <div class="dash-report-cta">
-      <div class="dash-report-title">${done ? 'Revisar mis respuestas' : '¿Qué sigue para ti?'}</div>
+      <div class="dash-report-title">${done ? t('ui.dash.next-cta-title-done', 'Revisar mis respuestas') : t('ui.dash.next-cta-title-pending', '¿Qué sigue para ti?')}</div>
       <p class="dash-report-sub">${done
-        ? 'Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.'
-        : 'Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.'}</p>
-      <button class="btn-cta" id="btn-next-steps">${done ? 'Ver mis respuestas →' : 'Continuar →'}</button>
+        ? t('ui.dash.next-cta-sub-done', 'Ver estadísticas consolidadas de lo que eligieron otros participantes y agendar conmigo.')
+        : t('ui.dash.next-cta-sub-pending', 'Marca lo que te interesa, añade tus propias ideas y agenda 15 min conmigo si puedes.')}</p>
+      <button class="btn-cta" id="btn-next-steps">${done ? t('ui.dash.btn-next-done', 'Ver mis respuestas →') : t('ui.dash.btn-next-pending', 'Continuar →')}</button>
     </div>
   `;
 }
@@ -929,15 +929,15 @@ function renderBit() {
       <div class="quiz-topbar">
         <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div>
         <div class="quiz-topbar-inner">
-          <div class="quiz-label">Test BIT · Perfil de Inversionista</div>
+          <div class="quiz-label">${t('ui.bit.quiz-label', 'Test BIT · Perfil de Inversionista')}</div>
           <div class="quiz-counter">${questions.length} / ${questions.length}</div>
         </div>
       </div>
       <div class="quiz-main">
         <div class="quiz-question-card" style="text-align:center">
-          <h2 style="font-family:var(--ff-display);font-size:1.8rem;margin-bottom:1rem">¡Test completado!</h2>
-          <p style="color:var(--ink-3);margin-bottom:2rem">Respondiste las ${questions.length} preguntas. Calcula tu perfil BIT.</p>
-          <button class="btn-nav-next" id="btn-calculate" style="margin:0 auto">Calcular mi perfil →</button>
+          <h2 style="font-family:var(--ff-display);font-size:1.8rem;margin-bottom:1rem">${t('ui.bit.test-completed-heading', '¡Test completado!')}</h2>
+          <p style="color:var(--ink-3);margin-bottom:2rem">${t('ui.bit.test-completed-body', 'Respondiste las {total} preguntas. Calcula tu perfil BIT.', {total: questions.length})}</p>
+          <button class="btn-nav-next" id="btn-calculate" style="margin:0 auto">${t('ui.bit.btn-calculate', 'Calcular mi perfil →')}</button>
         </div>
       </div>
     `;
@@ -956,9 +956,9 @@ function renderBit() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">Test BIT · Perfil de Inversionista <span class="quiz-time-hint">⏱ ~${Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))} min restantes · puedes pausar cuando quieras</span></div>
+        <div class="quiz-label">Test BIT · Perfil de Inversionista <span class="quiz-time-hint">${t('ui.bit.time-hint', '⏱ ~{minutes} min restantes · puedes pausar cuando quieras', {minutes: Math.max(1, Math.ceil((questions.length - state.bitIndex) * 0.5))})}</span></div>
         <div class="quiz-counter">${state.bitIndex + 1} / ${questions.length}</div>
-        <button class="btn-exit" id="btn-exit-bit">✕ Salir</button>
+        <button class="btn-exit" id="btn-exit-bit">${t('ui.bit.btn-exit', '✕ Salir')}</button>
       </div>
     </div>
     <div class="quiz-main">
@@ -972,13 +972,13 @@ function renderBit() {
             </button>
           `).join('')}
         </div>
-        ${answered && askFeedback ? ratingWidget(state.bitRatings[state.bitIndex], '¿cómo calificarías esta pregunta?') : ''}
+        ${answered && askFeedback ? ratingWidget(state.bitRatings[state.bitIndex], t('ui.bit.rating-prompt-question', '¿cómo calificarías esta pregunta?')) : ''}
       </div>
     </div>
     <div class="quiz-footer">
-      <button class="btn-nav-back" id="btn-bit-back" ${state.bitIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="btn-nav-back" id="btn-bit-back" ${state.bitIndex === 0 ? 'disabled' : ''}>${t('ui.bit.btn-back', '← Anterior')}</button>
       <button class="btn-nav-next" id="btn-bit-next" ${!answered || (askFeedback && !rated) ? 'disabled' : ''}>
-        ${state.bitIndex === questions.length - 1 ? 'Finalizar →' : 'Siguiente →'}
+        ${state.bitIndex === questions.length - 1 ? t('ui.bit.btn-next-finish', 'Finalizar →') : t('ui.bit.btn-next', 'Siguiente →')}
       </button>
     </div>
   `;
@@ -1005,7 +1005,7 @@ function renderBit() {
     render();
   });
   document.getElementById('btn-exit-bit').addEventListener('click', () => {
-    if (confirm('¿Salir? Tu progreso del BIT se perderá.')) {
+    if (confirm(t('ui.bit.exit-confirm', '¿Salir? Tu progreso del BIT se perderá.'))) {
       state.screen = 'dashboard';
       render();
     }
@@ -1088,23 +1088,23 @@ function renderBitResult() {
 
   const disclaimer = `
     <div class="bit-disclaimer">
-      <div class="bit-disclaimer-title">⚠ ¿Qué es — y qué no es — un perfil BIT?</div>
-      <p>Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.</p>
-      <p><strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.</p>
+      <div class="bit-disclaimer-title">⚠ ${t('ui.bit.disclaimer-title', '¿Qué es — y qué no es — un perfil BIT?')}</div>
+      <p>${t('ui.bit.disclaimer-body-1', 'Tu perfil es una <strong>tendencia dominante</strong>, no una etiqueta fija. Es la combinación de mecanismos que más probablemente distorsiona tus decisiones financieras — pero todas las personas tenemos algo de los 4 perfiles.')}</p>
+      <p>${t('ui.bit.disclaimer-body-2', '<strong>Limitaciones:</strong> el BIT captura patrones basados en tus respuestas a ~20 preguntas. No predice resultados de inversión ni reemplaza asesoría. Tu perfil puede cambiar con experiencia, edad o contexto.')}</p>
     </div>`;
 
   const hero = `
     <div class="result-hero">
-      <div class="result-hero-tag">Tu perfil conductual como inversionista</div>
+      <div class="result-hero-tag">${t('ui.bit.result-hero-tag', 'Tu perfil conductual como inversionista')}</div>
       <div class="result-hero-name" style="color:${profile.color}">${t(`profile.${result.primary}.name`, profile.name)}</div>
       <div class="result-hero-sub">${t(`profile.${result.primary}.tagline`, profile.tagline)}</div>
       <button class="btn-share-profile" id="btn-share-profile" title="Compartir mi perfil">
         📤 Compartir mi perfil
       </button>
       <div class="bit-step-indicator">
-        <span class="bit-step${step===1?' active':' done'}">1 · Tu perfil</span>
+        <span class="bit-step${step===1?' active':' done'}">${t('ui.bit.step-indicator-1', '1 · Tu perfil')}</span>
         <span class="bit-step-sep">→</span>
-        <span class="bit-step${step===2?' active':''}">2 · Sesgos y plan</span>
+        <span class="bit-step${step===2?' active':''}">${t('ui.bit.step-indicator-2', '2 · Sesgos y plan')}</span>
       </div>
     </div>`;
 
@@ -1113,7 +1113,7 @@ function renderBitResult() {
     bodyHtml = `
       ${disclaimer}
       <div class="result-card">
-        <div class="result-card-title">Puntuaciones por tipo</div>
+        <div class="result-card-title">${t('ui.bit.scores-card-title', 'Puntuaciones por tipo')}</div>
         <div class="score-bars">
           ${Object.entries(result.scores).map(([type, score]) => `
             <div class="score-row">
@@ -1129,7 +1129,7 @@ function renderBitResult() {
         </div>
       </div>
       <div class="result-card">
-        <div class="result-card-title">Tu perfil principal</div>
+        <div class="result-card-title">${t('ui.bit.profile-card-title', 'Tu perfil principal')}</div>
         <div class="profile-header">
           <div class="profile-badge" style="background:${profile.color}">${bitLabel(result.primary)}</div>
           <div>
@@ -1138,26 +1138,26 @@ function renderBitResult() {
           </div>
         </div>
         <div class="profile-desc">${t(`profile.${result.primary}.description`, profile.description)}</div>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">Perfil secundario: <strong>${t(`profile.${result.secondary}.name`, secondary.name)} (${bitLabel(secondary ? result.secondary : '')})</strong></div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--ink-4)">${t('ui.bit.secondary-profile-label', 'Perfil secundario:')} <strong>${t(`profile.${result.secondary}.name`, secondary.name)} (${bitLabel(secondary ? result.secondary : '')})</strong></div>
         <div class="profile-id-slider" style="margin-top:1.25rem">
-          <div class="slider-question">¿Qué tanto te identificas con este perfil? <span style="color:var(--danger,#B91C1C)">*</span></div>
+          <div class="slider-question">${t('ui.bit.slider-identify-question', '¿Qué tanto te identificas con este perfil?')} <span style="color:var(--danger,#B91C1C)">*</span></div>
           <div class="slider-row">
             <span class="slider-end-label">Nada</span>
             <input type="range" id="slider-profile-fit" class="fit-slider" min="0" max="5" step="1" value="${state.bitProfileRating ?? 3}" style="accent-color:${profile.color}">
-            <span class="slider-end-label">Totalmente</span>
+            <span class="slider-end-label">${t('ui.bit.slider-end-totally', 'Totalmente')}</span>
           </div>
           <div class="slider-value-label" id="slider-fit-val">${SLIDER_LABELS[state.bitProfileRating ?? 3]}</div>
-          <div class="bit-gate-hint" id="bit-gate-hint-1">Mueve el deslizador para continuar</div>
+          <div class="bit-gate-hint" id="bit-gate-hint-1">${t('ui.bit.gate-hint-slide-to-continue', 'Mueve el deslizador para continuar')}</div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;gap:1rem">
-        <p style="font-size:.82rem;color:var(--ink-4);margin:0">Paso 1 de 2</p>
-        <button class="btn-cta" id="btn-bit-next" disabled>Siguiente →</button>
+        <p style="font-size:.82rem;color:var(--ink-4);margin:0">${t('ui.bit.step-counter-1', 'Paso 1 de 2')}</p>
+        <button class="btn-cta" id="btn-bit-next" disabled>${t('ui.bit.btn-next-result', 'Siguiente →')}</button>
       </div>`;
   } else {
     bodyHtml = `
       <div class="result-card">
-        <div class="result-card-title">Sesgos predominantes en tu perfil</div>
+        <div class="result-card-title">${t('ui.bit.biases-card-title', 'Sesgos predominantes en tu perfil')}</div>
         <div class="bias-list">
           ${profile.biases.map(b => `
             <div class="bias-item">
@@ -1168,8 +1168,8 @@ function renderBitResult() {
         </div>
       </div>
       <div class="result-card">
-        <div class="result-card-title">Recomendaciones para tu perfil</div>
-        <p style="font-size:.82rem;color:var(--ink-4);margin-bottom:1rem">Valora qué tan útil te parece cada recomendación <span style="color:#B91C1C">*</span></p>
+        <div class="result-card-title">${t('ui.bit.recos-card-title', 'Recomendaciones para tu perfil')}</div>
+        <p style="font-size:.82rem;color:var(--ink-4);margin-bottom:1rem">${t('ui.bit.recos-rating-instruction', 'Valora qué tan útil te parece cada recomendación')} <span style="color:#B91C1C">*</span></p>
         <div class="reco-list">
           ${profile.recommendations.map((r, i) => {
             const val = state.bitRecoRatings[i] ?? 3;
@@ -1184,17 +1184,17 @@ function renderBitResult() {
                       <input type="range" class="fit-slider reco-slider" data-idx="${i}" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
                       <span class="slider-end-label">Muy útil</span>
                     </div>
-                    <div class="slider-value-label reco-slider-val" data-idx="${i}">${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : 'Mueve el deslizador'}</div>
+                    <div class="slider-value-label reco-slider-val" data-idx="${i}">${state.bitRecoTouched[i] ? SLIDER_LABELS[val] : t('ui.bit.reco-slider-move-hint', 'Mueve el deslizador')}</div>
                   </div>
                 </div>
               </div>`;
           }).join('')}
         </div>
-        <div class="bit-gate-hint" id="bit-gate-hint-2">Valora las ${profile.recommendations.length} recomendaciones para continuar</div>
+        <div class="bit-gate-hint" id="bit-gate-hint-2">${t('ui.bit.gate-hint-rate-recos', 'Valora las {total} recomendaciones para continuar', {total: profile.recommendations.length})}</div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 0;gap:1rem">
-        <button class="btn-ghost" id="btn-bit-back">← Atrás</button>
-        <button class="btn-cta" id="btn-to-dash" disabled>Ir al Dashboard →</button>
+        <button class="btn-ghost" id="btn-bit-back">${t('ui.bit.btn-back-result', '← Atrás')}</button>
+        <button class="btn-cta" id="btn-to-dash" disabled>${t('ui.bit.btn-go-dashboard', 'Ir al Dashboard →')}</button>
       </div>`;
   }
 
@@ -1243,7 +1243,7 @@ function renderBitResult() {
         if (hint) hint.style.visibility = 'hidden';
       } else {
         dashBtn.disabled = true;
-        if (hint) { hint.style.visibility = 'visible'; hint.textContent = `Faltan ${total - answered} recomendación(es) por valorar`; }
+        if (hint) { hint.style.visibility = 'visible'; hint.textContent = t('ui.bit.gate-hint-recos-remaining', 'Faltan {remaining} recomendación(es) por valorar', {remaining: total - answered}); }
       }
     };
     checkUnlock();
@@ -1319,7 +1319,7 @@ function renderSesgoQuiz() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">¿Cómo decides tú? · ${state.sesgoIndex + 1} de ${total} <span class="quiz-time-hint">⏱ módulo de ~5 min · tu progreso se guarda</span></div>
+        <div class="quiz-label">${t('ui.sesgo.quiz-step-label', '¿Cómo decides tú? · {index} de {total}', { index: state.sesgoIndex + 1, total })} <span class="quiz-time-hint">⏱ módulo de ~5 min · tu progreso se guarda</span></div>
         <div class="quiz-counter"></div>
         <button class="btn-exit" id="btn-exit-sesgo">✕</button>
       </div>
@@ -1339,9 +1339,9 @@ function renderSesgoQuiz() {
       </div>
     </div>
     <div class="quiz-footer">
-      <button class="btn-nav-back" id="btn-sq-back" ${state.sesgoIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="btn-nav-back" id="btn-sq-back" ${state.sesgoIndex === 0 ? 'disabled' : ''}>${t('ui.sesgo.btn-back', '← Anterior')}</button>
       <button class="btn-nav-next" id="btn-sq-next" ${!answered || (askFeedback && !rated) ? 'disabled' : ''}>
-        ${state.sesgoIndex === total - 1 ? 'Continuar →' : 'Siguiente →'}
+        ${state.sesgoIndex === total - 1 ? '${t('ui.sesgo.btn-continue', 'Continuar →')}' : '${t('ui.sesgo.btn-next', 'Siguiente →')}'}
       </button>
     </div>
   `;
@@ -1378,15 +1378,15 @@ function renderSesgoQuiz() {
     }
   });
   document.getElementById('btn-exit-sesgo').addEventListener('click', () => {
-    if (confirm('¿Salir del módulo?')) { state.screen = 'dashboard'; render(); }
+    if (confirm(t('ui.sesgo.confirm-exit', '¿Salir del módulo?'))) { state.screen = 'dashboard'; render(); }
   });
 }
 
 const LEARN_BLOCKS = [
-  { key: 'definicion',  title: 'Definición',        icon: '📖', label: '¿Qué es?' },
-  { key: 'explicacion', title: 'Explicación',        icon: '🧠', label: '¿Cómo funciona?' },
-  { key: 'ejemplos',    title: 'Ejemplos concretos', icon: '💡', label: 'En la práctica' },
-  { key: 'antidotos',   title: 'Antídotos',          icon: '🛡️', label: '¿Cómo mitigarlo?' },
+  { key: 'definicion',  t('ui.learn.definicion.title', 'Definición'),        icon: '📖', t('ui.learn.definicion.label', '¿Qué es?') },
+  { key: 'explicacion', t('ui.learn.explicacion.title', 'Explicación'),        icon: '🧠', t('ui.learn.explicacion.label', '¿Cómo funciona?') },
+  { key: 'ejemplos',    t('ui.learn.ejemplos.title', 'Ejemplos concretos'), icon: '💡', t('ui.learn.ejemplos.label', 'En la práctica') },
+  { key: 'antidotos',   t('ui.learn.antidotos.title', 'Antídotos'),          icon: '🛡️', t('ui.learn.antidotos.label', '¿Cómo mitigarlo?') },
 ];
 
 function learnBlockContent(s, step) {
@@ -1397,7 +1397,7 @@ function learnBlockContent(s, step) {
     `;
     case 1: return `
       <div class="learn-prose"><p>${t(`sesgo.${s.id}.mechanism`, s.mechanism)}</p></div>
-      <div class="learn-highlight"><strong>La trampa del cuestionario:</strong> ${t(`sesgo.${s.id}.trapQuestion`, s.trapQuestion)}</div>
+      <div class="learn-highlight"><strong>${t('ui.sesgo.trap-question-prefix', 'La trampa del cuestionario:')}</strong> ${t(`sesgo.${s.id}.trapQuestion`, s.trapQuestion)}</div>
     `;
     case 2: return `
       <div class="learn-examples">
@@ -1425,7 +1425,7 @@ function renderSesgoLearn() {
   const block = LEARN_BLOCKS[step];
   const isLast = step === LEARN_BLOCKS.length - 1;
   const rating = state.learnRatings[step];
-  const tipoLabel = s.tipo === 'cognitivo' ? 'Error Cognitivo' : s.tipo === 'emocional' ? 'Sesgo Emocional' : 'Error Cognitivo + Sesgo Emocional';
+  const tipoLabel = s.tipo === 'cognitivo' ? t('ui.sesgo.tipo-cognitivo', 'Error Cognitivo') : s.tipo === 'emocional' ? t('ui.sesgo.tipo-emocional', 'Sesgo Emocional') : t('ui.sesgo.tipo-mixto', 'Error Cognitivo + Sesgo Emocional');
 
   const c = document.createElement('div');
   c.className = 'learn-shell';
@@ -1451,11 +1451,11 @@ function renderSesgoLearn() {
       <div style="height:140px"></div>
     </div>
     <div class="learn-cta-bar">
-      <div class="learn-cta-hint">${step + 1} de ${LEARN_BLOCKS.length} bloques</div>
+      <div class="learn-cta-hint">${t('ui.sesgo.learn-blocks-counter', '{step} de {total} bloques', { step: step + 1, total: LEARN_BLOCKS.length })}</div>
       <div class="learn-cta-right">
         ${ratingWidget(rating, '¿cómo calificarías este bloque?')}
         <button class="btn-cta" id="btn-learn-next" ${rating === null ? 'disabled' : ''}>
-          ${isLast ? 'Preguntas de verificación →' : 'Continuar →'}
+          ${isLast ? '${t('ui.sesgo.btn-learn-verify', 'Preguntas de verificación →')}' : 'Continuar →'}
         </button>
       </div>
     </div>
@@ -1501,7 +1501,7 @@ function renderSesgoFixation() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">Verificación · ${state.fixationIndex + 1} de ${total}</div>
+        <div class="quiz-label">${t('ui.sesgo.fixation-step-label', 'Verificación · {index} de {total}', { index: state.fixationIndex + 1, total })}</div>
         <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${t(`sesgo.${s.id}.name`, s.name)}</div>
         <button class="btn-exit" id="btn-exit-fix">✕</button>
       </div>
@@ -1523,7 +1523,7 @@ function renderSesgoFixation() {
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-fx-back" ${state.fixationIndex === 0 ? 'disabled' : ''}>← Anterior</button>
       <button class="btn-nav-next" id="btn-fx-next" ${state.fixationAnswers[state.fixationIndex] === null || (askFeedback && state.fixationRatings[state.fixationIndex] === null) ? 'disabled' : ''}>
-        ${state.fixationIndex === total - 1 ? 'Ver mis resultados →' : 'Siguiente →'}
+        ${state.fixationIndex === total - 1 ? '${t('ui.sesgo.btn-fixation-last', 'Ver mis resultados →')}' : 'Siguiente →'}
       </button>
     </div>
   `;
@@ -1574,28 +1574,28 @@ function renderSesgoSelfAssessment() {
     <div class="quiz-topbar">
       <div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:100%"></div></div>
       <div class="quiz-topbar-inner">
-        <div class="quiz-label">Autoevaluación</div>
+        <div class="quiz-label">${t('ui.sesgo.self-assess-label', 'Autoevaluación')}</div>
         <div class="quiz-counter" style="font-size:.75rem;color:var(--ink-4)">${t(`sesgo.${s.id}.name`, s.name)}</div>
         <button class="btn-exit" id="btn-exit-self">✕</button>
       </div>
     </div>
     <div class="quiz-main">
       <div class="quiz-question-card">
-        <div class="q-situation" style="font-size:1.1rem;margin-bottom:1.25rem">Antes de ver tus resultados: <strong>¿qué tanto crees que <span style="color:var(--ibero-orange,#DC6B19)">${t(`sesgo.${s.id}.name`, s.name)}</span> te afecta?</strong></div>
-        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.5rem">Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.</p>
+        <div class="q-situation" style="font-size:1.1rem;margin-bottom:1.25rem">${t('ui.sesgo.self-assess-prompt', 'Antes de ver tus resultados: ¿qué tanto crees que {name} te afecta?', { name: t(`sesgo.${s.id}.name`, s.name) })}</div>
+        <p style="font-size:.85rem;color:var(--ink-4);margin-bottom:1.5rem">${t('ui.sesgo.self-assess-explanation', 'Tu respuesta se comparará con lo que tus respuestas previas sugieren. No hay respuesta correcta — se trata de calibrar tu autoconciencia.')}</p>
         <div class="self-assess-slider">
           <div class="slider-row">
-            <span class="slider-end-label">0% — nada</span>
+            <span class="slider-end-label">${t('ui.sesgo.slider-label-none', '0% — nada')}</span>
             <input type="range" id="slider-self" class="fit-slider" min="0" max="100" step="1" value="${val}">
-            <span class="slider-end-label">100% — mucho</span>
+            <span class="slider-end-label">${t('ui.sesgo.slider-label-much', '100% — mucho')}</span>
           </div>
-          <div class="self-assess-value" id="self-val-display">${touched ? val + '%' : 'Mueve el deslizador'}</div>
+          <div class="self-assess-value" id="self-val-display">${touched ? val + '%' : '${touched ? val + '%' : t('ui.sesgo.slider-placeholder', 'Mueve el deslizador')}'}</div>
         </div>
       </div>
     </div>
     <div class="quiz-footer">
       <button class="btn-nav-back" id="btn-self-back">← Anterior</button>
-      <button class="btn-nav-next" id="btn-self-next" ${!touched ? 'disabled' : ''}>Ver mis resultados →</button>
+      <button class="btn-nav-next" id="btn-self-next" ${!touched ? 'disabled' : ''}>${t('ui.sesgo.btn-see-results', 'Ver mis resultados →')}</button>
     </div>
   `;
   app.appendChild(c);
@@ -1643,24 +1643,24 @@ async function renderSesgoResult() {
   }).length;
   const intensidad = s.questions.length > 0 ? sesgadasCount / s.questions.length : 0;
 
-  const intensidadLabel = intensidad === 0 ? 'No detectado'
-    : intensidad <= 0.34 ? 'Tendencia leve'
-    : intensidad <= 0.67 ? 'Tendencia moderada'
-    : 'Sesgo dominante';
+  const intensidadLabel = intensidad === 0 ? t('ui.sesgo.result-intensity-no-detected', 'No detectado')
+    : intensidad <= 0.34 ? t('ui.sesgo.result-intensity-leve', 'Tendencia leve')
+    : intensidad <= 0.67 ? t('ui.sesgo.result-intensity-moderada', 'Tendencia moderada')
+    : t('ui.sesgo.result-intensity-dominante', 'Sesgo dominante');
 
   const intensidadDesc = intensidad === 0
-    ? 'En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.'
+    ? t('ui.sesgo.result-desc-no-detected', 'En los escenarios tomaste las decisiones más racionales. Este sesgo no parece dominante en ti.')
     : intensidad <= 0.34
-    ? 'Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.'
+    ? t('ui.sesgo.result-desc-leve', 'Aparece en situaciones específicas. Presta atención cuando estés bajo presión o incertidumbre.')
     : intensidad <= 0.67
-    ? 'Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.'
-    : 'Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.';
+    ? t('ui.sesgo.result-desc-moderada', 'Presente en varios de tus escenarios. Vale la pena trabajarlo activamente.')
+    : t('ui.sesgo.result-desc-dominante', 'Apareció de forma consistente en tus decisiones. Es uno de tus puntos ciegos más importantes.');
 
   const intensidadColor = intensidad === 0 ? '#059669' : intensidad <= 0.67 ? '#D97706' : '#DC2626';
   const intensidadBg = intensidad === 0 ? 'rgba(5,150,105,.07)' : intensidad <= 0.67 ? 'rgba(217,119,6,.07)' : 'rgba(220,38,38,.07)';
 
   const fixColor = fixScore === fixTotal ? 'var(--success)' : fixScore >= fixTotal * 0.67 ? 'var(--warning)' : 'var(--red)';
-  const fixLabel = fixScore === fixTotal ? '¡Perfecto!' : fixScore >= fixTotal * 0.67 ? 'Bien' : 'Sigue practicando';
+  const fixLabel = fixScore === fixTotal ? t('ui.sesgo.result-fix-perfect', '¡Perfecto!') : fixScore >= fixTotal * 0.67 ? t('ui.sesgo.result-fix-good', 'Bien') : t('ui.sesgo.result-fix-keep-practicing', 'Sigue practicando');
 
   // Save progress
   const sesgos = { ...(state.progress?.sesgos || {}) };
@@ -1710,8 +1710,8 @@ async function renderSesgoResult() {
   c.innerHTML = `
     <div class="result-hero">
       <div class="result-hero-tag">${t(`sesgo.${s.id}.name`, s.name)}</div>
-      <div class="result-hero-name">Tu diagnóstico</div>
-      <div class="result-hero-sub">Tus decisiones vs. lo que haría el inversor racional</div>
+      <div class="result-hero-name">${t('ui.sesgo.result-hero-name', 'Tu diagnóstico')}</div>
+      <div class="result-hero-sub">${t('ui.sesgo.result-hero-sub', 'Tus decisiones vs. lo que haría el inversor racional')}</div>
     </div>
     <div class="result-body">
       <div class="result-card" style="background:${intensidadBg};border-color:${intensidadColor}30">
@@ -1722,7 +1722,7 @@ async function renderSesgoResult() {
           </div>
           <div style="text-align:right">
             <div style="font-size:1.6rem;font-weight:700;color:${intensidadColor};font-family:var(--ff-display);line-height:1">${sesgadasCount}/${s.questions.length}</div>
-            <div style="font-size:.72rem;color:var(--ink-4)">respuestas sesgadas</div>
+            <div style="font-size:.72rem;color:var(--ink-4)">${t('ui.sesgo.result-biased-responses', 'respuestas sesgadas')}</div>
           </div>
         </div>
         <div style="height:6px;background:rgba(0,0,0,.08);border-radius:3px;overflow:hidden;margin-bottom:.75rem">
@@ -1732,18 +1732,18 @@ async function renderSesgoResult() {
       </div>
 
       <div class="result-card">
-        <div class="result-card-title">Verificación conceptual</div>
+        <div class="result-card-title">${t('ui.sesgo.result-card-verification', 'Verificación conceptual')}</div>
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:1rem">
           <div style="font-size:2rem;font-weight:700;color:${fixColor};font-family:var(--ff-display)">${fixScore}/${fixTotal}</div>
           <div>
             <div style="font-weight:700;color:${fixColor}">${fixLabel}</div>
-            <div style="font-size:.85rem;color:var(--ink-4)">preguntas correctas</div>
+            <div style="font-size:.85rem;color:var(--ink-4)">${t('ui.sesgo.result-correct-questions', 'preguntas correctas')}</div>
           </div>
         </div>
       </div>
 
       <div class="result-card">
-        <div class="result-card-title">Revisión de tus respuestas</div>
+        <div class="result-card-title">${t('ui.sesgo.result-card-review', 'Revisión de tus respuestas')}</div>
         <div class="responses-grid">
           ${s.questions.map((q, i) => {
             const ansIdx = state.sesgoAnswers[i];
@@ -1752,7 +1752,7 @@ async function renderSesgoResult() {
             const isRational = opt.reveal.toLowerCase().startsWith('racional') || opt.reveal.toLowerCase().startsWith('correcto');
             return `
               <div class="response-item">
-                <div class="response-q">Situación ${i + 1}</div>
+                <div class="response-q">${t('ui.sesgo.result-situation', 'Situación {n}', { n: i + 1 })}</div>
                 <div class="response-a">${t(`sesgo.${s.id}.question.${i}.option.${ansIdx}.text`, opt.text)}</div>
                 <div class="response-reveal" style="color:${isRational ? 'var(--success)' : 'var(--red)'}">${t(`sesgo.${s.id}.question.${i}.option.${ansIdx}.reveal`, opt.reveal)}</div>
               </div>`;
@@ -1761,12 +1761,12 @@ async function renderSesgoResult() {
       </div>
 
       <div class="result-card" id="result-clarity-card">
-        <div class="result-card-title">¿Qué tan claro te quedó el concepto?</div>
+        <div class="result-card-title">${t('ui.sesgo.result-card-clarity', '¿Qué tan claro te quedó el concepto?')}</div>
         ${ratingWidget(state.resultRating, '')}
       </div>
 
       <div style="text-align:center;padding:1rem 0">
-        <button class="btn-cta" id="btn-back-dash" ${state.resultRating === null ? 'disabled' : ''}>Volver al Dashboard →</button>
+        <button class="btn-cta" id="btn-back-dash" ${state.resultRating === null ? 'disabled' : ''}>${t('ui.sesgo.btn-back-dashboard', 'Volver al Dashboard →')}</button>
       </div>
     </div>
   `;
@@ -1853,8 +1853,8 @@ function computeAwarenessGap(sesgos) {
 function renderReportStep1_Profile(profile, bitResult) {
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 1 · Tu perfil BIT</div>
-      <div class="report-section-title">Así es como tomas decisiones financieras</div>
+      <div class="report-section-label">${t('ui.report.step1-label', 'Paso 1 · Tu perfil BIT')}</div>
+      <div class="report-section-title">${t('ui.report.step1-title', 'Así es como tomas decisiones financieras')}</div>
       <div class="report-profile-card">
         <div class="profile-header">
           <div class="profile-badge" style="background:${profile.color}">${bitLabel(bitResult.primary)}</div>
@@ -1866,7 +1866,7 @@ function renderReportStep1_Profile(profile, bitResult) {
         <div class="profile-desc">${t(`profile.${bitResult.primary}.description`, profile.description)}</div>
       </div>
       <div class="bit-disclaimer" style="margin-top:1rem">
-        <p style="font-size:.85rem;color:var(--ink-4);line-height:1.55"><strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.</p>
+        <p style="font-size:.85rem;color:var(--ink-4);line-height:1.55">${t('ui.report.step1-disclaimer', '<strong>Un perfil es una tendencia, no una sentencia.</strong> Resume patrones en tus respuestas — pero todos mostramos rasgos de varios perfiles en distintos momentos. Úsalo como mapa, no como etiqueta.')}</p>
       </div>
     </div>`;
 }
@@ -1877,27 +1877,27 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
   const top1 = top3[0];
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 2 · Plan de acción</div>
-      <div class="report-section-title">Si solo haces UNA cosa, haz esta</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil ${bitLabel(bitResult.primary)} con los sesgos que observamos en tus respuestas.</p>
+      <div class="report-section-label">${t('ui.report.step2-label', 'Paso 2 · Plan de acción')}</div>
+      <div class="report-section-title">${t('ui.report.step2-title', 'Si solo haces UNA cosa, haz esta')}</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">${t('ui.report.step2-intro', `Estos antídotos están rankeados por cobertura de <strong>tus mecanismos de mayor riesgo</strong>, combinando tu perfil ${bitLabel(bitResult.primary)} con los sesgos que observamos en tus respuestas.`, { profileLabel: bitLabel(bitResult.primary) })}</p>
       <div class="plan-top1" style="border-color:${profile.color}">
-        <div class="plan-top1-badge" style="background:${profile.color}">Tu antídoto #1</div>
+        <div class="plan-top1-badge" style="background:${profile.color}">${t('ui.report.antidoto-top1-badge', 'Tu antídoto #1')}</div>
         <div class="plan-top1-icon">${top1.icon}</div>
         <div class="plan-top1-name">${t(`report.antidoto.${top1.id}.name`, top1.name)}</div>
-        <div class="plan-top1-cov" style="color:${profile.color}">Cubre ${top1.coveragePct}% de tu peso sesgado</div>
+        <div class="plan-top1-cov" style="color:${profile.color}">${t('ui.report.antidoto-coverage', `Cubre ${top1.coveragePct}% de tu peso sesgado`, { pct: top1.coveragePct })}</div>
         <div class="plan-top1-mecs">
           ${top1.mecsCovered.map(m => `<span class="mec-pill" style="background:${m.mec.color}15;color:${m.mec.color};border-color:${m.mec.color}40">${m.mec.icon} ${t(`report.mecanismo.${m.mec.id}.name`, m.mec.name)}</span>`).join('')}
         </div>
         <div class="antidoto-what">
-          <div class="antidoto-label">¿Qué es?</div>
+          <div class="antidoto-label">${t('ui.report.antidoto-what-label', '¿Qué es?')}</div>
           <div class="antidoto-text">${t(`report.antidoto.${top1.id}.what`, top1.what)}</div>
         </div>
         <div class="antidoto-how">
-          <div class="antidoto-label">¿Cómo se implementa?</div>
+          <div class="antidoto-label">${t('ui.report.antidoto-how-label', '¿Cómo se implementa?')}</div>
           <div class="antidoto-text">${t(`report.antidoto.${top1.id}.how`, top1.how)}</div>
         </div>
       </div>
-      <div class="plan-others-title">Tus otros 2 antídotos de mayor retorno:</div>
+      <div class="plan-others-title">${t('ui.report.antidoto-others-title', 'Tus otros 2 antídotos de mayor retorno:')}</div>
       <div class="plan-others">
         ${top3.slice(1).map((a, i) => `
           <div class="plan-other">
@@ -1905,18 +1905,18 @@ function renderReportStep2_Plan(profile, bitResult, sesgos) {
               <div class="plan-other-rank">#${i + 2}</div>
               <div style="flex:1">
                 <div class="plan-other-name">${a.icon} ${t(`report.antidoto.${a.id}.name`, a.name)}</div>
-                <div class="plan-other-cov">Cubre ${a.coveragePct}% de tu peso sesgado</div>
+                <div class="plan-other-cov">${t('ui.report.antidoto-coverage', `Cubre ${a.coveragePct}% de tu peso sesgado`, { pct: a.coveragePct })}</div>
                 <div class="plan-other-mecs">
                   ${a.mecsCovered.map(m => `<span class="mec-pill-sm" style="color:${m.mec.color}">${m.mec.icon} ${t(`report.mecanismo.${m.mec.id}.name`, m.mec.name)}</span>`).join('')}
                 </div>
               </div>
             </div>
             <div class="antidoto-what-sm">
-              <div class="antidoto-label-sm">¿Qué es?</div>
+              <div class="antidoto-label-sm">${t('ui.report.antidoto-what-label', '¿Qué es?')}</div>
               <div class="antidoto-text-sm">${t(`report.antidoto.${a.id}.what`, a.what)}</div>
             </div>
             <div class="antidoto-how-sm">
-              <div class="antidoto-label-sm">¿Cómo se implementa?</div>
+              <div class="antidoto-label-sm">${t('ui.report.antidoto-how-label', '¿Cómo se implementa?')}</div>
               <div class="antidoto-text-sm">${t(`report.antidoto.${a.id}.how`, a.how)}</div>
             </div>
           </div>`).join('')}
@@ -1951,23 +1951,23 @@ function renderReportStep3_Severidad(profile, sesgos) {
     const pct = Math.round(dominant.avg * 100);
     const gap = second ? Math.round((dominant.avg - second.avg) * 100) : 0;
     if (!second || gap >= 15) {
-      return `Tu sistema cognitivo está <strong>claramente dominado por ${dominant.m.name}</strong> (${pct}%). Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.`;
+      return `${t('ui.report.conclusion-dominant-clear', `Tu sistema cognitivo está <strong>claramente dominado por <strong>${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</strong> (${pct}%)</strong>. Es ahí donde tus decisiones se tuercen con más consistencia — y donde los antídotos del Paso 2 rinden más.`, { mech: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct })}`;
     }
     if (gap >= 6) {
-      return `<strong>${dominant.m.name}</strong> (${pct}%) es tu mecanismo más fuerte, seguido de cerca por <strong>${second.m.name}</strong> (${Math.round(second.avg * 100)}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.`;
+      return `${t('ui.report.conclusion-dominant-moderate', `<strong>${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</strong> (${pct}%) es tu mecanismo más fuerte, seguido de cerca por <strong>${t(`report.mecanismo.${second.m.id}.name`, second.m.name)}</strong> (${Math.round(second.avg * 100)}%). Los dos se refuerzan entre sí — trabajarlos juntos multiplica el efecto.`, { mech1: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct1: pct, mech2: t(`report.mecanismo.${second.m.id}.name`, second.m.name), pct2: Math.round(second.avg * 100) })}`;
     }
-    return `Tienes varios mecanismos en tensión parecida (${dominant.m.name} ${pct}% · ${second.m.name} ${Math.round(second.avg * 100)}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.`;
-  })() : 'Aún no hay suficientes módulos completados para concluir.';
+    return `${t('ui.report.conclusion-tied', `Tienes varios mecanismos en tensión parecida (${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)} ${pct}% · ${t(`report.mecanismo.${second.m.id}.name`, second.m.name)} ${Math.round(second.avg * 100)}%). No hay un único punto ciego — las decisiones se tuercen por frentes múltiples, así que conviene un portafolio de antídotos más que uno solo.`, { mech1: t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name), pct1: pct, mech2: t(`report.mecanismo.${second.m.id}.name`, second.m.name), pct2: Math.round(second.avg * 100) })}`;
+  })() : t('ui.report.conclusion-incomplete', 'Aún no hay suficientes módulos completados para concluir.');
 
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 3 · Severidad por mecanismo</div>
-      <div class="report-section-title">Qué mecanismos te tuercen las decisiones</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.25rem">Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.</p>
+      <div class="report-section-label">${t('ui.report.step3-label', 'Paso 3 · Severidad por mecanismo')}</div>
+      <div class="report-section-title">${t('ui.report.step3-title', 'Qué mecanismos te tuercen las decisiones')}</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.25rem">${t('ui.report.step3-intro', 'Tus 15 sesgos agrupados por los 5 mecanismos cerebrales que los generan. La intensidad de cada mecanismo es el <strong>promedio de sus sesgos</strong>. El ranking te dice <em>dónde</em> atacar, no solo <em>qué</em>.')}</p>
 
       ${dominant ? `
       <div class="mec-conclusion" style="border-left-color:${dominant.m.color};background:${dominant.m.color}0D">
-        <div class="mec-conclusion-label">Conclusión</div>
+        <div class="mec-conclusion-label">${t('ui.report.conclusion-label', 'Conclusión')}</div>
         <div class="mec-conclusion-body">${conclusion}</div>
       </div>` : ''}
 
@@ -1987,7 +1987,7 @@ function renderReportStep3_Severidad(profile, sesgos) {
                 </div>
                 <div class="sev-group-phrase">"${t(`report.mecanismo.${g.m.id}.phrase`, g.m.phrase)}"</div>
                 <div class="sev-group-meta">
-                  <span>${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}</span>
+                  <span>${t(g.items.length === 1 ? 'ui.report.sev-group-meta.one' : 'ui.report.sev-group-meta.other', `${g.items.length} ${g.items.length === 1 ? 'sesgo' : 'sesgos'} de este mecanismo · nivel ${severityLabel(mecPct)}`, { count: g.items.length, level: severityLabel(mecPct) })}</span>
                 </div>
               </div>
               <div class="sev-group-bars">
@@ -2008,7 +2008,7 @@ function renderReportStep3_Severidad(profile, sesgos) {
         }).join('')}
       </div>
 
-      <p style="font-size:.82rem;color:var(--ink-4);line-height:1.5;margin-top:1.25rem">Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.</p>
+      <p style="font-size:.82rem;color:var(--ink-4);line-height:1.5;margin-top:1.25rem">${t('ui.report.step3-footnote', 'Cada % es la proporción de respuestas sesgadas en ese módulo. El mecanismo es el promedio simple de sus sesgos con datos.')}</p>
     </div>`;
 }
 
@@ -2018,11 +2018,11 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
   const dominant = ranked[0];
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 4 · Mecanismos</div>
-      <div class="report-section-title">Los 5 sistemas detrás de tus sesgos</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.</p>
+      <div class="report-section-label">${t('ui.report.step4-label', 'Paso 4 · Mecanismos')}</div>
+      <div class="report-section-title">${t('ui.report.step4-title', 'Los 5 sistemas detrás de tus sesgos')}</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">${t('ui.report.step4-intro', 'Cada sesgo nace de 1 de 5 mecanismos cerebrales. Agrupando <strong>tus 15 sesgos por mecanismo</strong>, ves qué sistema cognitivo te domina.')}</p>
       <div class="mec-dominant" style="background:${dominant.m.color}12;border-color:${dominant.m.color}40">
-        <div class="mec-dominant-label">Tu mecanismo dominante</div>
+        <div class="mec-dominant-label">${t('ui.report.mec-dominant-label', 'Tu mecanismo dominante')}</div>
         <div class="mec-dominant-name" style="color:${dominant.m.color}">${dominant.m.icon} ${t(`report.mecanismo.${dominant.m.id}.name`, dominant.m.name)}</div>
         <div class="mec-dominant-phrase">"${t(`report.mecanismo.${dominant.m.id}.phrase`, dominant.m.phrase)}"</div>
       </div>
@@ -2044,14 +2044,14 @@ function renderReportStep4_Mecanismos(profile, sesgos) {
               <div class="mec-track"><div class="mec-fill" style="width:${pct}%;background:${m.color}"></div></div>
               <div class="mec-phrase">"${t(`report.mecanismo.${m.id}.phrase`, m.phrase)}"</div>
               <div class="mec-desc">
-                <div class="mec-desc-label">Qué es este mecanismo</div>
+                <div class="mec-desc-label">${t('ui.report.mec-desc-what-label', 'Qué es este mecanismo')}</div>
                 <div class="mec-desc-text">${t(`report.mecanismo.${m.id}.desc`, m.desc)}</div>
               </div>
               <div class="mec-desc">
-                <div class="mec-desc-label">Cómo se relaciona con tus sesgos</div>
+                <div class="mec-desc-label">${t('ui.report.mec-desc-relation-label', 'Cómo se relaciona con tus sesgos')}</div>
                 <div class="mec-desc-text">${t(`report.mecanismo.${m.id}.relation`, m.relation)}</div>
               </div>
-              <div class="mec-biases-label">Tus sesgos en este mecanismo:</div>
+              <div class="mec-biases-label">${t('ui.report.mec-biases-label', 'Tus sesgos en este mecanismo:')}</div>
               <div class="mec-biases">${belongs.join(' · ')}</div>
             </div>`;
         }).join('')}
@@ -2064,9 +2064,9 @@ function renderReportStep5_Autoconciencia(sesgos) {
   if (!items.length) {
     return `
       <div class="report-section">
-        <div class="report-section-label">Paso 5 · Autoconciencia</div>
-        <div class="report-section-title">Comparación entre tu autoevaluación y tus respuestas</div>
-        <p style="font-size:.95rem;color:var(--ink-3);line-height:1.6">Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.</p>
+        <div class="report-section-label">${t('ui.report.step5-label', 'Paso 5 · Autoconciencia')}</div>
+        <div class="report-section-title">${t('ui.report.step5-title-empty', 'Comparación entre tu autoevaluación y tus respuestas')}</div>
+        <p style="font-size:.95rem;color:var(--ink-3);line-height:1.6">${t('ui.report.step5-empty-body', 'Aún no tienes autoevaluaciones guardadas en tus módulos. Esta sección se activa cuando completes los módulos incluyendo la pregunta final de autoevaluación.')}</p>
       </div>`;
   }
   const calibrated = items.filter(x => x.category === 'calibrated');
@@ -2080,8 +2080,8 @@ function renderReportStep5_Autoconciencia(sesgos) {
   return `
     <div class="report-section">
       <div class="report-section-label">Paso 5 · Autoconciencia</div>
-      <div class="report-section-title">¿Qué tan bien te conoces?</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.</p>
+      <div class="report-section-title">${t('ui.report.step5-title', '¿Qué tan bien te conoces?')}</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">${t('ui.report.step5-intro', 'Comparamos <strong>lo que dijiste que te afecta</strong> (eje X) con <strong>lo que tus respuestas muestran</strong> (eje Y). La diagonal es la calibración perfecta. Puntos arriba = te subestimas. Puntos abajo = te sobrestimas.')}</p>
       <div class="scatter-wrap">
         <svg viewBox="0 0 ${W} ${H}" class="scatter-svg" xmlns="http://www.w3.org/2000/svg">
           <rect x="${PAD}" y="${PAD}" width="${W-PAD*2}" height="${H-PAD*2}" fill="rgba(0,0,0,.02)" stroke="rgba(0,0,0,.1)" />
@@ -2091,8 +2091,8 @@ function renderReportStep5_Autoconciencia(sesgos) {
           <text x="${W-PAD-20}" y="${H-8}" font-size="10" fill="var(--ink-4)">100%</text>
           <text x="8" y="${PAD+10}" font-size="10" fill="var(--ink-4)">100%</text>
           <text x="8" y="${H-PAD}" font-size="10" fill="var(--ink-4)">0%</text>
-          <text x="${W/2}" y="${H-4}" font-size="11" fill="var(--ink-3)" text-anchor="middle">Tu autoevaluación →</text>
-          <text x="12" y="${H/2}" font-size="11" fill="var(--ink-3)" transform="rotate(-90 12 ${H/2})" text-anchor="middle">← Observado</text>
+          <text x="${W/2}" y="${H-4}" font-size="11" fill="var(--ink-3)" text-anchor="middle">${t('ui.report.scatter-x-label', 'Tu autoevaluación →')}</text>
+          <text x="12" y="${H/2}" font-size="11" fill="var(--ink-3)" transform="rotate(-90 12 ${H/2})" text-anchor="middle">${t('ui.report.scatter-y-label', '← Observado')}</text>
           ${items.map(it => {
             const color = it.category === 'calibrated' ? '#059669' : it.category === 'blind' ? '#DC2626' : '#D97706';
             return `<circle cx="${sx(it.self)}" cy="${sy(it.observed)}" r="5" fill="${color}" stroke="white" stroke-width="1.5"><title>${t(`sesgo.${it.sesgo.id}.name`, it.sesgo.name)}: auto ${it.self}% / observado ${it.observed}%</title></circle>`;
@@ -2101,22 +2101,22 @@ function renderReportStep5_Autoconciencia(sesgos) {
       </div>
       <div class="awareness-summary">
         <div class="awareness-card" style="border-color:#DC262640">
-          <div class="aw-card-title" style="color:#DC2626">Puntos ciegos (${blind.length})</div>
-          <div class="aw-card-sub">Te afectan más de lo que crees</div>
-          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno — buena calibración por el lado de la subestimación.</p>'}
+          <div class="aw-card-title" style="color:#DC2626">${t('ui.report.blind-spots-title', `Puntos ciegos (${blind.length})`, { count: blind.length })}</div>
+          <div class="aw-card-sub">${t('ui.report.blind-spots-sub', 'Te afectan más de lo que crees')}</div>
+          ${blind.length ? `<ul class="aw-list">${blind.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>${t('ui.report.aw-list-item-detail', `· auto ${x.self}% vs observado ${x.observed}%`, { self: x.self, observed: x.observed })}</span></li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.blind-spots-empty', 'Ninguno — buena calibración por el lado de la subestimación.')}</p>'}
         </div>
         <div class="awareness-card" style="border-color:#D9770640">
-          <div class="aw-card-title" style="color:#D97706">Sobreestimados (${over.length})</div>
-          <div class="aw-card-sub">Crees que te afectan más de lo que realmente aparece</div>
-          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">Ninguno.</p>'}
+          <div class="aw-card-title" style="color:#D97706">${t('ui.report.overestimated-title', `Sobreestimados (${over.length})`, { count: over.length })}</div>
+          <div class="aw-card-sub">${t('ui.report.overestimated-sub', 'Crees que te afectan más de lo que realmente aparece')}</div>
+          ${over.length ? `<ul class="aw-list">${over.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)} <span>· auto ${x.self}% vs observado ${x.observed}%</span></li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.overestimated-empty', 'Ninguno.')}</p>'}
         </div>
         <div class="awareness-card" style="border-color:#05966940">
-          <div class="aw-card-title" style="color:#059669">Bien calibrado (${calibrated.length})</div>
-          <div class="aw-card-sub">Tu autoevaluación coincide con las respuestas (±15 pp)</div>
-          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)}</li>`).join('')}</ul>` : '<p class="aw-empty">Aún no tienes sesgos calibrados.</p>'}
+          <div class="aw-card-title" style="color:#059669">${t('ui.report.calibrated-title', `Bien calibrado (${calibrated.length})`, { count: calibrated.length })}</div>
+          <div class="aw-card-sub">${t('ui.report.calibrated-sub', 'Tu autoevaluación coincide con las respuestas (±15 pp)')}</div>
+          ${calibrated.length ? `<ul class="aw-list">${calibrated.slice(0, 5).map(x => `<li>${t(`sesgo.${x.sesgo.id}.name`, x.sesgo.name)}</li>`).join('')}</ul>` : '<p class="aw-empty">${t('ui.report.calibrated-empty', 'Aún no tienes sesgos calibrados.')}</p>'}
         </div>
       </div>
-      <div class="aw-score">Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados</div>
+      <div class="aw-score">${t('ui.report.awareness-score', `Score de autoconciencia: <strong>${calibrated.length}/${items.length}</strong> sesgos bien calibrados`, { calibrated: calibrated.length, total: items.length })}</div>
     </div>`;
 }
 
@@ -2124,20 +2124,20 @@ function renderReportStep6_Matriz(bitResult) {
   const scenarios = DECISION_MATRIX[bitResult.primary] || DECISION_MATRIX.PP;
   return `
     <div class="report-section">
-      <div class="report-section-label">Paso 6 · Matriz de decisión</div>
-      <div class="report-section-title">Situaciones reales: tu tendencia vs. lo racional</div>
-      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">Tres escenarios típicos donde tu perfil <strong>${bitLabel(bitResult.primary)}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.</p>
+      <div class="report-section-label">${t('ui.report.step6-label', 'Paso 6 · Matriz de decisión')}</div>
+      <div class="report-section-title">${t('ui.report.step6-title', 'Situaciones reales: tu tendencia vs. lo racional')}</div>
+      <p style="font-size:.9rem;color:var(--ink-3);line-height:1.6;margin-bottom:1.5rem">${t('ui.report.step6-intro', `Tres escenarios típicos donde tu perfil <strong>${bitLabel(bitResult.primary)}</strong> reacciona de un modo — y cómo se vería la respuesta racional. Úsalo como checklist cuando surja la situación.`, { profileLabel: bitLabel(bitResult.primary) })}</p>
       <div class="matriz-list">
         ${scenarios.map((sc, i) => `
           <div class="matriz-item">
             <div class="matriz-sit"><span class="matriz-num">${i + 1}</span>${t(`report.matrix.${bitResult.primary}.${i}.sit`, sc.sit)}</div>
             <div class="matriz-cols">
               <div class="matriz-col matriz-tend">
-                <div class="matriz-col-label">Tu tendencia</div>
+                <div class="matriz-col-label">${t('ui.report.matrix-tendency-label', 'Tu tendencia')}</div>
                 <div class="matriz-col-text">${t(`report.matrix.${bitResult.primary}.${i}.tendency`, sc.tendency)}</div>
               </div>
               <div class="matriz-col matriz-rat">
-                <div class="matriz-col-label">Respuesta racional</div>
+                <div class="matriz-col-label">${t('ui.report.matrix-rational-label', 'Respuesta racional')}</div>
                 <div class="matriz-col-text">${t(`report.matrix.${bitResult.primary}.${i}.rational`, sc.rational)}</div>
               </div>
             </div>
@@ -2183,35 +2183,35 @@ function renderReport() {
 
   const feedbackCard = `
     <div class="report-feedback-card" style="border-color:${profile.color}30">
-      <div class="report-feedback-title">¿Qué tan útil te pareció esta información? <span style="color:#B91C1C">*</span></div>
+      <div class="report-feedback-title">${t('ui.report.feedback-title', '¿Qué tan útil te pareció esta información?')} <span style="color:#B91C1C">*</span></div>
       <div class="slider-row">
-        <span class="slider-end-label">Nada útil</span>
+        <span class="slider-end-label">${t('ui.report.slider-label-min', 'Nada útil')}</span>
         <input type="range" id="rep-step-slider" class="fit-slider" min="0" max="5" step="1" value="${val}" style="accent-color:${profile.color}">
-        <span class="slider-end-label">Muy útil</span>
+        <span class="slider-end-label">${t('ui.report.slider-label-max', 'Muy útil')}</span>
       </div>
-      <div class="slider-value-label" id="rep-step-val">${touched ? SLIDER_LABELS[val] : 'Mueve el deslizador para continuar'}</div>
+      <div class="slider-value-label" id="rep-step-val">${touched ? SLIDER_LABELS[val] : t('ui.report.slider-move-hint', 'Mueve el deslizador para continuar')}</div>
     </div>`;
 
   const navCard = `
     <div class="report-nav">
-      <button class="btn-ghost" id="btn-rep-prev" ${step === 1 ? 'disabled' : ''}>← Anterior</button>
-      <span style="font-size:.82rem;color:var(--ink-4)">Paso ${step} de ${TOTAL}</span>
-      <button class="btn-cta" id="btn-rep-next" ${!touched ? 'disabled' : ''}>${isLast ? 'Volver al Dashboard →' : 'Siguiente →'}</button>
+      <button class="btn-ghost" id="btn-rep-prev" ${step === 1 ? 'disabled' : ''}>${t('ui.report.nav-prev', '← Anterior')}</button>
+      <span style="font-size:.82rem;color:var(--ink-4)">${t('ui.report.nav-step-of', `Paso ${step} de ${TOTAL}`, { step, total: TOTAL })}</span>
+      <button class="btn-cta" id="btn-rep-next" ${!touched ? 'disabled' : ''}>${isLast ? isLast ? t('ui.report.nav-finish', 'Volver al Dashboard →') : t('ui.report.nav-next', 'Siguiente →')}</button>
     </div>`;
 
   const c = document.createElement('div');
   c.className = 'report-wrap';
   c.innerHTML = `
     <nav class="dash-nav">
-      <div class="dash-nav-logo">Finanzas Conductuales</div>
-      <button class="btn-link" id="btn-report-back">← Dashboard</button>
+      <div class="dash-nav-logo">${t('ui.report.nav-logo', 'Finanzas Conductuales')}</div>
+      <button class="btn-link" id="btn-report-back">${t('ui.report.nav-back', '← Dashboard')}</button>
     </nav>
     <div class="report-body">
       <div class="report-header">
-        <div class="report-logo">Informe Final</div>
-        <h1 class="report-title">Tu perfil conductual como inversionista</h1>
+        <div class="report-logo">${t('ui.report.header-logo', 'Informe Final')}</div>
+        <h1 class="report-title">${t('ui.report.header-title', 'Tu perfil conductual como inversionista')}</h1>
         <p class="report-name">${state.user.email}</p>
-        <div class="report-time-hint">⏱ 6 pasos · ~${Math.max(2, (TOTAL - step + 1) * 2)} min restantes · puedes volver cuando quieras</div>
+        <div class="report-time-hint">${t('ui.report.time-hint', `⏱ 6 pasos · ~${Math.max(2, (TOTAL - step + 1) * 2)} min restantes · puedes volver cuando quieras`, { min: Math.max(2, (TOTAL - step + 1) * 2) })}</div>
         <div class="report-stepper">${stepper}</div>
       </div>
       ${body}
@@ -2378,33 +2378,33 @@ function renderOnboarding() {
   c.className = 'onboarding-wrap';
   c.innerHTML = `
     <div class="onboarding-card">
-      <div class="onboarding-mark">Bienvenido</div>
-      <h1 class="onboarding-title">10 años compilados en una jornada de autoconocimiento</h1>
-      <p class="onboarding-lead">Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.</p>
+      <div class="onboarding-mark">${t('ui.auth.onboarding-welcome-mark','Bienvenido')}</div>
+      <h1 class="onboarding-title">${t('ui.auth.onboarding-title','10 años compilados en una jornada de autoconocimiento')}</h1>
+      <p class="onboarding-lead">${t('ui.auth.onboarding-lead','Esta plataforma es una versión interactiva de 10 años de estudio, observación y aplicación de finanzas conductuales — compilados en una jornada de autoconocimiento para tomar decisiones más racionales.')}</p>
 
       <div class="onboarding-time-card">
-        <div class="onboarding-time-title">⏱ Alrededor de 2 horas en total</div>
-        <div class="onboarding-time-body">No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.</div>
+        <div class="onboarding-time-title">${t('ui.auth.onboarding-time-title','⏱ Alrededor de 2 horas en total')}</div>
+        <div class="onboarding-time-body">${t('ui.auth.onboarding-time-body','No tienes que hacerlo de una sentada. Todo tu progreso se guarda solo — puedes pausar cuando quieras y retomar más tarde en la misma pantalla.')}</div>
         <div class="onboarding-time-grid">
-          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">Test BIT · perfil inversionista</span></div>
-          <div class="time-pill"><span class="time-pill-num">~5 min</span><span class="time-pill-lbl">Cada módulo de sesgo (×15)</span></div>
-          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">Informe final · 6 pasos</span></div>
-          <div class="time-pill"><span class="time-pill-num">~3 min</span><span class="time-pill-lbl">Próximos pasos</span></div>
+          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-bit-lbl','Test BIT · perfil inversionista')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">~5 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-sesgo-lbl','Cada módulo de sesgo (×15)')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">~10 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-informe-lbl','Informe final · 6 pasos')}</span></div>
+          <div class="time-pill"><span class="time-pill-num">~3 min</span><span class="time-pill-lbl">${t('ui.auth.onboarding-pill-next-lbl','Próximos pasos')}</span></div>
         </div>
       </div>
 
       <div class="onboarding-advice">
-        <div class="onboarding-advice-title">Un consejo antes de empezar</div>
-        <p>Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.</p>
+        <div class="onboarding-advice-title">${t('ui.auth.onboarding-advice-title','Un consejo antes de empezar')}</div>
+        <p>${t('ui.auth.onboarding-advice-body','Haz cada parte con calma y responde consciente. Si sientes que no estás concentrado, cierra la aplicación y continúa después — tu progreso estará intacto. Vale más responder 3 preguntas bien que 20 en automático.')}</p>
       </div>
 
       <div class="onboarding-feedback-note">
-        <strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.
+        ${t('ui.auth.onboarding-feedback-note','<strong>Es una versión de prueba.</strong> Vas a encontrar preguntas de feedback cortas — un slider, una o dos por pantalla. Perdón por la insistencia: cada respuesta que das mejora la versión que verán los próximos que recorran esta jornada.')}
       </div>
 
-      <p class="onboarding-thanks">Gracias por prestar tu atención.</p>
+      <p class="onboarding-thanks">${t('ui.auth.onboarding-thanks','Gracias por prestar tu atención.')}</p>
 
-      <button class="btn-cta onboarding-cta" id="btn-start-journey">Comenzar la jornada →</button>
+      <button class="btn-cta onboarding-cta" id="btn-start-journey">${t('ui.auth.onboarding-btn-start','Comenzar la jornada →')}</button>
     </div>
   `;
   app.appendChild(c);
@@ -2482,7 +2482,7 @@ function renderNextSteps() {
     loadNextStepsData().then(render);
     const c = document.createElement('div');
     c.className = 'dash-wrap';
-    c.innerHTML = `<div class="dash-body"><p style="text-align:center;padding:3rem 1rem;color:var(--ink-4)">Cargando…</p></div>`;
+    c.innerHTML = `<div class="dash-body"><p style="text-align:center;padding:3rem 1rem;color:var(--ink-4)">${t('ui.next.loading', 'Cargando…')}</p></div>`;
     app.appendChild(c);
     return;
   }
@@ -2498,19 +2498,19 @@ function renderNextSteps() {
     <nav class="dash-nav">
       <div class="dash-nav-logo">Finanzas Conductuales</div>
       <div class="dash-nav-right">
-        <button class="btn-link" id="btn-back-dash">← Dashboard</button>
-        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">Salir</button>`}
+        <button class="btn-link" id="btn-back-dash">${t('ui.next.nav_back', '← Dashboard')}</button>
+        ${state.viewAs ? '' : `<button class="btn-link" id="btn-logout">${t('ui.next.nav_logout', 'Salir')}</button>`}
       </div>
     </nav>
     <div class="dash-body next-steps-body">
       <div class="next-header">
-        <div class="panel-time" style="align-self:flex-start">⏱ ~3 min · última etapa</div>
-        <h1 class="next-title">Próximos pasos</h1>
-        <p class="next-sub">Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.</p>
+        <div class="panel-time" style="align-self:flex-start">${t('ui.next.time_badge', '⏱ ~3 min · última etapa')}</div>
+        <h1 class="next-title">${t('ui.next.title', 'Próximos pasos')}</h1>
+        <p class="next-sub">${t('ui.next.intro', 'Recorriste la jornada completa. Cuéntame qué te gustaría hacer a partir de aquí — marca todo lo que aplique.')}</p>
       </div>
 
       <div class="next-card">
-        <div class="next-card-title">Lo que me interesa</div>
+        <div class="next-card-title">${t('ui.next.card_interests_title', 'Lo que me interesa')}</div>
         <div class="next-options">
           ${NEXT_STEPS_OPTIONS.filter(opt => !opt.hidden).map(opt => `
             <label class="next-option ${interests.includes(opt.id) ? 'checked' : ''}">
@@ -2523,20 +2523,20 @@ function renderNextSteps() {
           `).join('')}
         </div>
 
-        <label class="next-other-label">Otros · lo que quieras contarme</label>
-        <textarea id="next-other" class="next-other" rows="3" placeholder="Ideas, sugerencias, temas que te interesan…">${escapeHtml(other || '')}</textarea>
+        <label class="next-other-label">${t('ui.next.other_label', 'Otros · lo que quieras contarme')}</label>
+        <textarea id="next-other" class="next-other" rows="3" placeholder="${t('ui.next.other_placeholder', 'Ideas, sugerencias, temas que te interesan…')}">${escapeHtml(other || '')}</textarea>
 
         <div class="next-actions">
           <button class="btn-cta" id="btn-save-next" ${interests.length === 0 && !(other || '').trim() ? 'disabled' : ''}>
-            ${saved ? 'Actualizar respuestas' : 'Guardar y ver resultados →'}
+            ${saved ? '${t('ui.next.btn_update', 'Actualizar respuestas')}' : '${t('ui.next.btn_save', 'Guardar y ver resultados →')}'}
           </button>
         </div>
       </div>
 
       ${saved ? `
       <div class="next-card">
-        <div class="next-card-title">Qué eligen los demás participantes</div>
-        <p class="next-sub" style="margin-bottom:1.25rem">Respuestas consolidadas — así ves dónde se concentra el interés del grupo.</p>
+        <div class="next-card-title">${t('ui.next.card_others_title', 'Qué eligen los demás participantes')}</div>
+        <p class="next-sub" style="margin-bottom:1.25rem">${t('ui.next.card_others_sub', 'Respuestas consolidadas — así ves dónde se concentra el interés del grupo.')}</p>
         <div class="next-stats">
           ${NEXT_STEPS_OPTIONS.filter(opt => !opt.hidden).map(opt => {
             const n = counts.find(r => r.interest === opt.id)?.n || 0;
@@ -2552,11 +2552,11 @@ function renderNextSteps() {
       </div>
 
       <div class="next-card calendly-card">
-        <div class="calendly-title">Un pedido sincero</div>
-        <p class="calendly-body"><strong>No hay nada más importante en esta etapa que esos 15 minutos.</strong> Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.</p>
-        <p class="calendly-body">Si puedes regalarme ese rato, estaría muy agradecido.</p>
-        <a href="${CALENDLY_URL}" target="_blank" rel="noopener" class="btn-cta calendly-cta">Agendar 30 min con Rodrigo →</a>
-        <p class="calendly-sub">Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min</p>
+        <div class="calendly-title">${t('ui.next.calendly_title', 'Un pedido sincero')}</div>
+        <p class="calendly-body"><strong>${t('ui.next.calendly_body1', 'No hay nada más importante en esta etapa que esos 15 minutos. Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.')}</strong> Necesito escuchar cómo te fue, qué te sirvió, qué te estorbó, qué faltó. Tu experiencia directa es la única manera de saber qué hay que mejorar.</p>
+        <p class="calendly-body">${t('ui.next.calendly_body2', 'Si puedes regalarme ese rato, estaría muy agradecido.')}</p>
+        <a href="${CALENDLY_URL}" target="_blank" rel="noopener" class="btn-cta calendly-cta">${t('ui.next.calendly_cta', 'Agendar 30 min con Rodrigo →')}</a>
+        <p class="calendly-sub">${t('ui.next.calendly_sub', 'Se abre en una ventana nueva · calendly.com/rodrigo-pandava/30min')}</p>
       </div>` : ''}
     </div>
   `;
@@ -2591,7 +2591,7 @@ function renderNextSteps() {
 
   document.getElementById('btn-save-next').addEventListener('click', async () => {
     const btn = document.getElementById('btn-save-next');
-    btn.disabled = true; btn.textContent = 'Guardando…';
+    btn.disabled = true; btn.textContent = t('ui.next.btn_saving', 'Guardando…');
     try {
       await saveNextSteps({
         email: state.user.email,
@@ -2604,7 +2604,7 @@ function renderNextSteps() {
       render();
     } catch(e) {
       btn.disabled = false;
-      btn.textContent = 'Reintentar';
+      btn.textContent = t('ui.next.btn_retry', 'Reintentar');
       console.error('saveNextSteps', e);
     }
   });
@@ -2622,24 +2622,24 @@ function mountBugReportWidget() {
   const wrap = document.createElement('div');
   wrap.id = 'bug-report-root';
   wrap.innerHTML = `
-    <button id="bug-report-fab" class="bug-fab" title="Reportar un problema" aria-label="Reportar un problema">
-      <span class="bug-fab-icon">🛠</span><span class="bug-fab-label">Clic aquí para reportar un problema</span>
+    <button id="bug-report-fab" class="bug-fab" title="${t('ui.bug.fab_title', 'Reportar un problema')}" aria-label="${t('ui.bug.fab_title', 'Reportar un problema')}">
+      <span class="bug-fab-icon">🛠</span><span class="bug-fab-label">${t('ui.bug.fab_label', 'Clic aquí para reportar un problema')}</span>
     </button>
     <div id="bug-report-modal" class="bug-modal" hidden>
       <div class="bug-modal-backdrop"></div>
       <div class="bug-modal-card" role="dialog" aria-modal="true" aria-labelledby="bug-modal-title">
         <div class="bug-modal-head">
-          <div id="bug-modal-title" class="bug-modal-title">Reportar un problema</div>
+          <div id="bug-modal-title" class="bug-modal-title">${t('ui.bug.modal_title', 'Reportar un problema')}</div>
           <button class="bug-modal-close" id="bug-modal-close" aria-label="Cerrar">✕</button>
         </div>
-        <p class="bug-modal-sub">Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.</p>
-        <label class="bug-field-label">Título</label>
-        <input type="text" id="bug-title" class="bug-field" maxlength="120" placeholder="ej. El botón no responde">
-        <label class="bug-field-label">Descripción</label>
-        <textarea id="bug-desc" class="bug-field" rows="4" maxlength="2000" placeholder="¿Qué esperabas? ¿Qué pasó en vez?"></textarea>
+        <p class="bug-modal-sub">${t('ui.bug.modal_sub', 'Cuéntame brevemente qué viste. Va directo a mí — gracias por ayudarme a afinar la plataforma.')}</p>
+        <label class="bug-field-label">${t('ui.bug.field_title_label', 'Título')}</label>
+        <input type="text" id="bug-title" class="bug-field" maxlength="120" placeholder="${t('ui.bug.field_title_placeholder', 'ej. El botón no responde')}">
+        <label class="bug-field-label">${t('ui.bug.field_desc_label', 'Descripción')}</label>
+        <textarea id="bug-desc" class="bug-field" rows="4" maxlength="2000" placeholder="${t('ui.bug.field_desc_placeholder', '¿Qué esperabas? ¿Qué pasó en vez?')}"></textarea>
         <div class="bug-modal-actions">
-          <button class="btn-link" id="bug-cancel">Cancelar</button>
-          <button class="btn-cta" id="bug-send" disabled>Enviar</button>
+          <button class="btn-link" id="bug-cancel">${t('ui.bug.btn_cancel', 'Cancelar')}</button>
+          <button class="btn-cta" id="bug-send" disabled>${t('ui.bug.btn_send', 'Enviar')}</button>
         </div>
         <div class="bug-modal-status" id="bug-status"></div>
       </div>
@@ -2668,7 +2668,7 @@ function mountBugReportWidget() {
   desc.addEventListener('input', checkValid);
 
   send.addEventListener('click', async () => {
-    send.disabled = true; send.textContent = 'Enviando…'; status.textContent = '';
+    send.disabled = true; send.textContent = t('ui.bug.btn_sending', 'Enviando…'); status.textContent = '';
     try {
       await submitBugReport({
         email: state.user?.email || null,
@@ -2676,15 +2676,15 @@ function mountBugReportWidget() {
         title: title.value.trim(),
         description: desc.value.trim() || null,
       });
-      status.textContent = '✓ Reporte enviado. Gracias.';
+      status.textContent = t('ui.bug.status_ok', '✓ Reporte enviado. Gracias.');
       status.className = 'bug-modal-status ok';
       setTimeout(close, 1400);
     } catch(e) {
-      status.textContent = 'No se pudo enviar. Intenta de nuevo.';
+      status.textContent = t('ui.bug.status_err', 'No se pudo enviar. Intenta de nuevo.');
       status.className = 'bug-modal-status err';
       send.disabled = false;
     }
-    send.textContent = 'Enviar';
+    send.textContent = t('ui.bug.btn_send', 'Enviar');
   });
 }
 
@@ -2719,7 +2719,7 @@ window.addEventListener('error', (e) => {
     filename: e.filename, lineno: e.lineno, colno: e.colno,
     stack: e.error?.stack || null,
   });
-  showToast('Ocurrió un problema técnico. Ya recibimos el reporte.', 'error');
+  showToast(t('ui.toast.window_error', 'Ocurrió un problema técnico. Ya recibimos el reporte.'), 'error');
 });
 window.addEventListener('unhandledrejection', (e) => {
   const r = e.reason;
@@ -2727,7 +2727,7 @@ window.addEventListener('unhandledrejection', (e) => {
   logJsError('unhandledrejection', msg, { stack: r?.stack || null });
   // Suppress toasts for known-benign cases so we don't spam the user.
   const silent = /JWT expired|AbortError|Failed to fetch|Load failed/i.test(msg);
-  if (!silent) showToast('Algo no salió bien. Vuelve a intentarlo en unos segundos.', 'error');
+  if (!silent) showToast(t('ui.toast.unhandled_rejection', 'Algo no salió bien. Vuelve a intentarlo en unos segundos.'), 'error');
 });
 
 // ── SHARE ──────────────────────────────────────────
@@ -2747,9 +2747,9 @@ async function shareBitProfile(profile, result) {
   // fallback: copy to clipboard
   try {
     await navigator.clipboard.writeText(`${text} ${url}`);
-    showToast('Enlace copiado al portapapeles.', 'ok');
+    showToast(t('ui.toast.share_ok', 'Enlace copiado al portapapeles.'), 'ok');
   } catch (_) {
-    showToast('No se pudo copiar. Copia manualmente: ' + url, 'error');
+    showToast(t('ui.toast.share_err', 'No se pudo copiar. Copia manualmente: {url}', { url }), 'error');
   }
 }
 
